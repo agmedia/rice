@@ -892,7 +892,7 @@ var transformProperty = 'transform';
 var styles = window.getComputedStyle(document.documentElement, '');
 var vendorPrefix = (Array.prototype.slice
   .call(styles)
-  .join('') 
+  .join('')
   .match(/-(moz|webkit|ms)-/) || (styles.OLink === '' && ['', 'o'])
 )[1];
 if(vendorPrefix === 'webkit')
@@ -1294,7 +1294,7 @@ options.endState = end;
 return options;
 };
 
-var polyFillrAF = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) { return setTimeout(callback, 1000 / 60); }; 
+var polyFillrAF = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) { return setTimeout(callback, 1000 / 60); };
 
 var queueTick = function(func) {
 if(tickRequests.length === 0)
@@ -2021,7 +2021,7 @@ return {
 };
 };
 // ------------------
-// -- StateTweener -- 
+// -- StateTweener --
 // -------------------
 
 var createStateTweener = function(startState, endState, resultState) {
@@ -2121,7 +2121,7 @@ return {
 };
 
 // ------------------------
-// -- ValueFeederTweener -- 
+// -- ValueFeederTweener --
 // ------------------------
 
 var createValueFeederTweener = function(valueFeeder, startState, endState, resultState) {
@@ -2672,12 +2672,13 @@ var MimeTypes = {
     jpe: 'image/jpeg',
     png: 'image/png',
     gif: 'image/gif',
-    bmp: 'image/bmp'
+    bmp: 'image/bmp',
+    webp: 'image/webp'
 };
 
-var ImageExtensionsRegex = /(\.png|\.bmp|\.gif|\.jpg|\.jpe|\.jpg|\.jpeg)$/;
+var ImageExtensionsRegex = /(\.webp|\.png|\.bmp|\.gif|\.jpg|\.jpe|\.jpg|\.jpeg)$/;
 
-var CanvasExportExtensions = /(jpe|jpg|jpeg|png)/;
+var CanvasExportExtensions = /(jpe|jpg|jpeg|png|webp)/;
 
 // shortcuts
 var create = function create(name, className) {
