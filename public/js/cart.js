@@ -2068,7 +2068,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     id: String,
-    available: String
+    available: String,
+    min_cart: String
   },
   data: function data() {
     return {
@@ -2099,6 +2100,15 @@ __webpack_require__.r(__webpack_exports__);
         this.updateCart();
       } else {
         this.addToCart();
+      }
+    },
+    onChangeProcessed: function onChangeProcessed(e, d) {
+      if (e.target.checked == true) {
+        this.quantity = this.min_cart;
+      }
+      ;
+      if (e.target.checked == false) {
+        this.quantity = 1;
       }
     },
     /**
@@ -3443,7 +3453,9 @@ var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "cart d-flex flex-wrap align-items-center pt-2 pb-2 mb-3"
+    staticClass: "cart"
+  }, [_c("div", {
+    staticClass: "d-flex flex-wrap align-items-center pt-1 pb-2 mb-1"
   }, [_c("input", {
     directives: [{
       name: "model",
@@ -3483,12 +3495,25 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "ci-cart"
-  }), _vm._v(" " + _vm._s(_vm.trans.add_to_cart))]), _vm._v(" "), _vm.has_in_cart ? _c("p", {
-    staticClass: "fs-md fw-light text-danger",
-    staticStyle: {
-      width: "100%"
+  }), _vm._v(" " + _vm._s(_vm.trans.add_to_cart))])]), _vm._v(" "), _vm.min_cart > 1 ? _c("div", {
+    staticClass: "form-check mb-3"
+  }, [_c("input", {
+    staticClass: "form-check-input",
+    attrs: {
+      type: "checkbox",
+      id: "ex-check-1"
+    },
+    on: {
+      change: function change($event) {
+        return _vm.onChangeProcessed($event, _vm.e);
+      }
     }
-  }, [_vm._v(_vm._s(_vm.trans.imate) + " " + _vm._s(_vm.has_in_cart) + " " + _vm._s(_vm.trans.artikala_u_kosarici) + ".")]) : _vm._e()]);
+  }), _vm._v(" "), _c("label", {
+    staticClass: "form-check-label",
+    attrs: {
+      "for": "ex-check-1"
+    }
+  }, [_vm._v(_vm._s(_vm.trans.add_to_cart_combo) + "  " + _vm._s(_vm.min_cart))])]) : _vm._e()]);
 };
 var staticRenderFns = [];
 render._withStripped = true;

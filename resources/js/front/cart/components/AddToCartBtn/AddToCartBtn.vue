@@ -1,11 +1,17 @@
 <template>
-    <div class="cart d-flex flex-wrap align-items-center pt-2 pb-2 mb-3">
+    <div class="cart ">
+        <div class="d-flex flex-wrap align-items-center pt-1 pb-2 mb-1">
         <input class="form-control me-3 mb-1" type="number" inputmode="numeric" pattern="[0-9]*" v-model="quantity" min="1" :max="available" style="width: 5rem;">
 
 
       <button class="btn btn-primary btn-shadow me-3 mb-1 " @click="add()" :disabled="disabled"><i class="ci-cart"></i> {{trans.add_to_cart }}</button>
-      <p style="width: 100%;" class="fs-md fw-light text-danger" v-if="has_in_cart">{{ trans.imate }} {{ has_in_cart }} {{trans.artikala_u_kosarici }}.</p>
+     <!-- <p style="width: 100%;" class="fs-md fw-light text-danger" v-if="has_in_cart">{{ trans.imate }} {{ has_in_cart }} {{trans.artikala_u_kosarici }}.</p>
+--> </div>
 
+        <div class="form-check mb-3" v-if="min_cart > 1">
+            <input class="form-check-input" type="checkbox"  @change="onChangeProcessed($event,e)" id="ex-check-1">
+            <label class="form-check-label" for="ex-check-1">{{trans.add_to_cart_combo }}  {{min_cart}}</label>
+        </div>
 
     </div>
 </template>
@@ -14,7 +20,8 @@
 export default {
     props: {
         id: String,
-        available: String
+        available: String,
+        min_cart:String
     },
 
     data() {
@@ -56,6 +63,18 @@ export default {
                 this.addToCart();
             }
         },
+
+        onChangeProcessed(e,d) {
+            if (e.target.checked == true) {
+                this.quantity = this.min_cart;
+
+
+            };
+            if (e.target.checked == false ) {
+                this.quantity = 1;
+            }
+        },
+
         /**
          *
          */

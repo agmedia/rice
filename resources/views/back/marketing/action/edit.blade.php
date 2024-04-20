@@ -82,7 +82,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row items-push mb-2">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <label for="type-select">{{ __('back/action.action_type') }} <span class="text-danger">*</span></label>
                                             <select class="form-control" id="type-select" name="type">
                                                 @foreach ($types as $type)
@@ -90,7 +90,14 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="min_cart-input">Min qty @include('back.layouts.partials.required-star')</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="min_cart-input" name="min_cart" placeholder="" value="{{ isset($action) ? $action->min_cart : old('min_cart') }}">
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
                                             <label for="discount-input">{{ __('back/action.action_title') }} @include('back.layouts.partials.required-star')</label>
                                             <div class="input-group">
                                                 <input type="text" class="form-control" id="discount-input" name="discount" placeholder="{{ __('back/action.enter_action') }}" value="{{ isset($action) ? $action->discount : old('discount') }}">
@@ -118,7 +125,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row items-push mb-0 mt-4">
+                                 {{--    <div class="form-group row items-push mb-0 mt-4">
                                         <div class="col-md-4 pt-2">
                                             <label>{{ __('back/action.zahtjeva_kupon_kod') }} @include('back.layouts.partials.popover', ['title' => 'If you enter code', 'content' => 'It will be considered that you request it when purchasing to benefit from the action and the corresponding discount...'])</label>
                                         </div>
@@ -135,6 +142,8 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    ---}}
                                 </div>
                             </div>
                         </div>

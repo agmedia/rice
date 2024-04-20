@@ -254,7 +254,8 @@ class Action extends Model
             'links'      => $data['links']->flatten()->toJson(),
             'date_start' => $data['start'],
             'date_end'   => $data['end'],
-            'coupon'     => $this->request->coupon,
+            'min_cart' => $this->request->min_cart,
+          //  'coupon'     => $this->request->coupon,
             'quantity'   => $data['coupon_quantity'],
             'status'     => $data['status'],
             'updated_at' => Carbon::now()

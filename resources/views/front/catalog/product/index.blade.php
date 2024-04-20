@@ -84,6 +84,8 @@
             <div class="h-100 bg-light rounded-3 p-4 position-relative">
                 <div class="btn-wishlist-block">
 
+
+
                     @if($prod->vegan)
                         <button class="btn-wishlist  btn-lg" type="button" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Vegan" data-bs-original-title="Vegan"><img src="{{ asset('image/vegan.svg') }}" alt="Vegan" width="35" height="35" style="width:31px"/></button>
                     @endif
@@ -188,9 +190,13 @@
        </div>
 
    @endif
+
+
             @if ( $prod->quantity > 0)
-   <add-to-cart-btn id="{{ $prod->id }}" available="{{ $prod->quantity }}"></add-to-cart-btn>
+   <add-to-cart-btn id="{{ $prod->id }}" available="{{ $prod->quantity }}" @if ($prod->action) min_cart="{{ $prod->action->min_cart }}"  @else min_cart="1"  @endif></add-to-cart-btn>
             @endif
+
+
    <!-- Product panels-->
    <div class="accordion mb-4" id="productPanels">
        <div class="accordion-item">
