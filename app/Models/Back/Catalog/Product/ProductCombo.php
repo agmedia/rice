@@ -18,4 +18,15 @@ class ProductCombo extends Model
      */
     protected $guarded = [];
 
+
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function getDataAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
 }
