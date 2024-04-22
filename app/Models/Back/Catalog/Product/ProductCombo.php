@@ -24,7 +24,7 @@ class ProductCombo extends Model
      *
      * @return mixed
      */
-    public function getDataAttribute($value)
+    public function getValueAttribute($value)
     {
         return json_decode($value, true);
     }
