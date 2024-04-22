@@ -136,7 +136,7 @@ class Product extends Model
      */
     public function combo()
     {
-        return $this->hasMany(ProductCombo::class, 'product_id')->orderBy('sort_order');
+        return $this->hasMany(ProductCombos::class, 'product_id')->orderBy('sort_order');
     }
 
 

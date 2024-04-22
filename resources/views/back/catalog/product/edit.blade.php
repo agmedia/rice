@@ -42,6 +42,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#slike"><i class="si si-picture"></i> {{ __('back/products.slike') }}</a>
                     </li>
+                    @if ($product->combo)
+                        <li class="nav-item">
+                            <a class="nav-link" href="#combo"><i class="si si-flag"></i> Product combo</a>
+                        </li>
+                    @endif
                     <li class="nav-item ">
                         <a class="nav-link" href="#seo">
                             <i class="si si-link"></i> {{ __('back/products.seo') }}
@@ -309,6 +314,24 @@
                                                                     </div>-->
                                         @include('back.catalog.product.edit-photos', ['resource' => isset($product) ? $product : null, 'existing' => $data['images'], 'delete_url' => route('products.destroy.image')])
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="combo" role="tabpanel">
+                        <div class="block">
+                            <div class="block-header block-header-default">
+                                <h3 class="block-title">Product combo</h3>
+                            </div>
+                            <div class="block-content">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-12">
+
+
+                                        {{ dd($product->combos) }}
+
+
+
                                 </div>
                             </div>
                         </div>
