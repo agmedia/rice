@@ -134,9 +134,9 @@ class Product extends Model
     /**
      * @return Relation
      */
-    public function combo()
+    public function combos()
     {
-        return $this->hasMany(ProductCombos::class, 'product_id')->orderBy('sort_order');
+        return $this->hasMany(ProductCombo::class, 'product_id')->orderBy('sort_order');
     }
 
 

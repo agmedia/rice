@@ -135,7 +135,7 @@
                                     </a>
                                 </td>
                                 <td class="font-size-sm">
-                                    <a class="font-w600" href="{{ route('products.edit', ['product' => $product]) }}">{{ $product->translation->name }}</a><br>
+                                    <a class="font-w600" href="{{ $product->combo ? route('products.edit.combo', ['product' => $product]) : route('products.edit', ['product' => $product]) }}">{{ $product->translation->name }}</a><br>
                                     @if ($product->categories)
                                         @foreach ($product->categories as $cat)
                                             <span class="badge badge-secondary">{{ $cat->title }}</span>

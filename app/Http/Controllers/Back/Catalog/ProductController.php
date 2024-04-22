@@ -141,6 +141,8 @@ class ProductController extends Controller
     {
         $data = $product->getRelationsData(1);
 
+        dd($product->combos->toArray());
+
         return view('back.catalog.product.edit', compact('product', 'data'));
     }
 
