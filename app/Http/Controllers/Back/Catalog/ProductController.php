@@ -75,9 +75,21 @@ class ProductController extends Controller
         $product = new Product();
 
         $data = $product->getRelationsData();
-        $active_actions = ProductAction::active()->get();
 
-        return view('back.catalog.product.edit', compact('data', 'active_actions'));
+        return view('back.catalog.product.edit', compact('data'));
+    }
+
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function createCombo()
+    {
+        $product = new Product();
+
+        $data = $product->getRelationsData(1);
+
+        return view('back.catalog.product.edit', compact('data'));
     }
 
 
@@ -115,6 +127,19 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $data = $product->getRelationsData();
+
+        return view('back.catalog.product.edit', compact('product', 'data'));
+    }
+
+
+    /**
+     * @param Product $product
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function editCombo(Product $product)
+    {
+        $data = $product->getRelationsData(1);
 
         return view('back.catalog.product.edit', compact('product', 'data'));
     }

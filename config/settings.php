@@ -119,6 +119,23 @@ return [
     'loyalty' => [
         'product_review' => 1,
         'google_review' => 5,
+    ],
+
+    'combo_product_groups' => [
+        0 => [
+            'group' => 'souce',
+            'title' => [
+                'hr' => 'Umaci',
+                'en' => 'Gravy'
+            ]
+        ],
+        1 => [
+            'group' => 'drinks',
+            'title' => [
+                'hr' => 'Pića',
+                'en' => 'Drinks & Beverages'
+            ]
+        ]
     ]
 
 ];

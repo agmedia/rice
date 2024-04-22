@@ -13,7 +13,9 @@
         <div class="content content-full">
             <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
                 <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">{{ __('back/products.artikli') }}</h1>
-                <a class="btn btn-hero-success my-2" href="{{ route('products.create') }}">
+                <a class="btn btn-hero-info my-2 mr-3" href="{{ route('products.create.combo') }}">
+                    <i class="far fa-fw fa-plus-square"></i><span class="d-none d-sm-inline ml-1"> {{ __('back/products.novi_artikl') }}</span>
+                </a><a class="btn btn-hero-success my-2" href="{{ route('products.create') }}">
                     <i class="far fa-fw fa-plus-square"></i><span class="d-none d-sm-inline ml-1"> {{ __('back/products.novi_artikl') }}</span>
                 </a>
             </div>
@@ -162,7 +164,7 @@
                                     <a class="btn btn-sm btn-alt-secondary" target="_blank" href="{{ url($product->translation->url) }}">
                                         <i class="fa fa-fw fa-eye"></i>
                                     </a>
-                                    <a class="btn btn-sm btn-alt-secondary" href="{{ route('products.edit', ['product' => $product]) }}">
+                                    <a class="btn btn-sm btn-alt-secondary" href="{{ $product->combo ? route('products.edit.combo', ['product' => $product]) : route('products.edit', ['product' => $product]) }}">
                                         <i class="fa fa-fw fa-pencil-alt"></i>
                                     </a>
                                     <button class="btn btn-sm btn-alt-danger" onclick="event.preventDefault(); deleteItem({{ $product->id }}, '{{ route('products.destroy.api') }}');"><i class="fa fa-fw fa-trash-alt"></i></button>

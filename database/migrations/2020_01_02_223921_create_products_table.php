@@ -28,6 +28,7 @@ class CreateProductsTable extends Migration
             $table->timestamp('special_from')->nullable();
             $table->timestamp('special_to')->nullable();
             $table->string('related_products')->nullable();
+            $table->boolean('combo')->default(false);
             $table->boolean('vegan')->default(false);
             $table->boolean('vegetarian')->default(false);
             $table->boolean('glutenfree')->default(false);
@@ -56,6 +57,20 @@ class CreateProductsTable extends Migration
             $table->foreign('product_id')
                 ->references('id')->on('products')
                 ->onDelete('cascade');
+        });
+
+        Schema::create('product_combo', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('product_id')->index();
+            $table->string('group'); // referenca... souce, drink, pasta, other...
+            $table->text('products'); // [ "sku1", "sku2", "sku3", ... ] koje može odabrati unutar grupe
+            $table->text('data'); // { hr: "Neki naslov grupe", en: "Some group title", {...} }... title, description, min, max...
+            $table->integer('sort_order')->unsigned();
+            $table->boolean('status')->default(true);
+            $table->timestamps();
+
+            $table->foreign('product_id')
+                  ->references('id')->on('products');
         });
 
         Schema::create('product_images', function (Blueprint $table) {

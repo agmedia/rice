@@ -134,6 +134,15 @@ class Product extends Model
     /**
      * @return Relation
      */
+    public function combo()
+    {
+        return $this->hasMany(ProductCombo::class, 'product_id')->orderBy('sort_order');
+    }
+
+
+    /**
+     * @return Relation
+     */
     public function all_actions()
     {
         return $this->hasOne(ProductAction::class, 'product_id');
@@ -239,13 +248,14 @@ class Product extends Model
     /**
      * @return array
      */
-    public function getRelationsData(): array
+    public function getRelationsData(int $combo = 0): array
     {
         return [
-            'categories'     => (new Category())->getList(false),
-            'brands' => '',
-            'images'         => ProductImage::getExistingImages($this),
-            'taxes'          => Settings::get('tax', 'list')
+            'categories' => (new Category())->getList(false),
+            'brands'     => '',
+            'images'     => ProductImage::getExistingImages($this),
+            'taxes'      => Settings::get('tax', 'list'),
+            'combo'      => $combo
         ];
     }
 

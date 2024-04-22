@@ -93,6 +93,9 @@ Route::group(
             Route::get('product/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
             Route::patch('product/{product}', [ProductController::class, 'update'])->name('products.update');
             Route::delete('product/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+            //
+            Route::get('product/create/combo', [ProductController::class, 'createCombo'])->name('products.create.combo');
+            Route::get('product/{product}/edit/combo', [ProductController::class, 'editCombo'])->name('products.edit.combo');
 
             // IZDAVAČI
             Route::get('publishers', [PublisherController::class, 'index'])->name('publishers');
