@@ -2102,7 +2102,7 @@ __webpack_require__.r(__webpack_exports__);
         this.addToCart();
       }
     },
-    onChangeProcessed: function onChangeProcessed(e, d) {
+    onChangeProcessed: function onChangeProcessed(e) {
       if (e.target.checked == true) {
         this.quantity = this.min_cart;
       }
@@ -3505,7 +3505,7 @@ var render = function render() {
     },
     on: {
       change: function change($event) {
-        return _vm.onChangeProcessed($event, _vm.e);
+        return _vm.onChangeProcessed($event);
       }
     }
   }), _vm._v(" "), _c("label", {
@@ -4619,7 +4619,7 @@ var render = function render() {
       }
     })]) : _vm._e()]), _vm._v(" "), product.quantity <= 0 ? _c("span", {
       staticClass: "badge bg-warning mt-1 ms-1 badge-end"
-    }, [_vm._v(_vm._s(_vm.trans.rasprodano))]) : _vm._e(), _vm._v(" "), product.special ? _c("span", {
+    }, [_vm._v(_vm._s(_vm.trans.rasprodano))]) : _vm._e(), _vm._v(" "), product.special && !product.action.min_cart ? _c("span", {
       staticClass: "badge rounded-pill bg-primary mt-1 ms-1 badge-shadow"
     }, [_vm._v("-" + _vm._s(_vm.$store.state.service.getDiscountAmount(product.price, product.special)) + "%")]) : _vm._e(), _vm._v(" "), _c("a", {
       staticClass: "card-img-top d-block pb-2 overflow-hidden",
@@ -4642,7 +4642,7 @@ var render = function render() {
       attrs: {
         href: _vm.origin + product.url
       }
-    }, [_vm._v(_vm._s(product.name))])]), _vm._v(" "), product.category_string ? _c("div", {
+    }, [_vm._v(_vm._s(product.name) + " ")])]), _vm._v(" "), product.category_string ? _c("div", {
       staticClass: "d-flex flex-wrap justify-content-between align-items-center"
     }, [_c("div", {
       staticClass: "fs-sm me-2"
@@ -4652,11 +4652,11 @@ var render = function render() {
       }
     })])]) : _vm._e(), _vm._v(" "), _c("div", {
       staticClass: "product-price"
-    }, [product.special ? _c("span", {
+    }, [product.special && !product.action.min_cart ? _c("span", {
       staticClass: "fs-sm text-muted"
     }, [_c("small", [_vm._v("NC 30 dana: " + _vm._s(product.main_price_text) + " ")]), _vm._v(" "), product.secondary_price_text ? _c("small", [_vm._v(_vm._s(product.secondary_price_text) + " ")]) : _vm._e()]) : _vm._e()]), _vm._v(" "), _c("div", {
       staticClass: "product-price"
-    }, [product.special ? _c("span", {
+    }, [product.special && !product.action.min_cart ? _c("span", {
       staticClass: "text-red fs-md"
     }, [_vm._v(_vm._s(product.main_special_text) + " "), product.secondary_special_text ? _c("small", [_vm._v(_vm._s(product.secondary_special_text) + " ")]) : _vm._e()]) : _vm._e()]), _vm._v(" "), _c("div", {
       staticClass: "product-price"

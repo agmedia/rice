@@ -318,7 +318,7 @@ class Helper
             $data = unserialize($widget->data);
 
             if (static::isDescriptionTarget($data, 'product')) {
-                $items     = static::products($data)->get();
+                $items     = static::products($data)->with('action')->get();
                 $tablename = 'product';
             }
 

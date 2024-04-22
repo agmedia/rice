@@ -193,6 +193,7 @@ class FilterController extends Controller
 
         if (isset($params['ids']) && $params['ids'] != '') {
             $products = (new Product())->filter($request)
+                                 ->with('action')
                                        ->paginate(config('settings.pagination.front'));
         } else {
             /*$products = Helper::resolveCache('products')->remember($cache_string, config('cache.life'), function () use ($request) {
@@ -202,6 +203,7 @@ class FilterController extends Controller
             });*/
 
             $products = (new Product())->filter($request)
+                                    ->with('action')
                                        ->paginate(config('settings.pagination.front'));
 
             /*foreach ($products as $product) {

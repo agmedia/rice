@@ -9,7 +9,7 @@
 --> </div>
 
         <div class="form-check mb-3" v-if="min_cart > 1">
-            <input class="form-check-input" type="checkbox"  @change="onChangeProcessed($event,e)" id="ex-check-1">
+            <input class="form-check-input" type="checkbox"  @change="onChangeProcessed($event)" id="ex-check-1">
             <label class="form-check-label" for="ex-check-1">{{trans.add_to_cart_combo }}  {{min_cart}}</label>
         </div>
 
@@ -64,7 +64,7 @@ export default {
             }
         },
 
-        onChangeProcessed(e,d) {
+        onChangeProcessed(e) {
             if (e.target.checked == true) {
                 this.quantity = this.min_cart;
 
