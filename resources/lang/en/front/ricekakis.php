@@ -82,5 +82,6 @@ return [
     'imate' => 'You have',
     'artikala_u_kosarici' => 'items in shopping cart',
     'hvala_vam_za_narudzbu' => 'Thank you for your order',
-    'dobili_ste_narudzbu' => 'You have received a new order'
+    'dobili_ste_narudzbu' => 'You have received a new order',
+    'odaberite_proizvod' => 'Select product'
 ];

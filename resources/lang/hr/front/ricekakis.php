@@ -81,7 +81,8 @@ return [
     'imate' => 'Imate',
     'artikala_u_kosarici' => 'artikala u košarici',
     'hvala_vam_za_narudzbu' => 'Hvala vam za narudžbu',
-    'dobili_ste_narudzbu' => 'Dobili ste novu narudžbu'
+    'dobili_ste_narudzbu' => 'Dobili ste novu narudžbu',
+    'odaberite_proizvod' => 'Odaberite proizvod'
 
 
 

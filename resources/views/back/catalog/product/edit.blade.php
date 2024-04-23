@@ -332,14 +332,11 @@
                                         <div class="col-md-12 card-body ">
 
 
-
-
-
                                             <label for="dm-post-edit-title">{{ __('back/products.naziv') }} <span class="text-danger">*</span></label>
                                             <ul class="nav nav-pills float-right">
                                                 @foreach(ag_lang() as $lang)
                                                     <li @if ($lang->code == current_locale()) class="active" @endif>
-                                                        <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif " data-toggle="pill" href="#name-{{ $lang->code }}">
+                                                        <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif " data-toggle="pill" href="#title-{{ $lang->code }}">
                                                             <img src="{{ asset('media/flags/' . $lang->code . '.png') }}" />
                                                         </a>
                                                     </li>
@@ -348,14 +345,9 @@
                                             <div class="tab-content">
                                                 @foreach(ag_lang() as $lang)
 
+                                                    <div id="title-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
 
-
-
-                                                    <div id="name-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-
-
-
-                                                        <input type="text" class="form-control" id="name-input-{{ $lang->code }}" name="name[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ isset($combo) ? $combo->value['title'][$lang->code] : old('title.*') }}" onkeyup="SetSEOPreview()">
+                                                        <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="title[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ isset($combo) ? $combo->value['title'][$lang->code] : old('title.*') }}" onkeyup="SetSEOPreview()">
                                                         @error('name')
                                                         <span class="text-danger font-italic">{{ __('back/products.naziv_je_potreban') }}    </span>
                                                         @enderror
