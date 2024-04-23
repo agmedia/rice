@@ -348,13 +348,16 @@
                                             <div class="tab-content">
                                                 @foreach(ag_lang() as $lang)
 
-                                                    {{ dd($combo->value)}}
+
 
 
                                                     <div id="name-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-                                                        <input type="text" class="form-control" id="name-input-{{ $lang->code }}" name="name[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ isset($product) ? $product->translation($lang->code)->name : old('name.*') }}" onkeyup="SetSEOPreview()">
+
+
+
+                                                        <input type="text" class="form-control" id="name-input-{{ $lang->code }}" name="name[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ isset($combo) ? $combo->value['title'][$lang->code] : old('title.*') }}" onkeyup="SetSEOPreview()">
                                                         @error('name')
-                                                        <span class="text-danger font-italic">{{ __('back/products.naziv_je_potreban') }}</span>
+                                                        <span class="text-danger font-italic">{{ __('back/products.naziv_je_potreban') }}    </span>
                                                         @enderror
                                                     </div>
                                                 @endforeach
@@ -366,10 +369,10 @@
 
 
                                         <div class="col-md-12" id="action-list-view">
-                                            @if (isset($action))
-                                                @livewire('back.marketing.action-group-list', ['group' => $action->group, 'list' => json_decode($action->links)])
+                                            @if (isset($combo))
+                                                @livewire('back.marketing.action-group-list', ['group' => 'product', 'list' => json_decode($combo->products, true)])
                                             @else
-                                                @livewire('back.marketing.action-group-list', ['group' => 'products'])
+                                                @livewire('back.marketing.action-group-list', ['group' => 'product'])
                                             @endif
                                         </div>
 
