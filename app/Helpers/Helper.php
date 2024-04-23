@@ -838,7 +838,7 @@ class Helper
 
         if ($has_condition) {
             $value = $item->price - floatval($item->associatedModel->special);
-            $discount = $dif * $value;
+            $discount = $dif * ($value * $min);
 
             $condition = new CartCondition(array(
                 'name'       => __('front/cart.min_cart_discount_title') . ': ' . $item->sku,
