@@ -234,6 +234,9 @@ class AgCart extends Model
     }
 
 
+    /**
+     * @return int
+     */
     public function hasLoyalty(): int
     {
         $loyalty = Loyalty::hasLoyalty();
@@ -325,6 +328,7 @@ class AgCart extends Model
         $special_condition = Helper::hasSpecialCartCondition($this->cart);
         $coupon_conditions = Helper::hasCouponCartConditions($this->cart, $this->coupon);
         $loyalty_conditions = Helper::hasLoyaltyCartConditions($this->cart, intval($this->loyalty));
+        $min_cart_condition = Helper::hasMinQuantityCartCondition($this->cart);
 
         if ($payment_method) {
             $str = str_replace('+', '', $payment_method->getValue());
@@ -347,6 +351,10 @@ class AgCart extends Model
 
         if ($loyalty_conditions) {
             $this->cart->condition($loyalty_conditions);
+        }
+
+        if ($min_cart_condition) {
+            $this->cart->condition($min_cart_condition);
         }
 
         // Style response array

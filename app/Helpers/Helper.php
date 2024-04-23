@@ -820,6 +820,42 @@ class Helper
     }
 
 
+    public static function hasMinQuantityCartCondition($cart = null)
+    {
+        $condition     = false;
+        $has_condition = false;
+
+        foreach ($cart->getContent() as $item) {
+            if (isset($item->associatedModel->action->min_cart) && $item->associatedModel->action->min_cart) {
+                $min = $item->associatedModel->action->min_cart;
+
+                if (($item->quantity / $min) >= 1) {
+                    $has_condition = true;
+                    $dif = intval($item->quantity / $min);
+                }
+            }
+        }
+
+        if ($has_condition) {
+            $value = $item->price - floatval($item->associatedModel->special);
+            $discount = $dif * $value;
+
+            $condition = new CartCondition(array(
+                'name'       => __('front/cart.min_cart_discount_title') . ': ' . $item->sku,
+                'type'       => 'special',
+                'target'     => 'total', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+                'value'      => '-' . $discount,
+                'attributes' => [
+                    'description' => '',
+                    'geo_zone'    => ''
+                ]
+            ));
+        }
+
+        return $condition;
+    }
+
+
     /**
      * @param $cart
      *

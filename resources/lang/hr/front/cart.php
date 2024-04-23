@@ -207,8 +207,9 @@ return [
     'loyalty_200' => '200 = 12€ popust',
     'loyalty_use' => 'Primjeni',
     'loyalty_cancel' => 'Odbaci',
-    'add_to_cart_combo' => 'Multipakiranje x '
+    'add_to_cart_combo' => 'Multipakiranje x ',
 
+    'min_cart_discount_title' => 'Količinsski popust'
 
 
 

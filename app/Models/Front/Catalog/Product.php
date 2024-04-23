@@ -322,6 +322,11 @@ class Product extends Model
     public function special()
     {
         $action = $this->action;
+
+        if ($action && $action->min_cart) {
+            return $this->price;
+        }
+
         $coupon_session_key = config('session.cart') . '_coupon';
         $coupon_ok = false;
 
