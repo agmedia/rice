@@ -841,7 +841,7 @@ class Helper
             $discount = $dif * ($value * $min);
 
             $condition = new CartCondition(array(
-                'name'       => __('front/cart.min_cart_discount_title') . ': ' . $item->sku,
+                'name'       => __('front/cart.min_cart_discount_title') . ': ' . $item->name,
                 'type'       => 'special',
                 'target'     => 'total', // this condition will be applied to cart's subtotal when getSubTotal() is called.
                 'value'      => '-' . $discount,
