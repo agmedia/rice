@@ -200,7 +200,7 @@
                     <div class="accordion-item">
                         <h3 class="accordion-header"><a class="accordion-button" href="#id1" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="productInfo">{{ __('front/ricekakis.odaberite_proizvod') }}</a></h3>
                         <div class="accordion-collapse collapse show" id="id1" data-bs-parent="#productPanels">
-                            <div class="accordion-body">
+                            <div class="accordion-body fs-sm">
 
                                 <ul class="list-group">
 

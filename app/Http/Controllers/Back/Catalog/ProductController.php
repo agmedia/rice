@@ -141,7 +141,7 @@ class ProductController extends Controller
     {
         $data = $product->getRelationsData(1);
 
-        dd($product->combos->first()->value);
+      //  dd($product->combos->first()->value);
 
         return view('back.catalog.product.edit', compact('product', 'data'));
     }
