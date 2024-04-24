@@ -36,7 +36,11 @@
                     <tr>
                         <td class="font-size-sm">
                             {{ isset($item['translation']['title']) ? $item['translation']['title'] : (isset($item['translation']['name']) ? $item['translation']['name'] : '') }} {{ isset($item['sku']) ? ' - ' . $item['sku'] : '' }}
-                            <input type="hidden" name="action_list[{{ isset($item['id']) ? $item['id'] : '' }}]" value="{{ isset($item['id']) ? $item['id'] : '' }}">
+                            @if ( ! $count)
+                                <input type="hidden" name="action_list[{{ isset($item['id']) ? $item['id'] : '' }}]" value="{{ isset($item['id']) ? $item['id'] : '' }}">
+                            @else
+                                <input type="hidden" name="action_list[{{ $count }}][{{ isset($item['id']) ? $item['id'] : '' }}]" value="{{ isset($item['id']) ? $item['id'] : '' }}">
+                            @endif
                         </td>
                         <td class="text-right font-size-sm">
                             <a class="btn btn-sm btn-alt-secondary" href="javascript:void(0)" wire:click="removeItem({{ isset($item['id']) ? $item['id'] : '' }})">

@@ -48,12 +48,15 @@ class ActionGroupList extends Component
      */
     public $list = [];
 
+    public $count = 0;
+
 
     /**
      * @return void
      */
     public function mount()
     {
+
         if ( ! empty($this->list)) {
             $ids = $this->list;
             $this->list = [];

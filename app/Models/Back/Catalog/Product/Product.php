@@ -213,7 +213,8 @@ class Product extends Model
         $id = $this->insertGetId($this->createModelArray());
 
         if ($id) {
-            $this->resolveCategories($id);
+            $this->resolveCategories($id)
+                 ->resolveCombo($id);
             ProductTranslation::create($id, $this->request);
 
             return $this->find($id);
@@ -235,7 +236,8 @@ class Product extends Model
         $updated = $this->update($this->createModelArray('update'));
 
         if ($updated) {
-            $this->resolveCategories($this->id);
+            $this->resolveCategories($this->id)
+                 ->resolveCombo($this->id);
             ProductTranslation::edit($this->id, $this->request);
 
             return $this;
@@ -397,6 +399,7 @@ class Product extends Model
             'vegan'        => (isset($this->request->vegan) and $this->request->vegan == 'on') ? 1 : 0,
             'vegetarian'   => (isset($this->request->vegetarian) and $this->request->vegetarian == 'on') ? 1 : 0,
             'glutenfree'   => (isset($this->request->glutenfree) and $this->request->glutenfree == 'on') ? 1 : 0,
+            'combo'        => $this->request->combo ?? 0,
             'sort_order'   => 0,
             'push'         => 0,
             'status'       => (isset($this->request->status) and $this->request->status == 'on') ? 1 : 0,
@@ -435,17 +438,30 @@ class Product extends Model
     /**
      * @param int $product_id
      *
-     * @return bool
+     * @return $this
      */
-    private function resolveCategories(int $product_id): bool
+    private function resolveCategories(int $product_id): Product
     {
         if ( ! empty($this->request->category) && is_array($this->request->category)) {
             ProductCategory::storeData($this->request->category, $product_id);
-
-            return true;
         }
 
-        return false;
+        return $this;
+    }
+
+
+    /**
+     * @param int $product_id
+     *
+     * @return Product
+     */
+    private function resolveCombo(int $product_id): Product
+    {
+        if ($this->request->has('combo_title')) {
+            ProductCombo::storeData($product_id, $this->request);
+        }
+
+        return $this;
     }
 
 

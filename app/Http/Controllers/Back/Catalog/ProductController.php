@@ -110,7 +110,9 @@ class ProductController extends Controller
         if ($stored) {
             $product->storeImages($stored);
 
-            return redirect()->route('products.edit', ['product' => $stored])->with(['success' => 'Artikl je uspješno snimljen!']);
+            $route = $product->combo ? 'products.edit.combo' : 'products.edit';
+
+            return redirect()->route($route, ['product' => $stored])->with(['success' => 'Artikl je uspješno snimljen!']);
         }
 
         return redirect()->back()->with(['error' => 'Ops..! Greška prilikom snimanja.']);
@@ -163,9 +165,9 @@ class ProductController extends Controller
         if ($updated) {
             $product->storeImages($updated);
 
-            //$product->addHistoryData('change');
+            $route = $product->combo ? 'products.edit.combo' : 'products.edit';
 
-            return redirect()->route('products.edit', ['product' => $updated])->with(['success' => 'Artikl je uspješno snimljen!']);
+            return redirect()->route($route, ['product' => $updated])->with(['success' => 'Artikl je uspješno snimljen!']);
         }
 
         return redirect()->back()->with(['error' => 'Ops..! Greška prilikom snimanja.']);
