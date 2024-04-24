@@ -325,73 +325,107 @@
                                 <div class="block-header block-header-default">
                                     <h3 class="block-title">Product combo</h3>
                                 </div>
-                                @foreach($product->combos as $key => $combo)
-                                    <div class="block-content card mb-3 mt-3">
-                                        <div class="row justify-content-center">
-                                            <div class="col-md-12 card-body">
-                                                <label for="dm-post-edit-title">{{ __('back/products.naziv') }} <span class="text-danger">*</span></label>
-                                                <ul class="nav nav-pills float-right">
-                                                    @foreach(ag_lang() as $lang)
-                                                        <li @if ($lang->code == current_locale()) class="active" @endif>
-                                                            <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif" data-toggle="pill" href="#title-{{ $lang->code }}-{{ $key+1 }}">
-                                                                <img src="{{ asset('media/flags/' . $lang->code . '.png') }}" />
-                                                            </a>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                                <div class="tab-content">
-                                                    @foreach(ag_lang() as $lang)
-                                                        <div id="title-{{ $lang->code }}-{{ $key+1 }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-                                                            <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="combo_title[{{ $key+1 }}][{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ isset($combo->value['title'][$lang->code]) ? $combo->value['title'][$lang->code] : old('title.*') }}">
-                                                            @error('name')
-                                                            <span class="text-danger font-italic">{{ __('back/products.naziv_je_potreban') }}</span>
-                                                            @enderror
-                                                        </div>
-                                                    @endforeach
+                                @if (isset($product))
+                                    @foreach($product->combos as $key => $combo)
+                                        <div class="block-content card mb-3 mt-3">
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-12 card-body">
+                                                    <label for="dm-post-edit-title">{{ __('back/products.naziv') }} <span class="text-danger">*</span></label>
+                                                    <ul class="nav nav-pills float-right">
+                                                        @foreach(ag_lang() as $lang)
+                                                            <li @if ($lang->code == current_locale()) class="active" @endif>
+                                                                <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif" data-toggle="pill" href="#title-{{ $lang->code }}-{{ $key+1 }}">
+                                                                    <img src="{{ asset('media/flags/' . $lang->code . '.png') }}" />
+                                                                </a>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        @foreach(ag_lang() as $lang)
+                                                            <div id="title-{{ $lang->code }}-{{ $key+1 }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
+                                                                <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="combo_title[{{ $key+1 }}][{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ isset($combo->value['title'][$lang->code]) ? $combo->value['title'][$lang->code] : old('title.*') }}">
+                                                                @error('name')
+                                                                <span class="text-danger font-italic">{{ __('back/products.naziv_je_potreban') }}</span>
+                                                                @enderror
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    @if (isset($combo->products) && ! empty($combo->products))
+                                                        @livewire('back.marketing.action-group-list', ['group' => 'product', 'count' => $key+1, 'list' => json_decode($combo->products, true)])
+                                                    @else
+                                                        @livewire('back.marketing.action-group-list', ['group' => 'product', 'count' => $key+1])
+                                                    @endif
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
-                                                @if (isset($combo->products) && ! empty($combo->products))
-                                                    @livewire('back.marketing.action-group-list', ['group' => 'product', 'count' => $key+1, 'list' => json_decode($combo->products, true)])
-                                                @else
-                                                    @livewire('back.marketing.action-group-list', ['group' => 'product', 'count' => $key+1])
-                                                @endif
-                                            </div>
                                         </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
 
-                                @for ($i = 0; $i < (5 - $product->combos->count()); $i++)
-                                    <div class="block-content card mb-3 mt-3">
-                                        <div class="row justify-content-center">
-                                            <div class="col-md-12 card-body">
-                                                <label for="dm-post-edit-title">{{ __('back/products.naziv') }} <span class="text-danger">*</span></label>
-                                                <ul class="nav nav-pills float-right">
-                                                    @foreach(ag_lang() as $lang)
-                                                        <li @if ($lang->code == current_locale()) class="active" @endif>
-                                                            <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif" data-toggle="pill" href="#title-{{ $lang->code }}-{{ $i+$product->combos->count()+1 }}">
-                                                                <img src="{{ asset('media/flags/' . $lang->code . '.png') }}" />
-                                                            </a>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                                <div class="tab-content">
-                                                    @foreach(ag_lang() as $lang)
-                                                        <div id="title-{{ $lang->code }}-{{ $i+$product->combos->count()+1 }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-                                                            <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="combo_title[{{ $i+$product->combos->count()+1 }}][{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="">
-                                                            @error('name')
-                                                            <span class="text-danger font-italic">{{ __('back/products.naziv_je_potreban') }}</span>
-                                                            @enderror
-                                                        </div>
-                                                    @endforeach
+                                    @for ($i = 0; $i < (5 - $product->combos->count()); $i++)
+                                        <div class="block-content card mb-3 mt-3">
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-12 card-body">
+                                                    <label for="dm-post-edit-title">{{ __('back/products.naziv') }} <span class="text-danger">*</span></label>
+                                                    <ul class="nav nav-pills float-right">
+                                                        @foreach(ag_lang() as $lang)
+                                                            <li @if ($lang->code == current_locale()) class="active" @endif>
+                                                                <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif" data-toggle="pill" href="#title-{{ $lang->code }}-{{ $i+$product->combos->count()+1 }}">
+                                                                    <img src="{{ asset('media/flags/' . $lang->code . '.png') }}" />
+                                                                </a>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        @foreach(ag_lang() as $lang)
+                                                            <div id="title-{{ $lang->code }}-{{ $i+$product->combos->count()+1 }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
+                                                                <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="combo_title[{{ $i+$product->combos->count()+1 }}][{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="">
+                                                                @error('name')
+                                                                <span class="text-danger font-italic">{{ __('back/products.naziv_je_potreban') }}</span>
+                                                                @enderror
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    @livewire('back.marketing.action-group-list', ['group' => 'product', 'count' => $i+$product->combos->count()+1])
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
-                                                @livewire('back.marketing.action-group-list', ['group' => 'product', 'count' => $i+$product->combos->count()+1])
+                                        </div>
+                                    @endfor
+                                @else
+                                    @for ($i = 0; $i < 6; $i++)
+                                        <div class="block-content card mb-3 mt-3">
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-12 card-body">
+                                                    <label for="dm-post-edit-title">{{ __('back/products.naziv') }} <span class="text-danger">*</span></label>
+                                                    <ul class="nav nav-pills float-right">
+                                                        @foreach(ag_lang() as $lang)
+                                                            <li @if ($lang->code == current_locale()) class="active" @endif>
+                                                                <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif" data-toggle="pill" href="#title-{{ $lang->code }}-{{ $i+1 }}">
+                                                                    <img src="{{ asset('media/flags/' . $lang->code . '.png') }}" />
+                                                                </a>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        @foreach(ag_lang() as $lang)
+                                                            <div id="title-{{ $lang->code }}-{{ $i+1 }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
+                                                                <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="combo_title[{{ $i+1 }}][{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="">
+                                                                @error('name')
+                                                                <span class="text-danger font-italic">{{ __('back/products.naziv_je_potreban') }}</span>
+                                                                @enderror
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    @livewire('back.marketing.action-group-list', ['group' => 'product', 'count' => $i+1])
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endfor
+                                    @endfor
+                                @endif
                             </div>
                         </div>
                     @endif
