@@ -2069,7 +2069,8 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     id: String,
     available: String,
-    min_cart: String
+    min_cart: String,
+    fullprice: String
   },
   data: function data() {
     return {
@@ -3511,7 +3512,7 @@ var render = function render() {
     attrs: {
       "for": "ex-check-1"
     }
-  }, [_vm._v(_vm._s(_vm.trans.add_to_cart_combo) + "  " + _vm._s(Math.floor(this.min_cart)))])]) : _vm._e()]);
+  }, [_vm._v(_vm._s(_vm.trans.add_to_cart_combo) + "  " + _vm._s(Math.floor(this.min_cart)) + " =  " + _vm._s(_vm.fullprice) + " ")])]) : _vm._e()]);
 };
 var staticRenderFns = [];
 render._withStripped = true;

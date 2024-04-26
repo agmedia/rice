@@ -186,8 +186,19 @@
                     </div>
                 @endif
 
+                    @if (isset($prod->action->min_cart))
+
+
+                        @php
+                            $fullprice = ($prod->main_price - $prod->action->discount ) * $prod->action->min_cart;
+                            $fullprice = number_format($fullprice, 2, '.', '') . '€';
+                        @endphp
+
+
+                    @endif
+
                 @if ( $prod->quantity > 0)
-                    <add-to-cart-btn id="{{ $prod->id }}" available="{{ $prod->quantity }}" @if (isset($prod->action->min_cart)) min_cart="{{ $prod->action->min_cart }}" @else min_cart="1"  @endif></add-to-cart-btn>
+                    <add-to-cart-btn id="{{ $prod->id }}" available="{{ $prod->quantity }}" @if (isset($prod->action->min_cart)) fullprice="{{ $fullprice }}" min_cart="{{ $prod->action->min_cart }}" @else min_cart="1"  @endif></add-to-cart-btn>
                 @endif
 
                 @if ( $prod->combo)

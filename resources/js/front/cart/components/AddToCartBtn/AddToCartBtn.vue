@@ -10,7 +10,7 @@
 
         <div class="form-check mb-3" v-if="min_cart > 1">
             <input class="form-check-input" type="checkbox"  @change="onChangeProcessed($event)" id="ex-check-1">
-            <label class="form-check-label" for="ex-check-1">{{ trans.add_to_cart_combo }}  {{ Math.floor(this.min_cart) }}</label>
+            <label class="form-check-label" for="ex-check-1">{{ trans.add_to_cart_combo }}  {{ Math.floor(this.min_cart) }} =  {{ fullprice }} </label>
         </div>
 
     </div>
@@ -21,7 +21,8 @@ export default {
     props: {
         id: String,
         available: String,
-        min_cart:String
+        min_cart:String,
+      fullprice:String
     },
 
     data() {
