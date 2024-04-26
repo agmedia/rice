@@ -191,6 +191,12 @@
                 @endif
 
                 @if ( $prod->combo)
+
+                        <div class="mb-1">
+
+                                <span class=" fw-normal  me-1">{{ __('front/ricekakis.combo') }}</span>
+
+                        </div>
                     <div class="accordion mb-4" id="productComboPanels">
                         @foreach ($prod->combo_set as $combo_id => $combo)
                             <div class="accordion-item">
