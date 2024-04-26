@@ -203,6 +203,7 @@ return [
     'loyalty_200' => '200 = 12 € discount',
     'loyalty_use' => 'Apply',
     'loyalty_cancel' => 'Cancel',
+    'add_to_cart_combo' => 'Multipack x ',
     'min_cart_discount_title' => 'Quantity discount'
 
 
