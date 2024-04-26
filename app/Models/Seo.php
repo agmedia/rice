@@ -24,7 +24,7 @@ class Seo
     public static function getProductData(Product $product): array
     {
         return [
-            'title'       => rtrim($product->name) . ' - ' . (isset($product->author->title) ? $product->author->title : ''),
+            'title'       => rtrim($product->name) ,
             'description' => rtrim($product->name) . ' - ' . (isset($product->meta_description) ? $product->meta_description : '')
         ];
     }
