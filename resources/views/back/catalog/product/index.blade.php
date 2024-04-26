@@ -14,7 +14,7 @@
             <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
                 <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">{{ __('back/products.artikli') }}</h1>
                 <a class="btn btn-hero-info my-2 mr-3" href="{{ route('products.create.combo') }}">
-                    <i class="far fa-fw fa-plus-square"></i><span class="d-none d-sm-inline ml-1"> {{ __('back/products.novi_artikl') }}</span>
+                    <i class="far fa-fw fa-plus-square"></i><span class="d-none d-sm-inline ml-1"> {{ __('back/products.novi_combo_artikl') }}</span>
                 </a><a class="btn btn-hero-success my-2" href="{{ route('products.create') }}">
                     <i class="far fa-fw fa-plus-square"></i><span class="d-none d-sm-inline ml-1"> {{ __('back/products.novi_artikl') }}</span>
                 </a>

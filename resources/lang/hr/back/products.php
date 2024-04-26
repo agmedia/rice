@@ -15,6 +15,7 @@ return [
 
     'artikli' => 'Artikli',
     'novi_artikl' => 'Novi artikl',
+    'novi_combo_artikl' => 'New combo',
     'svi_artikli' => 'Svi artikli',
     'ocisti_filtere' => 'Očisti filtere',
     'upisi_pojam_pretrazivanja' => 'Upiši pojam pretraživanja',

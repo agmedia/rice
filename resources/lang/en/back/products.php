@@ -15,6 +15,7 @@ return [
 
     'artikli' => 'Products',
     'novi_artikl' => 'New product',
+    'novi_combo_artikl' => 'New combo',
     'svi_artikli' => 'All products',
     'ocisti_filtere' => 'Clear filters',
     'upisi_pojam_pretrazivanja' => 'Enter search term',
