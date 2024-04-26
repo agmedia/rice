@@ -201,10 +201,10 @@
                                             @foreach ($combo['products'] as $product)
                                                 <label class="list-group-item d-flex align-items-center">
                                                     <div class="flex-shrink-0">
-                                                        <img src="{{ asset($product->image) }}" width="50px" class="img-reponsive img-rounded" />
+                                                        <img src="{{ $product['image'] }}" width="50px" class="img-reponsive img-rounded" />
                                                     </div>
                                                     <div class="flex-grow-1 ms-3">
-                                                        <input class="form-check-input me-2" type="radio" name="lg-radio{{ $combo_id }}" onclick="setComboSession({{ $prod->id }}, {{ $combo_id }}, {{ $product->id }})" value="combo_selected[{{ $combo_id }}][{{ $product->id }}]"> {{ $product->name }}
+                                                        <input class="form-check-input me-2" type="radio" name="lg-radio{{ $combo_id }}" onclick="setComboSession({{ $prod->id }}, {{ $combo_id }}, {{ $product['id'] }})" value="combo_selected[{{ $combo_id }}][{{ $product['id'] }}]" @if($product['selected']) checked @endif> {{ $product['name'] }}
                                                     </div>
                                                 </label>
                                             @endforeach

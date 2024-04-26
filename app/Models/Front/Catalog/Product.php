@@ -137,10 +137,35 @@ class Product extends Model
             $response = [];
 
             foreach ($this->combos()->get() as $combo) {
+                $preset_session = null;
+                $prod_response = [];
+                $session = session('combo.' . $this->id);
+                $products = Product::query()->whereIn('id', json_decode($combo->products, true))->available()->active()->get();
+
+                foreach ($products as $key => $product) {
+                    $selected = false;
+
+                    if ( ! isset($session[$combo->id]) && ! $key) {
+                        $selected = true;
+                        // napravi session
+                        $preset_session[$combo->id] = $product->id;
+                    }
+                    if (isset($session[$combo->id]) && ($session[$combo->id] == $product->id)) {
+                        $selected = true;
+                    }
+
+                    $prod_response[] = [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'image' => asset($product->image),
+                        'selected' => $selected
+                    ];
+                }
+
                 $response[$combo->id] = [
                     'group' => $combo->group,
                     'title' => $combo->value['title'][current_locale()],
-                    'products' => Product::query()->whereIn('id', json_decode($combo->products, true))->available()->active()->get()
+                    'products' => $prod_response
                 ];
             }
 
@@ -760,6 +785,12 @@ class Product extends Model
         }
 
         return $query;
+    }
+
+
+    public function resolveComboSession()
+    {
+        $session_key = 'combo.' . $this->id;
     }
 
 
