@@ -204,7 +204,7 @@
                                                         <img src="{{ asset($product->image) }}" width="50px" class="img-reponsive img-rounded" />
                                                     </div>
                                                     <div class="flex-grow-1 ms-3">
-                                                        <input class="form-check-input me-2" type="radio" name="lg-radio{{ $combo_id }}" onclick="setComboSession({{ $prod->id }}, {{ $combo_id }}, {{ $product->id }})" value="combo_selected[{{ $combo_id }}][{{ $product->id }}]" required> {{ $product->name }}
+                                                        <input class="form-check-input me-2" type="radio" name="lg-radio{{ $combo_id }}" onclick="setComboSession({{ $prod->id }}, {{ $combo_id }}, {{ $product->id }})" value="combo_selected[{{ $combo_id }}][{{ $product->id }}]"> {{ $product->name }}
                                                     </div>
                                                 </label>
                                             @endforeach
