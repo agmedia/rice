@@ -65,6 +65,14 @@ class CreateOrdersTable extends Migration
             $table->timestamps();
         });
 
+        Schema::create('order_products_combo', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->bigInteger('order_id')->unsigned();
+            $table->bigInteger('product_id')->unsigned();
+            $table->text('selected'); // { id:109, qty: "Some group title", {...} }... id, qty...
+            $table->timestamps();
+        });
+
 
         Schema::create('order_total', function (Blueprint $table) {
             $table->bigIncrements('id');

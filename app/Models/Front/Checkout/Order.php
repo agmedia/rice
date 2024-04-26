@@ -5,6 +5,7 @@ namespace App\Models\Front\Checkout;
 use App\Helpers\Helper;
 use App\Models\Back\Orders\OrderHistory;
 use App\Models\Back\Orders\OrderProduct;
+use App\Models\Back\Orders\OrderProductCombo;
 use App\Models\Back\Orders\OrderTotal;
 use App\Models\Back\Settings\Settings;
 use App\Models\Front\Catalog\Product;
@@ -243,6 +244,10 @@ class Order extends Model
 
         // PRODUCTS
         foreach ($this->order['cart']['items'] as $item) {
+            if ($item->associatedModel->combo) {
+                OrderProductCombo::storeData($order_id, $item->id);
+            }
+
             $discount = 0;
             $price    = $item->price;
 
@@ -250,8 +255,6 @@ class Order extends Model
                 $price    = $item->associatedModel->special;
                 $discount = Helper::calculateDiscount($item->price, $price);
             }
-
-            //Log::info(print_r($item, true));
 
             OrderProduct::insert([
                 'order_id'   => $order_id,

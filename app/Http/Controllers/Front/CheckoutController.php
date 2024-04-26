@@ -30,6 +30,11 @@ class CheckoutController extends FrontBaseController
      */
     public function cart(Request $request)
     {
+        if ($this->comboSessionProblem()) {
+            Log::info('Tu sam 3.1');
+            return redirect($this->getComboUrl())->with(['error' => 'Molimo odaberite combo proizvod.']);
+        }
+
         $gdl = TagManager::getGoogleCartDataLayer($this->shoppingCart()->get());
 
         return view('front.checkout.cart', compact('gdl'));
@@ -63,6 +68,10 @@ class CheckoutController extends FrontBaseController
      */
     public function view(Request $request)
     {
+        if ($this->comboSessionProblem()) {
+            return redirect($this->getComboUrl())->with(['error' => 'Molimo odaberite combo proizvod.']);
+        }
+
         $data = $this->checkSession();
 
         if (empty($data)) {
@@ -292,7 +301,53 @@ class CheckoutController extends FrontBaseController
         return new AgCart(config('session.cart'));
     }
 
-    private function forgetCheckoutCache()
+
+    /**
+     * @return bool
+     */
+    private function comboSessionProblem(): bool
+    {
+        $combo_session_problem = false;
+        $items = $this->shoppingCart()->getCartItems();
+
+        foreach ($items as $item) {
+            if ($item->associatedModel->combo && session()->has('combo.' . $item->id)) {
+                $key = 'combo.' . $item->id;
+                $session = session($key);
+
+                foreach ($item->associatedModel->combo_set as $combo_id => $combo_item) {
+                    if ( ! isset($session[$combo_id])) {
+                        $combo_session_problem = true;
+                    }
+                }
+            }
+        }
+
+        return $combo_session_problem;
+    }
+
+
+    /**
+     * @return string
+     */
+    private function getComboUrl(): string
+    {
+        $items = $this->shoppingCart()->getCartItems();
+
+        foreach ($items as $item) {
+            if ($item->associatedModel->combo) {
+                return $item->associatedModel->url ?? '';
+            }
+        }
+
+        return route('index');
+    }
+
+
+    /**
+     * @return void
+     */
+    private function forgetCheckoutCache(): void
     {
         CheckoutSession::forgetOrder();
         CheckoutSession::forgetStep();

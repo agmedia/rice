@@ -39,6 +39,23 @@ class OrderProduct extends Model
     }
 
 
+    public function combo()
+    {
+        $response = [];
+        $combo = OrderProductCombo::query()->where('order_id', $this->order_id)->where('product_id', $this->product_id)->first();
+
+        if ($combo) {
+            foreach ($combo->selected as $item) {
+                $response[] = Product::query()->find($item['selected_product']);
+            }
+
+            return $response;
+        }
+
+        return null;
+    }
+
+
     /**
      * @param $query
      *

@@ -77,7 +77,12 @@ class CatalogRouteController extends FrontBaseController
             $reviews = $prod->reviews()->get();
             $related = Helper::getRelated($cat, $subcat);
 
-            return view('front.catalog.product.index', compact('prod', 'group', 'cat', 'subcat', 'related', 'seo', 'shipping_methods' , 'payment_methods', 'crumbs', 'bookscheme', 'gdl', 'reviews'));
+            $combo_session = null;
+            if ($prod->combo) {
+                $combo_session = session('combo.' . $prod->id);
+            }
+
+            return view('front.catalog.product.index', compact('prod', 'group', 'cat', 'subcat', 'related', 'seo', 'shipping_methods' , 'payment_methods', 'crumbs', 'bookscheme', 'gdl', 'reviews', 'combo_session'));
         }
 
         $list = [];

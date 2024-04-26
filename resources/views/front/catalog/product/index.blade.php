@@ -164,11 +164,9 @@
                     @if ($prod->main_price > $prod->main_special and !$prod->action->min_cart)
                         <span class="h3 fw-normal text-accent me-1">{{ $prod->main_special_text }}</span>
                         <span class="text-muted fs-lg me-3">*{{ $prod->main_price_text }}</span>
-
                     @else
                         <span class="h3 fw-normal text-accent me-1">{{ $prod->main_price_text }}</span>
                     @endif
-
                 </div>
 
                 @if($prod->secondary_price_text)
@@ -181,253 +179,43 @@
                         @endif
                     </div>
                 @endif
-                @if ($prod->main_price > $prod->main_special and !$prod->action->min_cart)
 
+                @if ($prod->main_price > $prod->main_special and !$prod->action->min_cart)
                     <div class="mb-3 mt-1 text-start">
                         <span class=" fs-sm text-muted me-1">  {{ __('front/ricekakis.lowest_price') }}</span>
                     </div>
-
                 @endif
-
 
                 @if ( $prod->quantity > 0)
                     <add-to-cart-btn id="{{ $prod->id }}" available="{{ $prod->quantity }}" @if (isset($prod->action->min_cart)) min_cart="{{ $prod->action->min_cart }}" @else min_cart="1"  @endif></add-to-cart-btn>
                 @endif
+
                 @if ( $prod->combo)
-
-
-                    <div class="accordion mb-4" id="productPanels">
-                        <div class="accordion-item">
-                            <h3 class="accordion-header"><a class="accordion-button" href="#id1" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="productInfo">{{ __('front/ricekakis.odaberite_proizvod') }}</a></h3>
-                            <div class="accordion-collapse collapse show" id="id1" data-bs-parent="#productPanels">
-                                <div class="accordion-body fs-sm">
-
-                                    <ul class="list-group">
-
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-
-
-
-                                    </ul>
-
+                    <div class="accordion mb-4" id="productComboPanels">
+                        @foreach ($prod->combo_set as $combo_id => $combo)
+                            <div class="accordion-item">
+                                <h3 class="accordion-header"><a class="accordion-button @if($loop->iteration != 1) collapsed @endif" href="#combo_acc{{ $combo_id }}" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="combo_view{{ $combo_id }}">{{ $combo['title'] }}</a></h3>
+                                <div class="accordion-collapse collapse @if($loop->iteration == 1) show @endif" id="combo_acc{{ $combo_id }}" data-bs-parent="#productComboPanels">
+                                    <div class="accordion-body fs-sm">
+                                        <ul class="list-group">
+                                            @foreach ($combo['products'] as $product)
+                                                <label class="list-group-item d-flex align-items-center">
+                                                    <div class="flex-shrink-0">
+                                                        <img src="{{ asset($product->image) }}" width="50px" class="img-reponsive img-rounded" />
+                                                    </div>
+                                                    <div class="flex-grow-1 ms-3">
+                                                        <input class="form-check-input me-2" type="radio" name="lg-radio{{ $combo_id }}" onclick="setComboSession({{ $prod->id }}, {{ $combo_id }}, {{ $product->id }})" value="combo_selected[{{ $combo_id }}][{{ $product->id }}]"> {{ $product->name }}
+                                                    </div>
+                                                </label>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    <small class="mt-2"></small>
                                 </div>
                             </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h3 class="accordion-header"><a class="accordion-button collapsed" href="#id2" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="shippingOptions">{{ __('front/ricekakis.odaberite_proizvod') }}</a></h3>
-                            <div class="accordion-collapse collapse" id="id2" data-bs-parent="#productPanels">
-                                <div class="accordion-body fs-sm">
-
-                                    <ul class="list-group ">
-
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-
-
-
-                                    </ul>
-
-                                </div>
-                                <small class="mt-2"></small>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h3 class="accordion-header"><a class="accordion-button collapsed" href="#id3" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="shippingOptions">{{ __('front/ricekakis.odaberite_proizvod') }}</a></h3>
-                            <div class="accordion-collapse collapse" id="id3" data-bs-parent="#productPanels">
-                                <div class="accordion-body fs-sm">
-
-                                    <ul class="list-group ">
-
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-
-
-
-                                    </ul>
-
-                                </div>
-                                <small class="mt-2"></small>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h3 class="accordion-header"><a class="accordion-button collapsed" href="#id4" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="shippingOptions">{{ __('front/ricekakis.odaberite_proizvod') }}</a></h3>
-                            <div class="accordion-collapse collapse" id="id4" data-bs-parent="#productPanels">
-                                <div class="accordion-body fs-sm">
-
-                                    <ul class="list-group ">
-
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-
-
-
-                                    </ul>
-
-                                </div>
-                                <small class="mt-2"></small>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h3 class="accordion-header"><a class="accordion-button collapsed" href="#id5" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="shippingOptions">{{ __('front/ricekakis.odaberite_proizvod') }}</a></h3>
-                            <div class="accordion-collapse collapse" id="id5" data-bs-parent="#productPanels">
-                                <div class="accordion-body fs-sm">
-
-                                    <ul class="list-group ">
-
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-                                        <label class="list-group-item d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('media/img/products/1/japan-box-20-8cbz.jpg') }}"  width="50px" class="img-reponsive img-rounded" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <input class="form-check-input me-2" type="radio" name="lg-radio"  value=""> Cras justo odio
-                                            </div>
-                                        </label>
-
-
-
-                                    </ul>
-
-                                </div>
-                                <small class="mt-2"></small>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
-
-
-
-
                 @else
-
-
                     <!-- Product panels-->
                     <div class="accordion mb-4" id="productPanels">
                         <div class="accordion-item">
@@ -508,15 +296,14 @@
                             </div>
                         </div>
                     </div>
-
                 @endif
                 <!-- Sharing-->
                 <!-- ShareThis BEGIN --><div class="sharethis-inline-share-buttons"></div><!-- ShareThis END -->
             </div>
         </div>
     </section>
-    <!-- Related products-->
 
+    <!-- Related products-->
     <section class="mx-n2 pb-4 px-2 mb-xl-3" id="tabs_widget">
         <div class="bg-light px-2 mb-3 shadow-lg rounded-3">
             <!-- Tabs-->
@@ -717,11 +504,6 @@
             </div>
         </div>
     </section>
-    <!-- Product description-->
-
-
-
-
 
     @if (count($related) > 1)
         <section class="pb-5 mb-2 mb-xl-4">
@@ -758,5 +540,20 @@
             $('.nav-tabs a[href="#reviews"]').tab('show');
             document.getElementById("tabs_widget").scrollIntoView();
         });
+    </script>
+    <script>
+        function setComboSession(main_product_id, combo_id, selected_product_id) {
+            let item = {main: main_product_id, combo: combo_id, product: selected_product_id};
+
+            axios.post("{{ route('api.products.set.combo.session') }}", {data: item})
+            .then(response => {
+                console.log(response.data)
+                if (response.data.success) {
+                    return successToast.fire(response.data.success);
+                } else {
+                    return errorToast.fire(response.data.message);
+                }
+            });
+        }
     </script>
 @endpush

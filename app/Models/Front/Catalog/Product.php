@@ -5,6 +5,7 @@ namespace App\Models\Front\Catalog;
 use App\Helpers\Currency;
 use App\Helpers\ProductHelper;
 use App\Models\Back\Catalog\Product\ProductAction;
+use App\Models\Back\Catalog\Product\ProductCombo;
 use App\Models\Back\Marketing\Review;
 use App\Models\Back\Settings\Settings;
 use Carbon\Carbon;
@@ -48,6 +49,7 @@ class Product extends Model
         'secondary_price_text',
         'secondary_special',
         'secondary_special_text',
+        'combo_set'
     ];
 
     /**
@@ -118,10 +120,35 @@ class Product extends Model
     }
 
 
-    /*public function translations()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function combos()
     {
-        return $this->hasMany(ProductTranslation::class, 'product_id');
-    }*/
+        return $this->hasMany(ProductCombo::class, 'product_id')->where('products', '!=', '[]')->orderBy('sort_order');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function getComboSetAttribute()
+    {
+        if ($this->combo) {
+            $response = [];
+
+            foreach ($this->combos()->get() as $combo) {
+                $response[$combo->id] = [
+                    'group' => $combo->group,
+                    'title' => $combo->value['title'][current_locale()],
+                    'products' => Product::query()->whereIn('id', json_decode($combo->products, true))->available()->active()->get()
+                ];
+            }
+
+            return $response;
+        }
+
+        return null;
+    }
 
 
     /**

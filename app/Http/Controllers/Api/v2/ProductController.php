@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v2;
 use App\Helpers\Helper;
 use App\Models\Back\Catalog\Product\Product;
 use App\Models\Back\Catalog\Product\ProductImage;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -122,6 +123,36 @@ class ProductController extends Controller
                     'value_1' => $product['new_value'],
                     'value_2' => isset($new_special) ? $new_special : null
                 ]);
+            }
+        }
+
+        return response()->json(['error' => 300]);
+    }
+
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function setComboProductSession(Request $request): JsonResponse
+    {
+        if ($request->has('data')) {
+            $session = [];
+            $data = $request->input('data');
+
+            if (isset($data['main']) && isset($data['combo']) && isset($data['product'])) {
+                $key = 'combo.' . $data['main'];
+
+                if (session()->has($key)) {
+                    $session = session($key);
+                }
+
+                $session[$data['combo']] = $data['product'];
+
+                session([$key => $session]);
+
+                return response()->json(['success' => 200]);
             }
         }
 
