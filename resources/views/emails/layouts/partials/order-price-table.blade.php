@@ -43,7 +43,15 @@
     </tr>
     @foreach ($order->products as $product)
         <tr>
-            <td>{{ $product->name }} </td>
+            <td>
+                {{ $product->name }}
+                @if ($product->combo())
+                    <br>
+                    @foreach ($product->combo() as $combo_product)
+                        <span class="font-size-sm font-weight-light">{{ $combo_product->translation->name }}</span>
+                    @endforeach
+                @endif
+            </td>
             <td style="text-align: center;">{{ $product->quantity }}</td>
             <td style="text-align: right;">€ {{ number_format($product->price, 2, ',', '.') }}</td>
             <td style="text-align: right;">€ {{ number_format($product->total, 2, ',', '.') }}</td>
