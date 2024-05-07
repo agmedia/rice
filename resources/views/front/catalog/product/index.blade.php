@@ -274,7 +274,11 @@
                                             <div>
 
                                                 <div class="fw-semibold text-dark">{{$shipping_method->title->{ current_locale() } }}</div>
+
+                                                @if ($shipping_method->short_description->{ current_locale() })
                                                 <div class="fs-sm text-muted">{{$shipping_method->short_description->{ current_locale() } }}</div>
+
+                                                @endif
                                                 @if ($prod->shipping_time)
 
                                                     <span class=" fs-sm text-muted me-1"> {{ __('front/ricekakis.rok_dostave') }}: {{ $prod->shipping_time }}</span>
