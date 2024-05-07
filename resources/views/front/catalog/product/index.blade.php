@@ -275,7 +275,7 @@
 
                                                 <div class="fw-semibold text-dark">{{$shipping_method->title->{ current_locale() } }}</div>
 
-                                                <div class="fs-sm text-muted">{{$shipping_method->short_description->{ current_locale() } }}</div>
+
 
 
                                                 @if ($prod->shipping_time)
