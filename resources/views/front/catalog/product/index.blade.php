@@ -274,10 +274,17 @@
                                             <div>
 
                                                 <div class="fw-semibold text-dark">{{$shipping_method->title->{ current_locale() } }}</div>
+                                                <div class="fs-sm text-muted"> {{ __('front/ricekakis.besplatna_dostava') }}
+                                                    @if ($shipping_method->code == 'gls')
+                                                    {{ config('settings.free_shipping_zagreb') }}
 
-
-
-
+                                                        @elseif ($shipping_method->code == 'pickup')
+                                                    0
+                                                        @else
+                                                        {{ config('settings.free_shipping') }}
+                                                    @endif
+                                                    €
+                                                </div>
                                                 @if ($prod->shipping_time)
 
                                                     <span class=" fs-sm text-muted me-1"> {{ __('front/ricekakis.rok_dostave') }}: {{ $prod->shipping_time }}</span>

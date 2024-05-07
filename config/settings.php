@@ -15,6 +15,7 @@ return [
     */
 
     'free_shipping' => 45,
+    'free_shipping_zagreb' => 25,
 
     'pagination' => [
         'front' => 60,
