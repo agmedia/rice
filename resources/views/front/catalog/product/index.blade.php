@@ -276,14 +276,14 @@
                                                 <div class="fw-semibold text-dark">{{$shipping_method->title->{ current_locale() } }}</div>
                                                 <div class="fs-sm text-muted">
                                                     @if ($shipping_method->code == 'gls')
-                                                        {{ __('front/ricekakis.besplatna_dostava') }}  {{ config('settings.free_shipping_zagreb') }}
+                                                        {{ __('front/ricekakis.besplatna_dostava') }}  {{ config('settings.free_shipping_zagreb') }}      €
 
                                                         @elseif ($shipping_method->code == 'pickup')
                                                         {{ $shipping_method->data->short_description->{ current_locale() } }}
                                                     @else
-                                                        {{ __('front/ricekakis.besplatna_dostava') }}    {{ config('settings.free_shipping') }}
+                                                        {{ __('front/ricekakis.besplatna_dostava') }}    {{ config('settings.free_shipping') }}      €
                                                     @endif
-                                                    €
+
                                                 </div>
                                                 @if ($prod->shipping_time)
 
