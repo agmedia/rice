@@ -16,7 +16,7 @@
         </div>
 
 
-        @if ($product->main_price > $product->main_special and !$product->action->min_cart)
+        @if ($product->main_price > $product->main_special and $product->action and !$product->action->min_cart)
             <span class="badge bg-primary badge-shadow">-{{ number_format(floatval(\App\Helpers\Helper::calculateDiscount($product->price, $product->special())), 0) }}%</span>
         @endif
         <a class="card-img-top pb-2 d-block overflow-hidden" href="{{ url($product->url) }}">
