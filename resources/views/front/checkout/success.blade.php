@@ -8,13 +8,13 @@
         <!-- Event snippet for Purchase conversion page -->
         <script>
             gtag('event', 'conversion', {
-                'send_to': 'AW-11343209567/RcwNCISSyOMYEN_I7qAq',
+                'send_to': 'AW-11199697517',
                 'transaction_id': ''
             });
         </script>
 
         @section('google_data_layer')
-            <!-- Event snippet for Purchase conversion page --> <script> gtag('event', 'conversion', { 'send_to': 'AW-11343209567/RcwNCISSyOMYEN_I7qAq', 'transaction_id': '' }); </script>
+            <!-- Event snippet for Purchase conversion page --> <script> gtag('event', 'conversion', { 'send_to': 'AW-11199697517', 'transaction_id': '' }); </script>
             <script>
                 window.dataLayer = window.dataLayer || [];
                 dataLayer.push(<?php echo json_encode($data['google_tag_manager']); ?>);
@@ -33,7 +33,7 @@
                         <p> {{ __('front/cart.sb4') }}</p>
                         <p> {{ __('front/cart.sb5') }}</p>
                         <p>{{ __('front/cart.sb6') }}  {{number_format($data['order']['total'], 2)}} €<br>
-                            {{ __('front/cart.sb7') }}: HR98 2402 0061 1011 2296 1<br>
+                            {{ __('front/cart.sb7') }}: HR9223400091111126783<br>
                             {{ __('front/cart.sb8') }}: {{ $data['order']['id'] }}-{{date('ym')}}</p>
                         <p>{{ __('front/cart.sb9') }}</p>
                         <p><img src="{{ asset('media/img/qr/'.$data['order']['id']) }}.jpg"></p>
