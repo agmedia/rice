@@ -131,7 +131,7 @@
                     <span class="badge bg-warning ">{{ __('front/ricekakis.rasprodano') }}</span>
                 @endif
 
-                @if ($prod->main_price > $prod->main_special and !$prod->action->min_cart )
+                @if ($prod->main_price > $prod->main_special and $prod->action and !$prod->action->min_cart )
                     <span class="badge bg-primary ">-{{ number_format(floatval(\App\Helpers\Helper::calculateDiscount($prod->price, $prod->special())), 0) }}%</span>
                 @endif
 
@@ -161,7 +161,7 @@
                 <h1 class="h3 fs-3 fw-medium">{{ $prod->name }}</h1>
 
                 <div class="mb-1">
-                    @if ($prod->main_price > $prod->main_special and !$prod->action->min_cart)
+                    @if ($prod->main_price > $prod->main_special and $prod->action  and !$prod->action->min_cart)
                         <span class="h3 fw-normal text-accent me-1">{{ $prod->main_special_text }}</span>
                         <span class="text-muted fs-lg me-3">*{{ $prod->main_price_text }}</span>
                     @else
@@ -180,7 +180,7 @@
                     </div>
                 @endif
 
-                @if ($prod->main_price > $prod->main_special and !$prod->action->min_cart)
+                @if ($prod->main_price > $prod->main_special and $prod->action and !$prod->action->min_cart)
                     <div class="mb-3 mt-1 text-start">
                         <span class=" fs-sm text-muted me-1">  {{ __('front/ricekakis.lowest_price') }}</span>
                     </div>

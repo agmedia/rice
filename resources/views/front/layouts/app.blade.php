@@ -28,14 +28,14 @@
 
     @if (config('app.env') == 'production')
 
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-BHVWQJT9T0"></script>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-3KWGQKLWE8"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
 
-            gtag('config', 'G-BHVWQJT9T0');
+            gtag('config', 'G-3KWGQKLWE8');
         </script>
 
 
