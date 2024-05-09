@@ -72,7 +72,7 @@ Route::group(
         Route::get('slugs', [DashboardController::class, 'slugs'])->name('slugs.revision');
         Route::get('statuses', [DashboardController::class, 'statuses'])->name('statuses.cron');
         Route::get('duplicate/{target?}', [DashboardController::class, 'duplicate'])->name('duplicate.revision');
-        Route::get('set/category-group', [DashboardController::class, 'setCategoryGroup'])->name('set.group');
+        Route::get('set/category-group', [DashboardController::class, 'setProductsURL'])->name('set.url');
         Route::get('set/pdv/products', [DashboardController::class, 'setPdvProducts'])->name('set.pdv.products');
         Route::get('set/unlimited-qty', [DashboardController::class, 'setProductsUnlimitedQty'])->name('set.unlimited');
 
@@ -457,4 +457,5 @@ Route::group(
     Route::fallback(function () {
         return view('front.404');
     });
+        //dd('test');
 });

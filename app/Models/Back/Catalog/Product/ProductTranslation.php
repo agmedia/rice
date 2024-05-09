@@ -45,6 +45,7 @@ class ProductTranslation extends Model
                 'meta_title'       => $request->meta_title[$lang->code],
                 'meta_description' => $request->meta_description[$lang->code],
                 'slug'             => $slug,
+                'url'              => static::resolveURL($id, $lang->code),
                 'created_at'       => Carbon::now(),
                 'updated_at'       => Carbon::now()
             ]);
@@ -78,7 +79,7 @@ class ProductTranslation extends Model
                 'meta_title'       => $request->meta_title[$lang->code],
                 'meta_description' => $request->meta_description[$lang->code],
                 'slug'             => $slug,
-                'url'              => $slug,
+                'url'              => static::resolveURL($id, $lang->code),
                 'updated_at'       => Carbon::now()
             ]);
 
@@ -126,6 +127,25 @@ class ProductTranslation extends Model
         }
 
         return $slug;
+    }
+
+
+    /**
+     * @param int     $id
+     * @param Request $request
+     * @param string  $lang
+     *
+     * @return string
+     */
+    public static function resolveURL(int $id, string $lang): string
+    {
+        $product = Product::query()->find($id);
+
+        if ($product) {
+            return ProductHelper::url($product, null, null, $lang);
+        }
+
+        return '';
     }
 
 }

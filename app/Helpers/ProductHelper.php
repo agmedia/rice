@@ -48,22 +48,22 @@ class ProductHelper
      *
      * @return string
      */
-    public static function url(Product $product, Category $category = null, Category $subcategory = null): string
+    public static function url(Product $product, Category $category = null, Category $subcategory = null, string $locale = null): string
     {
+        $_locale     = $locale ?: current_locale();
         $data        = static::resolveCategories($product, $category, $subcategory);
         $category    = $data['category'];
         $subcategory = $data['subcategory'];
-        $locale = session('locale') ?: current_locale();
 
         if ($subcategory) {
-            return $locale . '/' . Str::slug($category->group) . '/' . $category->translation($locale)->slug . '/' . $subcategory->translation($locale)->slug . '/' . $product->translation($locale)->slug;
+            return $_locale . '/' . Str::slug($category->group) . '/' . $category->translation($_locale)->slug . '/' . $subcategory->translation($_locale)->slug . '/' . $product->translation($_locale)->slug;
         }
 
         if ($category) {
-            return $locale . '/' . Str::slug($category->group) . '/' . $category->translation($locale)->slug . '/' . $product->translation($locale)->slug;
+            return $_locale . '/' . Str::slug($category->group) . '/' . $category->translation($_locale)->slug . '/' . $product->translation($_locale)->slug;
         }
 
-        return $locale . '/';
+        return $_locale . '/';
     }
 
 
