@@ -24,6 +24,11 @@ class ShippingMethod
      */
     protected $response_methods = null;
 
+    /**
+     * @var array
+     */
+    protected $address = [];
+
 
     /**
      * ShippingMethod constructor.
@@ -54,6 +59,19 @@ class ShippingMethod
     public function id(int $id)
     {
         return $this->methods->where('id', $id)->first();
+    }
+
+
+    /**
+     * @param array $address
+     *
+     * @return $this
+     */
+    public function setAddress(array $address)
+    {
+        $this->address = $address;
+
+        return $this;
     }
 
 
@@ -147,6 +165,14 @@ class ShippingMethod
 
             if ($cart->getTotal() > config('settings.free_shipping')) {
                 $value = 0;
+            }
+
+            if (CheckoutSession::hasAddress()) {
+                $address = CheckoutSession::getAddress();
+
+                if (in_array($address['city'], ['Zagreb', 'zagreb']) || in_array($address['zip'], ['10000', '10 000'])) {
+                    $value = 0;
+                }
             }
 
             $condition = new \Darryldecode\Cart\CartCondition(array(
