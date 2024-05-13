@@ -84,7 +84,7 @@ class CatalogRouteController extends FrontBaseController
         // If only group and has any category... continue...
         if ($group && ! $cat && ! $subcat) {
             if ( ! Category::where('group', $group)->first('id')) {
-                abort(404);
+                return $this->resolveOldUrl($group);
             }
 
             $list = Category::where('group', $group)->get();
@@ -118,10 +118,13 @@ class CatalogRouteController extends FrontBaseController
     {
         if ($prod) {
             $prod = substr($prod, 0, strrpos($prod, '-'));
-            $prod = Product::where('slug', 'LIKE', $prod . '%')->first();
+            $prod = Product::query()->whereHas('translation', function ($query) use ($prod) {
+                $query->where('slug', 'LIKE', $prod . '%');
+            })->first();
 
             if ($prod) {
-                return redirect()->to(url($prod->url), 301);
+                //dd(url($prod->translation->url));
+                return redirect(url($prod->translation->url));
             }
         }
 
