@@ -45,7 +45,7 @@ class ProductTranslation extends Model
                 'meta_title'       => $request->meta_title[$lang->code],
                 'meta_description' => $request->meta_description[$lang->code],
                 'slug'             => $slug,
-                'url'              => static::resolveURL($id, $lang->code),
+                'url'              => '',//static::resolveURL($id, $lang->code),
                 'created_at'       => Carbon::now(),
                 'updated_at'       => Carbon::now()
             ]);
@@ -81,6 +81,28 @@ class ProductTranslation extends Model
                 'slug'             => $slug,
                 'url'              => static::resolveURL($id, $lang->code),
                 'updated_at'       => Carbon::now()
+            ]);
+
+            if ( ! $saved) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    /**
+     * @param int $id
+     *
+     * @return bool
+     */
+    public static function updateURL(int $id)
+    {
+        foreach (ag_lang() as $lang) {
+            $saved = self::where('product_id', $id)->where('lang', $lang->code)->update([
+                'url'        => static::resolveURL($id, $lang->code),
+                'updated_at' => Carbon::now()
             ]);
 
             if ( ! $saved) {

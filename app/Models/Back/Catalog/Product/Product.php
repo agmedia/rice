@@ -216,6 +216,7 @@ class Product extends Model
             $this->resolveCategories($id)
                  ->resolveCombo($id);
             ProductTranslation::create($id, $this->request);
+            ProductTranslation::updateURL($id);
 
             return $this->find($id);
         }
@@ -442,8 +443,8 @@ class Product extends Model
      */
     private function resolveCategories(int $product_id): Product
     {
-        if ( ! empty($this->request->category) && is_array($this->request->category)) {
-            ProductCategory::storeData($this->request->category, $product_id);
+        if ( ! empty($this->request->input('category')) && is_array($this->request->input('category'))) {
+            ProductCategory::storeData($this->request->input('category'), $product_id);
         }
 
         return $this;
