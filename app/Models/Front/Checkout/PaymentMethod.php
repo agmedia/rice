@@ -139,14 +139,18 @@ class PaymentMethod
             }
         }
 
+        Log::info('tu sam 1:::::');
+
         if ( ! $pass) {
             $methods = $this->response_methods;
             $this->response_methods = collect();
 
             foreach ($methods as $method) {
-               // if ($method->code != 'cod') {
+                Log::info($method->min);
+                Log::info(floatval($cart['subtotal']));
+                if (isset($method->min) && $method->min > 0 && $method->min < floatval($cart['subtotal'])) {
                     $this->response_methods->push($method);
-               // }
+               }
             }
         }
 

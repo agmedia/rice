@@ -209,22 +209,22 @@
 
         <div id="collapseOib" aria-expanded="false" class="collapse">
 
-                    <div class="row ">
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="checkout-company">{{ __('front/cart.tvrtka') }}</label>
-                                <input class="form-control" name="company" type="text" wire:model="address.company">
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <div class="mb-3">
-                                    <label class="form-label" for="checkout-oib">{{ __('front/cart.oib') }}</label>
-                                    <input class="form-control" name="oib" type="text" wire:model="address.oib">
-                                </div>
-                            </div>
+            <div class="row ">
+                <div class="col-sm-6">
+                    <div class="mb-3">
+                        <label class="form-label" for="checkout-company">{{ __('front/cart.tvrtka') }}</label>
+                        <input class="form-control" name="company" type="text" wire:model="address.company">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="mb-3">
+                        <div class="mb-3">
+                            <label class="form-label" for="checkout-oib">{{ __('front/cart.oib') }}</label>
+                            <input class="form-control" name="oib" type="text" wire:model="address.oib">
                         </div>
                     </div>
+                </div>
+            </div>
 
         </div>
 
@@ -268,14 +268,14 @@
                         <td class="align-middle">{{ $s_method->data->time }}</td>
                         <td class="align-middle">
                             @if ($is_free_shipping)
-                                 0€
+                                0€
                                 @if ($secondary_price)0kn
                                 @endif
                             @else
-                               {{ $s_method->data->price }}€
-                                    @if ($secondary_price)
-                                        <br>{{ $s_method->data->price ? number_format($s_method->data->price * $secondary_price, 2) : '0' }}kn
-                                    @endif
+                                {{ $s_method->data->price }}€
+                                @if ($secondary_price)
+                                    <br>{{ $s_method->data->price ? number_format($s_method->data->price * $secondary_price, 2) : '0' }}kn
+                                @endif
                             @endif
                         </td>
                     </tr>
@@ -284,7 +284,7 @@
             </table>
         </div>
         @if($shippingMethods->isEmpty())
-          <p class="text-danger">{{ __('front/cart.ne_vrsimo_dostavu') }} </p>
+            <p class="text-danger">{{ __('front/cart.ne_vrsimo_dostavu') }} </p>
             @error('shipping') <small class="text-danger">{{ __('front/cart.ne_vrsimo_dostavu') }} </small> @enderror
         @else
             @error('shipping') <small class="text-danger">{{ __('front/cart.dostava_obavezna') }}</small> @enderror
@@ -302,7 +302,7 @@
         <div class="table-responsive">
             <table class="table table-hover fs-sm border-top">
                 <tbody>
-                @foreach ($paymentMethods as $p_method)
+                @forelse ($paymentMethods as $p_method)
                     <tr wire:click="selectPayment('{{ $p_method->code }}')" style="cursor: pointer;">
                         <td>
                             <div class="form-check mb-2  ">
@@ -312,7 +312,13 @@
                         </td>
                         <td class="align-middle"><span class="text-dark fw-medium">{{ $p_method->title->{current_locale()} }}</span><br><span class="text-muted">{{ $p_method->data->short_description->{current_locale()} }}</span></td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td class="text-center font-size-sm" colspan="2">
+                            <label>Molimo vas provjerite iznos narudžbe ili kontaktirajte administratora...</label>
+                        </td>
+                    </tr>
+                @endforelse
                 </tbody>
             </table>
         </div>
