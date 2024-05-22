@@ -134,6 +134,8 @@
                 <div class="row">
 
                     @foreach ($list as $item)
+
+
                         <!-- Product-->
                         <div class="article col-md-3 mb-grid-gutter">
                             <a class="card border-0 shadow" href="{{ route('catalog.route', ['group' => $group]) }}/{{ $item['slug'] }}">

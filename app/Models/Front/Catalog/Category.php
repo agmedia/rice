@@ -24,7 +24,7 @@ class Category extends Model implements \Mcamara\LaravelLocalization\Interfaces\
     /**
      * @var string[]
      */
-    protected $appends = ['title', 'description', 'webp', 'thumb'];
+    protected $appends = ['title', 'description', 'webp', 'thumb','slug'];
 
     /**
      * @var string
@@ -103,6 +103,15 @@ class Category extends Model implements \Mcamara\LaravelLocalization\Interfaces\
     public function getDescriptionAttribute()
     {
         return $this->translation->description;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getSlugAttribute()
+    {
+        return $this->translation->slug;
     }
 
 
