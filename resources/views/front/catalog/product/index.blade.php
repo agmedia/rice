@@ -16,7 +16,7 @@
     <meta property="og:image:width" content="640" />
     <meta property="og:image:height" content="480" />
     <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:alt" content="{{ $prod->image_alt }}" />
+    <meta property="og:image:alt" content="{{ $seo['title'] }}" />
     <meta property="product:price:amount" content="{{ number_format($prod->price, 2) }}" />
     <meta property="product:price:currency" content="EUR" />
     <meta property="product:availability" content="instock" />
