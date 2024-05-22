@@ -322,10 +322,14 @@
                 </tbody>
             </table>
         </div>
+
+
         @error('payment') <small class="text-danger">{{ __('front/cart.nacin_placanja_obavezan') }}</small> @enderror
         <div class=" d-flex pt-4 mt-3">
             <div class="w-50 pe-3"><a class="btn btn-outline-primary d-block w-100" wire:click="changeStep('dostava')" href="javascript:void(0);"><i class="ci-arrow-left mt-sm-0 me-1"></i><span class="d-none d-sm-inline">{{ __('front/cart.povratak_na_odabir_dostave') }}</span><span class="d-inline d-sm-none">{{ __('front/cart.povratak') }}</span></a></div>
+            @if(!$paymentMethods->isEmpty())
             <div class="w-50 ps-2"><a class="btn btn-primary d-block w-100" href="{{ ($payment != '') ? route('pregled') : '#' }}"><span class="d-none d-sm-inline">{{ __('front/cart.pregledajte_narudzbu') }}</span><span class="d-inline d-sm-none">{{ __('front/cart.nastavi') }}</span><i class="ci-arrow-right mt-sm-0 ms-1"></i></a></div>
+                @endif
         </div>
     @endif
 
