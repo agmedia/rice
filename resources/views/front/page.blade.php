@@ -2,11 +2,8 @@
 @if (request()->routeIs(['index']))
     @section ( 'title', 'Rice Kakis - Bubble Tea | Mochi | Nudle | Slatkiši' )
     @section ( 'description', 'Rice Kakis Azijski Webshop - autentični Bubble Tea u četiri okusa, japanski Mochi , Nudle, Korejske grickalice i slatkiši, te veliki izbor umaka i začina.' )
-
-
     @push('meta_tags')
-
-        <link rel="canonical" href="{{ env('APP_URL')}}" />
+        <link rel="canonical" href="{{ env('APP_URL')}}{{ current_locale() == 'hr' ? '' : current_locale() }}" />
         <meta property="og:locale" content="hr_HR" />
         <meta property="og:site_name" content="Rice Kakis | Asian Store" />
         <meta property="og:type" content="website" />
