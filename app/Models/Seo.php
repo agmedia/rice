@@ -25,7 +25,7 @@ class Seo
     {
         return [
             'title'       => rtrim($product->name) ,
-            'description' => rtrim($product->name) . ' - ' . (isset($product->meta_description) ? $product->meta_description : '')
+            'description' => rtrim($product->name) . ' - ' . (isset($product->translation->meta_description) ? $product->translation->meta_description : '')
         ];
     }
 
