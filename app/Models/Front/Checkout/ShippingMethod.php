@@ -170,7 +170,7 @@ class ShippingMethod
             if (CheckoutSession::hasAddress()) {
                 $address = CheckoutSession::getAddress();
 
-                if (in_array($address['city'], ['Zagreb', 'zagreb']) || in_array($address['zip'], ['10000', '10 000'])) {
+                if ((in_array($address['city'], ['Zagreb', 'zagreb']) || in_array($address['zip'], ['10000', '10 000'])) && $cart->getTotal() > config('settings.free_shipping_zagreb')) {
                     $value = 0;
                 }
             }
