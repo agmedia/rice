@@ -161,16 +161,22 @@ class ShippingMethod
         }
 
         if ($shipping) {
+
+
+
+
             $value = $shipping->data->price;
 
-            if ($cart->getTotal() > config('settings.free_shipping')) {
+            if ($cart->getTotal() > config('settings.free_shipping')  && $shipping->code != 'gls_eu'  ) {
                 $value = 0;
             }
 
             if (CheckoutSession::hasAddress()) {
                 $address = CheckoutSession::getAddress();
 
-                if ((in_array($address['city'], ['Zagreb', 'zagreb']) || in_array($address['zip'], ['10000', '10 000'])) && $cart->getTotal() > config('settings.free_shipping_zagreb')) {
+
+
+                if ((in_array($address['city'], ['Zagreb', 'zagreb']) || in_array($address['zip'], ['10000', '10 000'])) && $cart->getTotal() > config('settings.free_shipping_zagreb') && $shipping->code == 'gls'  ) {
                     $value = 0;
                 }
             }

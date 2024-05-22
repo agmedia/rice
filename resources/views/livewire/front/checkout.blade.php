@@ -267,7 +267,7 @@
                         </td>
                         <td class="align-middle">{{ $s_method->data->time }}</td>
                         <td class="align-middle">
-                            @if ($is_free_shipping)
+                            @if ($is_free_shipping and $s_method->code != 'gls_eu')
                                 0€
                                 @if ($secondary_price)0kn
                                 @endif
