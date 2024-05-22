@@ -15,7 +15,7 @@
         <div class="row justify-content-center">
             <div class="col-xl-8 col-lg-10">
                 <div class="row">
-                    <div class="col-sm-4 mb-3">
+                    <div class="col-sm-6 mb-3">
                         <a class="card h-100 border-0 shadow-sm" href="{{ route('index') }}">
                             <div class="card-body">
                                 <div class="d-flex align-items-center"><i class="ci-home text-primary h4 mb-0"></i>
@@ -26,7 +26,7 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-sm-4 mb-3"><a class="card h-100 border-0 shadow-sm" href="{{ route('index') }}">
+                    <div class="col-sm-6 mb-3"><a class="card h-100 border-0 shadow-sm" href="{{ route('index') }}">
                             <div class="card-body">
                                 <div class="d-flex align-items-center"><i class="ci-search text-success h4 mb-0"></i>
                                     <div class="ps-3">
@@ -34,15 +34,7 @@
                                     </div>
                                 </div>
                             </div></a></div>
-                    <div class="col-sm-4 mb-3"><a class="card h-100 border-0 shadow-sm" href="{{ route('faq') }}">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center"><i class="ci-help text-info h4 mb-0"></i>
-                                    <div class="ps-3">
-                                        <h5 class="fs-sm mb-0">{{ __('front/cart.faq1') }}</h5><span class="text-muted fs-ms">{{ __('front/cart.faq2') }} </span>
-                                    </div>
-                                </div>
-                            </div></a>
-                    </div>
+
                 </div>
             </div>
         </div>
