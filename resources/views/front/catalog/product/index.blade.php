@@ -213,7 +213,7 @@
                     <div class="accordion mb-4" id="productComboPanels">
                         @foreach ($prod->combo_set as $combo_id => $combo)
                             <div class="accordion-item">
-                                <h3 class="accordion-header"><a class="accordion-button @if($loop->iteration != 1) collapsed @endif" href="#combo_acc{{ $combo_id }}" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="combo_view{{ $combo_id }}">{{ $combo['title'] }}</a></h3>
+                                <p class="accordion-header"><a class="accordion-button @if($loop->iteration != 1) collapsed @endif" href="#combo_acc{{ $combo_id }}" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="combo_view{{ $combo_id }}">{{ $combo['title'] }}</a></p>
                                 <div class="accordion-collapse collapse @if($loop->iteration == 1) show @endif" id="combo_acc{{ $combo_id }}" data-bs-parent="#productComboPanels">
                                     <div class="accordion-body fs-sm">
                                         <ul class="list-group">
@@ -238,7 +238,7 @@
                     <!-- Product panels-->
                     <div class="accordion mb-4" id="productPanels">
                         <div class="accordion-item">
-                            <h3 class="accordion-header"><a class="accordion-button" href="#productInfo" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="productInfo"><i class="ci-announcement text-muted fs-lg align-middle mt-n1 me-2"></i> {{ __('front/ricekakis.osnovne_informacije') }}</a></h3>
+                            <p class="accordion-header"><a class="accordion-button" href="#productInfo" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="productInfo"><i class="ci-announcement text-muted fs-lg align-middle mt-n1 me-2"></i> {{ __('front/ricekakis.osnovne_informacije') }}</a></p>
                             <div class="accordion-collapse collapse show" id="productInfo" data-bs-parent="#productPanels">
                                 <div class="accordion-body">
 
@@ -267,7 +267,7 @@
                             </div>
                         </div>
                         <div class="accordion-item">
-                            <h3 class="accordion-header"><a class="accordion-button collapsed" href="#shippingOptions" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="shippingOptions"><i class="ci-delivery text-muted lead align-middle mt-n1 me-2"></i>{{ __('front/ricekakis.opcije_dostave') }}</a></h3>
+                            <p class="accordion-header"><a class="accordion-button collapsed" href="#shippingOptions" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="shippingOptions"><i class="ci-delivery text-muted lead align-middle mt-n1 me-2"></i>{{ __('front/ricekakis.opcije_dostave') }}</a></p>
                             <div class="accordion-collapse collapse" id="shippingOptions" data-bs-parent="#productPanels">
                                 <div class="accordion-body fs-sm">
 
@@ -302,7 +302,7 @@
                             </div>
                         </div>
                         <div class="accordion-item">
-                            <h3 class="accordion-header"><a class="accordion-button collapsed" href="#localStore" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="localStore"><i class="ci-card text-muted fs-lg align-middle mt-n1 me-2"></i>{{ __('front/ricekakis.nacin_placanja') }}</a></h3>
+                            <p class="accordion-header"><a class="accordion-button collapsed" href="#localStore" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="localStore"><i class="ci-card text-muted fs-lg align-middle mt-n1 me-2"></i>{{ __('front/ricekakis.nacin_placanja') }}</a></p>
                             <div class="accordion-collapse collapse" id="localStore" data-bs-parent="#productPanels">
                                 <div class="accordion-body fs-sm">
 
