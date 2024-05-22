@@ -125,15 +125,19 @@ class Loyalty extends Model
             $spent = $cart['loyalty'];
         }
 
-        return Loyalty::query()->insert([
-            'user_id'      => auth()->user()->id,
-            'reference_id' => $order->id,
-            'target'       => 'order',
-            'earned'       => intval($order->total),
-            'spend'        => $spent,
-            'created_at'   => now(),
-            'updated_at'   => now()
-        ]);
+        if (auth()->user()) {
+            return Loyalty::query()->insert([
+                'user_id'      => auth()->user()->id,
+                'reference_id' => $order->id,
+                'target'       => 'order',
+                'earned'       => intval($order->total),
+                'spend'        => $spent,
+                'created_at'   => now(),
+                'updated_at'   => now()
+            ]);
+        }
+
+        return false;
     }
 
 
