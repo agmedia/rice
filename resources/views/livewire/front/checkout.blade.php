@@ -195,7 +195,7 @@
                 <div class="mb-3" wire:ignore>
                     <label class="form-label" for="checkout-country">{{ __('front/cart.drzava') }} <span class="text-danger">*</span></label>
                     <select name="country" class="form-select @error('address.state') is-invalid @enderror" id="state-select" wire:model="address.state" wire:change="stateSelected($event.target.value)">
-                        <option value=""></option>
+                       
                         @foreach ($countries as $country)
                             <option value="{{ $country['name'] }}">{{ $country['name'] }}</option>
                         @endforeach
