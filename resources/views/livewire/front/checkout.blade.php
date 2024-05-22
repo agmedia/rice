@@ -193,14 +193,14 @@
             </div>
             <div class="col-sm-6">
                 <div class="mb-3" wire:ignore>
-                    <label class="form-label" for="checkout-country">{{ __('front/cart.drzava') }} <span class="text-danger">*</span></label>
-                    <select name="country" class="form-select @error('address.state') is-invalid @enderror" id="state-select" wire:model="address.state" wire:change="stateSelected($event.target.value)">
-                       
+                    <label class="form-label" for="checkout-country">Država <span class="text-danger">*</span></label>
+                    <select class="form-select @error('address.state') is-invalid @enderror" id="state-select" wire:model="address.state" wire:change="stateSelected($event.target.value)">
+                        <!--                        <option value=""></option>-->
                         @foreach ($countries as $country)
                             <option value="{{ $country['name'] }}">{{ $country['name'] }}</option>
                         @endforeach
                     </select>
-                    @error('address.state') <div class="invalid-feedback animated fadeIn">{{ __('front/cart.drzava_warning') }}</div> @enderror
+                    @error('address.state') <div class="invalid-feedback animated fadeIn">Država je obvezna</div> @enderror
                 </div>
             </div>
         </div>
@@ -340,6 +340,7 @@
 
         $(document).ready(function(){
             $(this).scrollTop(0);
+            $('input').attr('autocomplete','off');
         });
     </script>
 
