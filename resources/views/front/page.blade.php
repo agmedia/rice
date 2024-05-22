@@ -34,7 +34,7 @@
 
       {{--@include('front.layouts.partials.hometemp') --}}
 
-      <h1 style="visibility: hidden;height:1px "> Rice Kakis - Bubble Tea | Mochi | Nudle | Slatkiši</h1>
+      <h1 style="visibility: hidden;height:1px "> Rice Kakis Azijski Webshop</h1>
 
         {!! $page->description !!}
 
