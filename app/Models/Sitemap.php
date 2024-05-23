@@ -70,6 +70,8 @@ class Sitemap
             return $sitemap;
         }
 
+
+
         if ($sitemap == 'pages' || $sitemap == 'pages.xml') {
             return $this->getPages();
         }
@@ -86,9 +88,6 @@ class Sitemap
             return $this->getBrands();
         }
 
-        if ($sitemap == 'recepti' || $sitemap == 'recepti.xml') {
-            return $this->getRecepti();
-        }
 
         if ($sitemap == 'images' || $sitemap == 'img') {
             return $this->getImages();
@@ -128,8 +127,10 @@ class Sitemap
      */
     private function getPages()
     {
-        $pages = Page::query()->where('group', 'page')->where('slug', '!=', 'homepage')->where('status', '=', 1)->select('slug', 'status', 'updated_at')->get();
-        $blogs = Page::query()->where('group', 'blog')->where('status', '=', 1)->select('slug', 'status', 'updated_at')->get();
+        $pages = Page::query()->where('group', 'page')->where('status', '=', 1)->get();
+        $blogs = Blog::query()->where('status', '=', 1)->get();
+
+        $recepti = Recepti::query()->where('status', '=', 1)->get();
 
         $this->response[] = [
             'url' => route('index'),
@@ -141,26 +142,34 @@ class Sitemap
             'lastmod' => Carbon::now()->startOfYear()->tz('UTC')->toAtomString()
         ];
 
-        $this->response[] = [
+     /*   $this->response[] = [
             'url' => route('faq'),
             'lastmod' => Carbon::now()->startOfYear()->tz('UTC')->toAtomString()
-        ];
+        ];*/
 
         foreach ($pages as $page) {
             $this->response[] = [
-                'url' => route('catalog.route.page', ['page' => $page->slug]),
+                'url' => route('catalog.route.page', ['page' => $page->translation->slug]),
                 'lastmod' => $page->updated_at->tz('UTC')->toAtomString()
             ];
         }
 
         foreach ($blogs as $blog) {
             $this->response[] = [
-                'url' => route('catalog.route.blog', ['blog' => $blog->slug]),
+                'url' => route('catalog.route.blog', ['blog' => $blog->translation->slug]),
                 'lastmod' => $blog->updated_at->tz('UTC')->toAtomString()
             ];
         }
 
-        //dd($coll);
+        foreach ($recepti as $recept) {
+            $this->response[] = [
+                'url' => route('catalog.route.blog', ['blog' => $recept->translation->slug]),
+                'lastmod' => $recept->updated_at->tz('UTC')->toAtomString()
+            ];
+        }
+
+
+
 
         return $this->response;
     }
@@ -214,7 +223,7 @@ class Sitemap
      */
     private function getBrands()
     {
-        $brands = Brand::query()->active()->select('url', 'updated_at')->get();
+        $brands = Brand::query()->active()->get();
 
         $this->response[] = [
             'url' => route('catalog.route.brand'),
@@ -223,7 +232,7 @@ class Sitemap
 
         foreach ($brands as $brand) {
             $this->response[] = [
-                'url' => url($brand->url),
+                'url' => url($brand->translation->url),
                 'lastmod' => $brand->updated_at->tz('UTC')->toAtomString()
             ];
 
@@ -257,7 +266,7 @@ class Sitemap
      */
     private function getRecepti()
     {
-        $recepti = Recepti::query()->active()->select('url', 'updated_at')->get();
+        $recepti = Recepti::query()->active()->get();
 
         $this->response[] = [
             'url' => route('catalog.route.recepti'),
@@ -266,7 +275,7 @@ class Sitemap
 
         foreach ($recepti as $recept) {
             $this->response[] = [
-                'url' => url($recept->url),
+                'url' => url($recept->translation->url),
                 'lastmod' => $recept->updated_at->tz('UTC')->toAtomString()
             ];
         }

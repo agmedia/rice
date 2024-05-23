@@ -424,7 +424,7 @@ Route::group(
      */
     Route::redirect('/sitemap.xml', '/sitemap');
     Route::get('sitemap/{sitemap?}', [HomeController::class, 'sitemapXML'])->name('sitemap');
-    Route::get('image-sitemap', [HomeController::class, 'sitemapImageXML'])->name('sitemap');
+    Route::get('image-sitemap', [HomeController::class, 'sitemapImageXML'])->name('sitemap-image');
     /**
      * Forgot password & login routes.
      */
