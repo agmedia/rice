@@ -599,12 +599,5 @@
             });
         }
 
-        function hasComboSesssion(main_product_id) {
-            axios.post("{{ route('api.products.check.combo.session') }}", {main: main_product_id})
-            .then(response => {
-                console.log(response.data)
-                return response.data;
-            });
-        };
     </script>
 @endpush
