@@ -192,4 +192,21 @@ class ProductHelper
 
         return preg_replace('/ face=("|\')(.*?)("|\')/', '', $clean);
     }
+
+
+    /**
+     * @param int $product_id
+     *
+     * @return bool
+     */
+    public static function checkComboProductSession(int $product_id = 0): bool
+    {
+        if ($product_id) {
+            if (session()->has('combo.' . $product_id)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

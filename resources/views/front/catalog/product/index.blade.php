@@ -574,9 +574,7 @@
         $(() => {
             let combos = {!! collect($prod->combo_set)->toJson() !!};
 
-            console.log('hasComboSesssion({{ $prod->id }})', hasComboSesssion({{ $prod->id }}))
-
-            if (Object.keys(combos).length && ! hasComboSesssion({{ $prod->id }})) {
+            if (Object.keys(combos).length && ! {{ $has_combo_session }}) {
                 for (const key in combos) {
                     combos[key].products.forEach((item) => {
                         if (item.selected) {
@@ -604,6 +602,7 @@
         function hasComboSesssion(main_product_id) {
             axios.post("{{ route('api.products.check.combo.session') }}", {main: main_product_id})
             .then(response => {
+                console.log(response.data)
                 return response.data;
             });
         };

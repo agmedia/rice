@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Helpers\Breadcrumb;
 use App\Helpers\Helper;
+use App\Helpers\ProductHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FrontBaseController;
 use App\Imports\ProductImport;
@@ -76,8 +77,13 @@ class CatalogRouteController extends FrontBaseController
 
             $reviews = $prod->reviews()->get();
             $related = Helper::getRelated($cat, $subcat);
+            $has_combo_session = true;
 
-            return view('front.catalog.product.index', compact('prod', 'group', 'cat', 'subcat', 'related', 'seo', 'shipping_methods' , 'payment_methods', 'crumbs', 'bookscheme', 'gdl', 'reviews'));
+            if ($prod->combo) {
+                $has_combo_session = ProductHelper::checkComboProductSession($prod->id);
+            }
+
+            return view('front.catalog.product.index', compact('prod', 'group', 'cat', 'subcat', 'related', 'seo', 'shipping_methods' , 'payment_methods', 'crumbs', 'bookscheme', 'gdl', 'reviews', 'has_combo_session'));
         }
 
         $list = [];
