@@ -107,8 +107,8 @@ return [
         0 => 'pages',
         1 => 'categories',
         2 => 'products',
-        3 => 'authors',
-        4 => 'publishers'
+        3 => 'brands',
+        4 => 'recepti'
     ],
 
     'special_action' => [
