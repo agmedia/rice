@@ -158,4 +158,21 @@ class ProductController extends Controller
 
         return response()->json(['error' => 300]);
     }
+
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function checkComboProductSession(Request $request): JsonResponse
+    {
+        if ($request->has('main')) {
+            if (session()->has('combo.' . $request->input('main'))) {
+                return response()->json(1);
+            }
+        }
+
+        return response()->json(0);
+    }
 }
