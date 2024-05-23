@@ -571,6 +571,20 @@
         });
     </script>
     <script>
+        $(() => {
+            let combos = {!! collect($prod->combo_set)->toJson() !!};
+
+            if (Object.keys(combos).length) {
+                for (const key in combos) {
+                    combos[key].products.forEach((item) => {
+                        if (item.selected) {
+                            setComboSession({{ $prod->id }}, key, item.id);
+                        }
+                    })
+                }
+            }
+        });
+
         function setComboSession(main_product_id, combo_id, selected_product_id) {
             let item = {main: main_product_id, combo: combo_id, product: selected_product_id};
 
