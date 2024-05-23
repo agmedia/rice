@@ -197,16 +197,17 @@ class ProductHelper
     /**
      * @param int $product_id
      *
-     * @return bool
+     * @return int
      */
-    public static function checkComboProductSession(int $product_id = 0): bool
+    public static function checkComboProductSession(int $product_id = 0): int
     {
         if ($product_id) {
             if (session()->has('combo.' . $product_id)) {
-                return true;
+                Log::info(session('combo.' . $product_id));
+                return 1;
             }
         }
 
-        return false;
+        return 0;
     }
 }

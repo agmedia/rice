@@ -77,7 +77,7 @@ class CatalogRouteController extends FrontBaseController
 
             $reviews = $prod->reviews()->get();
             $related = Helper::getRelated($cat, $subcat);
-            $has_combo_session = true;
+            $has_combo_session = 1;
 
             if ($prod->combo) {
                 $has_combo_session = ProductHelper::checkComboProductSession($prod->id);
