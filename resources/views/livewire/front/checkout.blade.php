@@ -249,10 +249,15 @@
                 </tr>
                 </thead>
                 <tbody>
+
+
+
                 @foreach ($shippingMethods as $s_method)
 
+                    @if($s_method->code == 'gls' and !in_array($address['zip'], ['10000', '10 000', '10010', '10020', '10040', '10090', '10104', '10105', '10109', '10110', '10123', '10135', '10172', '10250', '10360', '10408', '10410', '10412' ]))
+                        @else
 
-                    <tr wire:click="selectShipping('{{ $s_method->code }}')" style="cursor: pointer;">
+                    <tr wire:click="selectShipping('{{ $s_method->code }}')" style="cursor: pointer; " >
                         <td>
                             <div class="form-check mb-4">
                                 <input class="form-check-input" type="radio" value="{{ $s_method->code }}" wire:model="shipping">
@@ -279,6 +284,7 @@
                             @endif
                         </td>
                     </tr>
+                    @endif
                 @endforeach
                 </tbody>
             </table>
@@ -344,7 +350,7 @@
 
         $(document).ready(function(){
             $(this).scrollTop(0);
-            $('input').attr('autocomplete','off');
+           // $('input').attr('autocomplete','off');
         });
     </script>
 

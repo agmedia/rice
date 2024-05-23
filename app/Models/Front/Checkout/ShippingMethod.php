@@ -176,7 +176,7 @@ class ShippingMethod
 
 
 
-                if ((in_array($address['city'], ['Zagreb', 'zagreb']) || in_array($address['zip'], ['10000', '10 000'])) && $cart->getTotal() > config('settings.free_shipping_zagreb') && $shipping->code == 'gls'  ) {
+                if ((in_array($address['city'], ['Zagreb', 'zagreb']) || in_array($address['zip'], ['10000', '10 000', '10010', '10020', '10040', '10090', '10104', '10105', '10109', '10110', '10123', '10135', '10172', '10250', '10360', '10408', '10410', '10412' ])) && $cart->getTotal() > config('settings.free_shipping_zagreb') && $shipping->code == 'gls'  ) {
                     $value = 0;
                 }
             }
