@@ -4661,7 +4661,7 @@ var render = function render() {
       staticClass: "product-price"
     }, [!product.special ? _c("span", {
       staticClass: "text-dark fs-md"
-    }, [_vm._v(_vm._s(product.main_price_text) + " "), product.secondary_price_text ? _c("small", [_vm._v(_vm._s(product.secondary_price_text) + " ")]) : _vm._e()]) : _vm._e()])]), _vm._v(" "), product.quantity > 0 ? _c("div", {
+    }, [_vm._v(_vm._s(product.main_price_text) + " "), product.secondary_price_text ? _c("small", [_vm._v(_vm._s(product.secondary_price_text) + " ")]) : _vm._e()]) : _vm._e()])]), _vm._v(" "), product.quantity > 0 && product.combo == 0 ? _c("div", {
       staticClass: "product-floating-btn"
     }, [_c("button", {
       staticClass: "btn btn-primary btn-shadow btn-sm",
@@ -4673,6 +4673,15 @@ var render = function render() {
         click: function click($event) {
           return _vm.add(product.id, product.quantity);
         }
+      }
+    }, [_vm._v("+"), _c("i", {
+      staticClass: "ci-cart fs-base ms-1"
+    })])]) : _vm._e(), _vm._v(" "), product.quantity > 0 && product.combo == 1 ? _c("div", {
+      staticClass: "product-floating-btn"
+    }, [_c("a", {
+      staticClass: "btn btn-primary btn-shadow btn-sm",
+      attrs: {
+        href: _vm.origin + product.url
       }
     }, [_vm._v("+"), _c("i", {
       staticClass: "ci-cart fs-base ms-1"

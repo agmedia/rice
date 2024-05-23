@@ -34,7 +34,14 @@
             @endif
         </div>
         <div class="product-floating-btn">
+
+            @if ( $product->combo == 0)
             <add-to-cart-btn-simple id="{{ $product->id }}" available="{{ $product->quantity }}"></add-to-cart-btn-simple>
+            @else
+                <a href="{{ url($product->url) }}" class="btn btn-primary btn-shadow btn-sm"  type="button">+<i class="ci-cart fs-base ms-1"></i></a>
+
+
+            @endif
         </div>
     </div>
 </div>
