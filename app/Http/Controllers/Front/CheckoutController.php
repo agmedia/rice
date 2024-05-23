@@ -329,6 +329,8 @@ class CheckoutController extends FrontBaseController
                 Log::info($session);
 
                 foreach ($item->associatedModel->combo_set as $combo_id => $combo_item) {
+                    Log::info('$combo_id');
+                    Log::info($combo_id);
                     if ( ! isset($session[$combo_id])) {
                         $combo_session_problem = true;
                     }
