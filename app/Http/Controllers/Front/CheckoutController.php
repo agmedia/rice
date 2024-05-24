@@ -328,6 +328,9 @@ class CheckoutController extends FrontBaseController
                 Log::info('$session');
                 Log::info($session);
 
+                Log::info('$item->associatedModel->combo_set');
+                Log::info($item->associatedModel->combo_set);
+
                 foreach ($item->associatedModel->combo_set as $combo_id => $combo_item) {
                     Log::info('$combo_id');
                     Log::info($combo_id);
