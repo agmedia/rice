@@ -13,7 +13,14 @@ class OrderHelper
      */
     public static function isCanceled(int $status): bool
     {
-        if (is_array(config('settings.order.canceled_status'))) {
+        $canceled = [5, 7];
+
+        foreach ($canceled as $value) {
+            if ($value == $status) {
+                return true;
+            }
+        }
+        /*if (is_array(config('settings.order.canceled_status'))) {
             foreach (config('settings.order.canceled_status') as $value) {
                 if ($value == $status) {
                     return true;
@@ -23,7 +30,7 @@ class OrderHelper
             if (config('settings.order.canceled_status') == $status) {
                 return true;
             }
-        }
+        }*/
 
         return false;
     }
