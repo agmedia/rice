@@ -5,9 +5,11 @@
             <div class="card-body py-md-4 py-3 px-4 text-center">
                 <h3 class="mb-3">{{ __('front/ricekakis.newsletter_title') }}</h3>
                 <p class="mb-4 pb-2">{{ __('front/ricekakis.newsletter_description') }}</p>
+
                 <div class="widget mx-auto" style="max-width: 500px;">
+                    @include('front.layouts.partials.session')
                     <form class="subscription-form " action="{{ route('newsletter') }}" method="post"  novalidate>
-                        {{ csrf_token() }}
+                        @csrf
                         <div class="input-group flex-nowrap"><i class="ci-mail position-absolute top-50 translate-middle-y text-muted fs-base ms-3"></i>
                             <input class="form-control rounded-start" type="text" value="" name="email" placeholder="{{ __('front/ricekakis.newsletter_email') }}" required>
                             <button class="btn btn-primary" type="submit" >{{ __('front/ricekakis.newsletter_btn') }}</button>
