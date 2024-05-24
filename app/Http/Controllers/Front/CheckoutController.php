@@ -335,7 +335,7 @@ class CheckoutController extends FrontBaseController
                     Log::info('$combo_id');
                     Log::info($combo_id);
                     if ( ! isset($session[$combo_id])) {
-                        $combo_session_problem = true;
+                        //$combo_session_problem = true;
 
                         $session[$combo_id] = collect($combo_item['products'])->first()['id'];
 
