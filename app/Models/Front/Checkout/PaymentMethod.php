@@ -271,9 +271,9 @@ class PaymentMethod
         if ($payment) {
             $value = $payment->data->price;
 
-            if ($cart->getTotal() > config('settings.free_shipping')) {
+          /*  if ($cart->getTotal() > config('settings.free_shipping')) {
                 $value = 0;
-            }
+            }*/
 
             $condition = new \Darryldecode\Cart\CartCondition(array(
                 'name' => __('front/cart.naknada_cod'),
