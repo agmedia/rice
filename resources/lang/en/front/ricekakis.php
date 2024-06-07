@@ -84,5 +84,6 @@ return [
     'hvala_vam_za_narudzbu' => 'Thank you for your order',
     'dobili_ste_narudzbu' => 'You have received a new order',
     'odaberite_proizvod' => 'Select product',
-    'combo' => 'Select combo options'
+    'combo' => 'Select combo options',
+    'lista_brandova' =>'Brands'
 ];
