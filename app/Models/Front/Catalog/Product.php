@@ -199,7 +199,8 @@ class Product extends Model
      */
     public function getUrlAttribute()
     {
-        return ProductHelper::url(\App\Models\Back\Catalog\Product\Product::query()->find($this->id), $this->category());
+        return $this->translation->url;
+        //return ProductHelper::url(\App\Models\Back\Catalog\Product\Product::query()->find($this->id), $this->category());
     }
 
 
