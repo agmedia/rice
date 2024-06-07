@@ -105,6 +105,17 @@
                             @endforeach
                         @endif
 
+                        @if(auth()->user())
+                            <div class="accordion-item border-bottom">
+
+                                <h3 class="accordion-header px-grid-gutter"><a class="nav-link-style d-block fs-md fw-normal py-3" href="{{ route('login') }}"><span class="d-flex align-items-center"><i class="icon ci-user pe-2"></i> {{ __('front/ricekakis.my_account') }}</span></a></h3>
+                            </div>
+                        @else
+                            <div class="accordion-item border-bottom">
+                                <h3 class="accordion-header px-grid-gutter"><a class="nav-link-style d-block fs-md fw-normal py-3" href="signin-tab"  role="button" data-bs-toggle="modal" data-bs-target="#signin-modal"><span class="d-flex align-items-center"><i class="icon ci-user pe-2"></i> {{ __('front/ricekakis.login') }}</span></a></h3>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
             </div>
