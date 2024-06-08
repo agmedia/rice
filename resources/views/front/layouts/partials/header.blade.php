@@ -84,11 +84,7 @@
                 <div class="widget widget-categories">
                     <div class="accordion" id="shop-menu">
                         <!-- Homepages-->
-                      {{--   @foreach ($uvjeti_kupnje->sortBy('title') as $page)
-                            <div class="accordion-item border-bottom">
-                                <h3 class="accordion-header px-grid-gutter"><a class="nav-link-style d-block fs-md fw-normal py-3" href="{{ route('catalog.route.page', ['page' => $page]) }}"><span class="d-flex align-items-center">{{ $page->title }}</span></a></h3>
-                            </div>
-                        @endforeach--}}
+
 
 
                         @if (isset($pages) && $pages)
