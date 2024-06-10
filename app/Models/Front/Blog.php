@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class Blog extends Model
+class Blog extends Model implements \Mcamara\LaravelLocalization\Interfaces\LocalizedUrlRoutable
 {
 
     /**
