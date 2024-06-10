@@ -169,9 +169,11 @@ class CheckoutController extends FrontBaseController
             //Log::info($cart->get());
 
             $order->decreaseItems($order->products);
-
+            Log::info($order);
+            Log::info($order['payment_code']);
+            if($order['payment_code'] !='cod'){
             Loyalty::resolveOrder($cart->get(), $order);
-
+            }
             dispatch(function () use ($order) {
                 Mail::to(config('mail.admin'))->send(new OrderReceived($order));
                 Mail::to($order->payment_email)->send(new OrderSent($order));
