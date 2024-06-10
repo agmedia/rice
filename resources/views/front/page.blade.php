@@ -1,31 +1,33 @@
 @extends('front.layouts.app')
 @if (request()->routeIs(['index']))
-    @section ( 'title', 'Rice Kakis - Bubble Tea | Mochi | Nudle | Slatkiši' )
-    @section ( 'description', 'Rice Kakis Azijski Webshop - autentični Bubble Tea u četiri okusa, japanski Mochi , Nudle, Korejske grickalice i slatkiši, te veliki izbor umaka i začina.' )
+
+
+    @section ( 'title', $page->translation->meta_title )
+    @section ( 'description', $page->translation->meta_description )
     @push('meta_tags')
         <link rel="canonical" href="{{ env('APP_URL')}}{{ current_locale() == 'hr' ? '' : current_locale() }}" />
         <meta property="og:locale" content="hr_HR" />
         <meta property="og:site_name" content="Rice Kakis | Asian Store" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Azijski Webshop- Internet Trgovina za Azijske Namirnice" />
-        <meta property="og:description" content="Rice Kakis | Azijski Webshop. Raj za užitke! Otkrijte raznolikost poslastica poput Mochi, Bubble tea, Noodlesa i još mnogo toga. Okusite izbor začina i umaka." />
+        <meta property="og:title" content="{{ $page->translation->meta_title }}" />
+        <meta property="og:description" content="{{ $page->translation->meta_description }}" />
         <meta property="og:url" content="{{ env('APP_URL')}}"  />
         <meta property="og:image" content="{{ asset('media/rice-kakis.jpg') }}" />
         <meta property="og:image:secure_url" content="{{ asset('media/rice-kakis.jpg') }}" />
         <meta property="og:image:width" content="1920" />
         <meta property="og:image:height" content="720" />
         <meta property="og:image:type" content="image/jpeg" />
-        <meta property="og:image:alt" content="Azijski Webshop - Internet Trgovina za Azijske Namirnice" />
+        <meta property="og:image:alt" content="{{ $page->translation->meta_title }}" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Azijski Webshop - Internet Trgovina za Azijske Namirnice" />
-        <meta name="twitter:description" content="Rice Kakis | Azijski Webshop. Raj za užitke! Otkrijte raznolikost poslastica poput Mochi, Bubble tea, Noodlesa i još mnogo toga. Okusite izbor začina i umaka." />
+        <meta name="twitter:title" content="{{ $page->translation->meta_title }}" />
+        <meta name="twitter:description" content="{{ $page->translation->meta_description }}" />
         <meta name="twitter:image" content="{{ asset('media/rice-kakis.jpg') }}" />
 
     @endpush
 
 @else
     @section ( 'title', $page->title. ' - Rice Kakis | Asian Store' )
-    @section ( 'description', $page->meta_description )
+    @section ( 'description', $page->translation->meta_description )
 @endif
 
 @section('content')

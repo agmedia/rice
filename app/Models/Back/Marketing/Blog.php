@@ -116,7 +116,7 @@ class Blog extends Model
         $id = $this->update($this->createModelArray('update'));
 
         if ($id) {
-            PageTranslation::edit($id, $this->request);
+            PageTranslation::edit($this->id, $this->request);
 
             return $this;
         }

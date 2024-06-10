@@ -209,7 +209,8 @@ return [
     'loyalty_cancel' => 'Odbaci',
     'add_to_cart_combo' => 'Multipakiranje x ',
 
-    'min_cart_discount_title' => 'Količinski popust'
+    'min_cart_discount_title' => 'Količinski popust',
+    'pogledaj_sve' => 'Pogledaj sve'
 
 
 

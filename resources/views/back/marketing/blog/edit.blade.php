@@ -56,7 +56,7 @@
                                 <div class="tab-content">
                                     @foreach(ag_lang() as $lang)
                                         <div id="title-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-                                            <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="title[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ isset($brand) ? $brand->translation($lang->code)->title : old('title.*') }}" onkeyup="SetSEOPreview()">
+                                            <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="title[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ isset($blog) ? $blog->translation($lang->code)->title : old('title.*') }}" onkeyup="SetSEOPreview()">
                                         </div>
                                     @endforeach
                                 </div>

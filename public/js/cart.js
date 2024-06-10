@@ -4284,7 +4284,7 @@ var render = function render() {
       attrs: {
         href: cat.url
       }
-    }, [_vm._v("Pogledaj sve")])])])], 2)])]) : _c("div", {
+    }, [_vm._v(_vm._s(_vm.trans.pogledaj_sve))])])])], 2)])]) : _c("div", {
       staticClass: "collapse",
       attrs: {
         id: "id" + cat.id,
@@ -4314,7 +4314,7 @@ var render = function render() {
       attrs: {
         href: cat.url
       }
-    }, [_vm._v("Pogledaj sve")])])])], 2)])])]);
+    }, [_vm._v(_vm._s(_vm.trans.pogledaj_sve))])])])], 2)])])]);
   }), 0), _vm._v(" "), _c("div", {
     staticClass: "accordion-item border-bottom"
   }, [_c("h3", {
