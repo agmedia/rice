@@ -33,6 +33,13 @@
                                 </a>
                             @endif
 
+                            @if (isset($brand)  )
+                                <a class=" @if (current_locale() == $lang->code) active @endif" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.brand'), [], true) }}">
+                                    <img class="lang" style="width:16px;margin-left:5px" src="{{ asset('media/flags/'.Str::lower($lang->code).'.png') }}" alt="">
+                                    {{ $lang->title->{current_locale()} }}
+                                </a>
+                            @endif
+
 
                         <!-- -->
                         @if (isset($page) && $page->id != 5)
