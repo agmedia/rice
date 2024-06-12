@@ -382,9 +382,9 @@ class CatalogRouteController extends FrontBaseController
     public function blog(Blog $blog)
     {
         if (! $blog->exists) {
-            $blogs = Blog::active()->get();
+            $frontblogs = Blog::active()->get();
 
-            return view('front.blog', compact('blogs'));
+            return view('front.blog', compact('frontblogs'));
         }
 
         $blog->description = Helper::setDescription($blog->description, $blog->id);

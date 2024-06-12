@@ -418,7 +418,7 @@ Route::group(
     Route::get('info/{page}', [CatalogRouteController::class, 'page'])->name('catalog.route.page');
     Route::get('blog/{blog?}', [CatalogRouteController::class, 'blog'])->name('catalog.route.blog');
 
-    Route::get('blogs', [CatalogRouteController::class, 'blog'])->name('blogs');
+    Route::get('blogs', [CatalogRouteController::class, 'blog'])->name('frontblogs');
 
 
 
