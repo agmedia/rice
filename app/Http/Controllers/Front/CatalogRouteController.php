@@ -393,6 +393,7 @@ class CatalogRouteController extends FrontBaseController
     }
 
 
+
     /**
      * @param Recepti $recepti
      *
@@ -401,9 +402,9 @@ class CatalogRouteController extends FrontBaseController
     public function recepti(Recepti $recepti)
     {
         if (! $recepti->exists) {
-            $receptis = Recepti::active()->get();
+            $receptin = Recepti::active()->get();
 
-            return view('front.recepti', compact('receptis'));
+            return view('front.recepti', compact('receptin'));
         }
 
         $recepti->description = Helper::setDescription($recepti->description, $recepti->id);

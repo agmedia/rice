@@ -1,5 +1,5 @@
 @extends('front.layouts.app')
-@if(isset($receptis))
+@if(isset($receptin))
         @section ( 'title', 'Recepti - Rice Kakis | Asian Store' )
         @section ( 'description', 'Gastronomske poslastice vas očekuju: Uživajte u primamljivom mochiju, bubble tea-u, kimchiju, proizvodima bez glutena i ukusnim umacima.' )
 @else
@@ -34,7 +34,7 @@
         </ol>
     </nav>
     <section class="d-md-flex justify-content-between align-items-center mb-4 pb-2">
-        @if(isset($receptis))
+        @if(isset($receptin))
             <h1 class="h2 mb-3 mb-md-0 me-3">{{ __('front/ricekakis.recepti') }}</h1>
         @else
             <h1 class="h2 mb-3 mb-md-0 me-3">{{ $recepti->title }}</h1>
@@ -44,14 +44,14 @@
 
 
 
-    @if(isset($receptis))
+    @if(isset($receptin))
 
     <div class=" pb-5 mb-2 mb-md-4">
 
 
             <!-- Entries grid-->
             <div class="masonry-grid" data-columns="3" >
-                @foreach ($receptis as $recepti)
+                @foreach ($receptin as $recepti)
 
                 <article class="masonry-grid-item">
                     <div class="card">
