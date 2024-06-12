@@ -44,11 +44,11 @@
                                 </div>
                             </form>
                             <div class="mb-2 text-center">
-                                @if (Route::has('password.request'))
-                                    <a class="link-fx font-size-sm" href="{{ route('password.request') }}">
+
+                                    <a class="link-fx font-size-sm" href="forgot-password">
                                         {{ __('Zaboravili ste lozinku?') }}
                                     </a>
-                                @endif
+
                             </div>
                             <div class="mb-2 text-center">
                                 <a class="link-fx font-size-sm" href="{{ route('register') }}">
