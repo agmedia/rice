@@ -1,5 +1,6 @@
 
 <div class="language">
+
     <div class="dropdown hover-dropdown">
         <button class="dropdown-toggle btn btn-sm btn-default px-1 ps-3 text-white" type="button" data-bs-toggle="dropdown"><img class="lang" style="width:16px" src="{{ asset('media/flags/' . session('locale') . '.png') }}" alt=""> {{ \Illuminate\Support\Str::upper(current_locale()) }} </button>
         <ul class="dropdown-menu">
@@ -19,19 +20,38 @@
                             </a>
                         @endif
 
-                            @if (isset($blog)  )
-                                <a class=" @if (current_locale() == $lang->code) active @endif" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('frontblogs'), [], true) }}">
+
+
+                            @if (isset($blog) && !$frontblogs )
+                                <a class=" @if (current_locale() == $lang->code) active @endif" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.blog', ['blog' => $blog->translation($lang->code)->slug]),[], true) }}">
                                     <img class="lang" style="width:16px;margin-left:5px" src="{{ asset('media/flags/'.Str::lower($lang->code).'.png') }}" alt="">
                                     {{ $lang->title->{current_locale()} }}
                                 </a>
                             @endif
 
-                            @if (isset($recepti)  )
-                                <a class=" @if (current_locale() == $lang->code) active @endif" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('receptin'), [], true) }}">
+                            @if (isset($blog) && $frontblogs )
+                                <a class=" @if (current_locale() == $lang->code) active @endif" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.blog'), [], true) }}">
                                     <img class="lang" style="width:16px;margin-left:5px" src="{{ asset('media/flags/'.Str::lower($lang->code).'.png') }}" alt="">
                                     {{ $lang->title->{current_locale()} }}
                                 </a>
                             @endif
+
+
+                            @if (isset($recepti) && !$receptin )
+                                <a class=" @if (current_locale() == $lang->code) active @endif" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.recepti', ['recepti' => $recepti->translation($lang->code)->slug]),[], true) }}">
+                                    <img class="lang" style="width:16px;margin-left:5px" src="{{ asset('media/flags/'.Str::lower($lang->code).'.png') }}" alt="">
+                                    {{ $lang->title->{current_locale()} }}
+                                </a>
+                            @endif
+
+                            @if (isset($recepti) && $receptin )
+                                <a class=" @if (current_locale() == $lang->code) active @endif" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.recepti'), [], true) }}">
+                                    <img class="lang" style="width:16px;margin-left:5px" src="{{ asset('media/flags/'.Str::lower($lang->code).'.png') }}" alt="">
+                                    {{ $lang->title->{current_locale()} }}
+                                </a>
+                            @endif
+
+
 
                             @if (isset($brand)  )
                                 <a class=" @if (current_locale() == $lang->code) active @endif" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.brand'), [], true) }}">

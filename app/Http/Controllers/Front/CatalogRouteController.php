@@ -387,9 +387,11 @@ class CatalogRouteController extends FrontBaseController
             return view('front.blog', compact('frontblogs'));
         }
 
+        $frontblogs = null;
+
         $blog->description = Helper::setDescription($blog->description, $blog->id);
 
-        return view('front.blog', compact('blog'));
+        return view('front.blog', compact('blog','frontblogs'));
     }
 
 
@@ -407,9 +409,11 @@ class CatalogRouteController extends FrontBaseController
             return view('front.recepti', compact('receptin'));
         }
 
+        $receptin = null;
+
         $recepti->description = Helper::setDescription($recepti->description, $recepti->id);
 
-        return view('front.recepti', compact('recepti'));
+        return view('front.recepti', compact('recepti','receptin'));
     }
 
 
