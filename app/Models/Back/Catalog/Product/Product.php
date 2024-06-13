@@ -8,6 +8,7 @@ use App\Models\Back\Catalog\Brand;
 use App\Models\Back\Catalog\Category;
 use App\Models\Back\Catalog\Publisher;
 use App\Models\Back\Settings\Settings;
+use App\Models\Front\Catalog\ProductTranslation;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -343,10 +344,13 @@ class Product extends Model
                 $query->orderBy('price', 'desc');
             }
             if ($request->input('sort') == 'az') {
-                $query->orderBy('name', 'asc');
+                $query->orderBy(ProductTranslation::query()->select('name')->whereColumn('product_translations.product_id', 'products.id')->where('product_translations.lang', current_locale()));
+
             }
             if ($request->input('sort') == 'za') {
-                $query->orderBy('name', 'desc');
+
+                $query->orderByDesc(ProductTranslation::query()->select('name')->whereColumn('product_translations.product_id', 'products.id')->where('product_translations.lang', current_locale()));
+
             }
             if ($request->input('sort') == 'qty_up') {
                 $query->orderBy('quantity', 'asc');
