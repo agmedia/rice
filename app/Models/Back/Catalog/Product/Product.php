@@ -8,7 +8,7 @@ use App\Models\Back\Catalog\Brand;
 use App\Models\Back\Catalog\Category;
 use App\Models\Back\Catalog\Publisher;
 use App\Models\Back\Settings\Settings;
-use App\Models\Front\Catalog\ProductTranslation;
+
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
