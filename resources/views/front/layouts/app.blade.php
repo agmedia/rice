@@ -149,6 +149,13 @@
 </script>
 
 <script>
+    $('.closeside').click(function(){
+        $('#sideNav').removeClass('offcanvas')
+
+    });
+</script>
+
+<script>
     const myModal = document.getElementById('signin-modal')
 
     myModal.addEventListener('show.bs.modal', (ev) => {

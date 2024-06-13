@@ -108,7 +108,7 @@
                             </div>
                         @else
                             <div class="accordion-item border-bottom">
-                                <h3 class="accordion-header px-grid-gutter"><a class="nav-link-style d-block fs-md fw-normal py-3" href="{{ route('login') }}" ><span class="d-flex align-items-center"><i class="icon ci-user pe-2"></i> {{ __('front/ricekakis.login') }}</span></a></h3>
+                                <h3 class="accordion-header px-grid-gutter"><a class="closeside nav-link-style d-block fs-md fw-normal py-3" data-tab-id="pills-signin-tab" aria-label="{{ __('front/ricekakis.login') }}" href="signin-tab"  role="button" data-bs-toggle="modal" data-bs-target="#signin-modal" ><span class="d-flex align-items-center"><i class="icon ci-user pe-2"></i> {{ __('front/ricekakis.login') }}</span></a></h3>
                             </div>
                         @endif
 
@@ -123,3 +123,5 @@
         <p class="pt-2 fw-medium pb-1">{{ __('front/ricekakis.follow_us') }}</p><a class="btn-social bs-outline bs-facebook me-2 mb-2" href="https://www.facebook.com/ricekakis" aria-label="Facebook"><i class="ci-facebook"></i></a><a class="btn-social bs-outline bs-instagram me-2 mb-2" aria-label="Instagram" href="https://www.instagram.com/ricekakis/"><i class="ci-instagram"></i></a><a class="btn-social bs-outline bs-youtube me-2 mb-2" aria-label="Youtube" href="https://www.youtube.com/channel/UCdNEYWHea1pKfUJbKF6fU4g"><i class="ci-youtube"></i></a><a class="btn-social bs-outline bs-tiktok me-2 mb-2" aria-label="Youtube" href="https://www.tiktok.com/@ricekakis"><i class="ci-tiktok"></i></a>
     </div>
 </aside>
+
+
