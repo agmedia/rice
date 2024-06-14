@@ -187,7 +187,7 @@
             <div class="col-sm-6">
                 <div class="mb-3">
                     <label class="form-label" for="checkout-zip">{{ __('front/cart.zip') }}<span class="text-danger">*</span></label>
-                    <input name="postal-code" class="form-control @error('address.zip') is-invalid @enderror" type="text" wire:model.defer="address.zip">
+                    <input name="postal-code" class="form-control @error('address.zip') is-invalid @enderror" maxlength="5" type="text" wire:model.defer="address.zip">
                     @error('address.zip') <div class="invalid-feedback animated fadeIn">{{ __('front/cart.zip_warning') }}</div> @enderror
                 </div>
             </div>
