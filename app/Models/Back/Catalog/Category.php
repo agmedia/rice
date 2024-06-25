@@ -3,6 +3,7 @@
 namespace App\Models\Back\Catalog;
 
 use App\Http\Controllers\Back\Catalog\CategoryController;
+use App\Http\Controllers\Back\DashboardController;
 use App\Models\Back\Catalog\Product\Product;
 use App\Models\Back\Catalog\Product\ProductCategory;
 use Carbon\Carbon;
@@ -219,6 +220,9 @@ class Category extends Model
 
         if ($id) {
             CategoryTranslation::edit($this->id, $this->request);
+
+            $dash = new DashboardController();
+            $dash->setProductsURL(new Request(), $this->products()->pluck('id')->toArray());
 
             return $this;
         }

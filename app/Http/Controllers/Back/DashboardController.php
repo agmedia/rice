@@ -441,11 +441,15 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function setProductsURL(Request $request)
+    public function setProductsURL(Request $request, array $ids)
     {
-        $products = Product::query()->get();
+        $products = Product::query();
 
-        foreach ($products as $product) {
+        if ($ids) {
+            $products->whereIn('id', $ids);
+        }
+
+        foreach ($products->get() as $product) {
             foreach (ag_lang() as $lang) {
                 ProductTranslation::query()->where('product_id', $product->id)->where('lang', $lang->code)->update([
                     'url' => ProductHelper::url($product, null, null, $lang->code)
