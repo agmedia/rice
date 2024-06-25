@@ -134,7 +134,7 @@ class Checkout extends Component
         if (CheckoutSession::hasShipping()) {
             $this->shipping = CheckoutSession::getShipping();
         } else {
-            $this->selectShipping('gls');
+            $this->selectShipping('flat');
         }
 
         if (CheckoutSession::hasPayment()) {
@@ -388,6 +388,11 @@ class Checkout extends Component
             $this->view_comment = true;
         } else {
             $this->view_comment = false;
+        }
+
+        // Check if not Zagreb and Dostava zagreb is selected
+        if ($shipping == 'gls' && ! Country::checkIfZagreb($this->address['city'], $this->address['zip'])) {
+            $this->selectShipping('flat');
         }
     }
 
