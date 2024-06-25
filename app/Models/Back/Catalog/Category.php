@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -223,6 +224,8 @@ class Category extends Model
 
             $dash = new DashboardController();
             $dash->setProductsURL(new Request(), $this->products()->pluck('id')->toArray());
+
+            Artisan::call('cache:clear');
 
             return $this;
         }
