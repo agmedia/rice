@@ -324,7 +324,6 @@ export default {
             if (cart) {
                 for (let i = 0; i < this.products.data.length; i++) {
                     this.products.data[i].disabled = false;
-
                     for (const key in cart.items) {
                         if (this.products.data[i].id == cart.items[key].id) {
                             if (this.products.data[i].quantity <= cart.items[key].quantity) {
@@ -341,7 +340,6 @@ export default {
          */
         checkHrTotal() {
             this.hr_total = 'rezultata';
-
             if ((this.products.total).toString().slice(-1) == '1') {
                 this.hr_total = 'rezultat';
             }
