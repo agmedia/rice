@@ -61,9 +61,12 @@
                             <td>
                                 {{ \Illuminate\Support\Carbon::make($blog->created_at)->format('d.m.Y') }}
                             </td>
-                            <td>
-                                {{ isset($blog->publish_date) ? \Illuminate\Support\Carbon::make($blog->publish_date)->format('d.m.Y u h:i') : '' }}
+
+                            <td class=" font-size-sm">
+                                @include('back.layouts.partials.status', ['status' => $blog->status])
+
                             </td>
+
                             <td class="text-right font-size-sm">
                                 <a class="btn btn-sm btn-alt-secondary" href="{{ route('blogs.edit', ['blog' => $blog]) }}">
                                     <i class="fa fa-fw fa-pencil-alt"></i>
@@ -88,5 +91,6 @@
 @endsection
 
 @push('js_after')
+    <script></script>
 
 @endpush

@@ -60,8 +60,9 @@
                             <td>
                                 {{ \Illuminate\Support\Carbon::make($recepti->created_at)->format('d.m.Y') }}
                             </td>
-                            <td>
-                                {{ isset($recepti->publish_date) ? \Illuminate\Support\Carbon::make($recepti->publish_date)->format('d.m.Y u h:i') : '' }}
+                            <td class=" font-size-sm">
+                                @include('back.layouts.partials.status', ['status' => $recepti->status])
+
                             </td>
                             <td class="text-right font-size-sm">
                                 <a class="btn btn-sm btn-alt-secondary" href="{{ route('receptis.edit', ['recepti' => $recepti]) }}">
