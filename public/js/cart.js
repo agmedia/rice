@@ -4665,7 +4665,17 @@ var render = function render() {
       staticClass: "product-price"
     }, [!product.special ? _c("span", {
       staticClass: "text-dark fs-md"
-    }, [_vm._v(_vm._s(product.main_price_text) + " "), product.secondary_price_text ? _c("small", [_vm._v(_vm._s(product.secondary_price_text) + " ")]) : _vm._e()]) : _vm._e()])]), _vm._v(" "), product.quantity > 0 && product.combo == 0 ? _c("div", {
+    }, [_vm._v(_vm._s(product.main_price_text) + " "), product.secondary_price_text ? _c("small", [_vm._v(_vm._s(product.secondary_price_text) + " ")]) : _vm._e()]) : _vm._e()]), _vm._v(" "), product.stars ? _c("div", {
+      staticClass: "star-rating"
+    }, _vm._l(5, function (item) {
+      return _c("span", [Math.floor(product.stars) - item >= 0 ? _c("i", {
+        staticClass: "star-rating-icon ci-star-filled active"
+      }) : product.stars - item > -1 ? _c("i", {
+        staticClass: "star-rating-icon ci-star-half active"
+      }) : _c("i", {
+        staticClass: "star-rating-icon ci-star"
+      })]);
+    }), 0) : _vm._e()]), _vm._v(" "), product.quantity > 0 && product.combo == 0 ? _c("div", {
       staticClass: "product-floating-btn"
     }, [_c("button", {
       staticClass: "btn btn-primary btn-shadow btn-sm",

@@ -32,6 +32,22 @@
             @else
                 <div class="product-price"><span class="text-dark fs-md">{{ $product->main_price_text }}  @if($product->secondary_price_text) <small class="fs-sm text-muted">{{ $product->secondary_price_text }} </small>@endif</span></div>
             @endif
+            @if($product->reviews->count() > 0)
+                <div class="star-rating">
+                    @for ($i = 0; $i < 5; $i++)
+                        @if (floor($product->reviews->avg('stars')) - $i >= 1)
+                            {{--Full Start--}}
+                            <i class="star-rating-icon ci-star-filled active"></i>
+                        @elseif ($product->reviews->avg('stars') - $i > 0)
+                            {{--Half Start--}}
+                            <i class="star-rating-icon ci-star-half active"></i>
+                        @else
+                            {{--Empty Start--}}
+                            <i class="star-rating-icon ci-star"></i>
+                        @endif
+                    @endfor
+                </div>
+            @endif
         </div>
         <div class="product-floating-btn">
 

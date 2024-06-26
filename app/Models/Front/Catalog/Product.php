@@ -49,6 +49,7 @@ class Product extends Model
         'secondary_price_text',
         'secondary_special',
         'secondary_special_text',
+        'stars',
         'combo_set'
     ];
 
@@ -246,6 +247,16 @@ class Product extends Model
     public function getSecondaryPriceAttribute()
     {
         return Currency::secondary($this->price);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return array|string|string[]
+     */
+    public function getStarsAttribute($value)
+    {
+        return $this->reviews()->avg('stars');
     }
 
 
