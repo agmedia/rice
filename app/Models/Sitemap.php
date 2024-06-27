@@ -148,10 +148,12 @@ class Sitemap
         ];*/
 
         foreach ($pages as $page) {
-            $this->response[] = [
-                'url' => route('catalog.route.page', ['page' => $page->translation->slug]),
-                'lastmod' => $page->updated_at->tz('UTC')->toAtomString()
-            ];
+            if ($page->translation->slug == 'homepage') {
+                $this->response[] = [
+                    'url' => route('catalog.route.page', ['page' => $page->translation->slug]),
+                    'lastmod' => $page->updated_at->tz('UTC')->toAtomString()
+                ];
+            }
         }
 
         foreach ($blogs as $blog) {
