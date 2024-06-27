@@ -321,7 +321,7 @@
                 @empty
                     <tr>
                         <td class="text-center font-size-sm" colspan="2">
-                            <label>Molimo vas provjerite iznos narudžbe ili kontaktirajte administratora...</label>
+                            <div role="alert" class="alert alert-info d-flex"><div class="alert-icon"><i class="ci-announcement"></i></div> <div>Minimalni iznos narudžbe je 10 €</div></div>
                         </td>
                     </tr>
                 @endforelse
