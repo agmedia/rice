@@ -38,6 +38,24 @@
 
       <h1 style="visibility: hidden;height:1px "> Rice Kakis Azijski Webshop</h1>
 
+      <div class="d-flex row justify-content-between">
+          <div class="col-md-12">
+              <div role="alert" class="alert alert-info d-flex  mb-1 ">
+                  <div class="alert-icon"><i class="ci-heart-circle"></i>
+                  </div>
+
+                 @if ( LaravelLocalization::getCurrentLocale() == 'hr')
+                  <small><a  data-tab-id="pills-signin-tab" aria-label="{{ __('front/ricekakis.login') }}" href="signin-tab"  role="button" data-bs-toggle="modal" data-bs-target="#signin-modal" ><u>Registrirajte se</u></a> i osvojite <a href="{{ route('catalog.route.page', ['page' => 'loyalty-club'])}}"><u>Loyalty bodove</u></a> sa svakom narudžbom i recenzijom.</small>
+
+                  @else
+
+                      <small><a  data-tab-id="pills-signin-tab" aria-label="{{ __('front/ricekakis.login') }}" href="signin-tab"  role="button" data-bs-toggle="modal" data-bs-target="#signin-modal" ><u>Register </u></a> and earn  <a href="{{ route('catalog.route.page', ['page' => 'loyalty-club'])}}"><u>Loyalty points </u></a>with every order and review.</small>
+
+                  @endif
+              </div>
+          </div>
+      </div>
+
         {!! $page->description !!}
 
 

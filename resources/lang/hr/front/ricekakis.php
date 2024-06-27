@@ -19,7 +19,7 @@ return [
     'icons_d1' => 'Besplatna dostava za narudžbe > 45€',
 
     'icons_t2' => 'Program vjernosti',
-    'icons_d2' => 'Osvoji bodove s svakom narudžbom i recenzijom',
+    'icons_d2' => 'Osvojite bodove sa svakom narudžbom i recenzijom',
 
     'icons_t3' => 'Brza i pozdana dostava',
     'icons_d3' => 'Dostavljamo za 1-3 radna dana u Hrvatskoj',
@@ -84,7 +84,8 @@ return [
     'dobili_ste_narudzbu' => 'Dobili ste novu narudžbu',
     'odaberite_proizvod' => 'Odaberite proizvod',
     'combo' => 'Odaberite combo opcije',
-    'lista_brandova' =>'Lista brandova'
+    'lista_brandova' =>'Lista brandova',
+
 
 
 
