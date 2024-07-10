@@ -51,6 +51,7 @@ return [
     'dostava' => 'Dostava',
     'placanje' => 'Plaćanje',
     'pregledaj' => 'Pregledaj',
+    'izvrseno' => 'Izvršeno',
     'jos'=> 'Još',
     'do_besplatne' =>'do besplatne dostave!',
     'artikli' => 'Artikli',

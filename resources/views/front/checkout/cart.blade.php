@@ -60,6 +60,10 @@
                     <div class="step-progress"><span class="step-count">5</span></div>
                     <div class="step-label"><i class="ci-check-circle"></i>{{ __('front/cart.pregledaj') }}</div>
                 </a>
+                <span class="step-item" >
+                    <div class="step-progress"><span class="step-count">6</span></div>
+                    <div class="step-label"><i class="ci-thumb-up"></i>{{ __('front/cart.izvrseno') }}</div>
+                </span>
             </div>
 
             <cart-view continueurl="{{ \Illuminate\Support\Facades\URL::previous() }}" checkouturl="{{ route('naplata') }}" freeship="{{ config('settings.free_shipping') }}"></cart-view>

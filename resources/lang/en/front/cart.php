@@ -56,6 +56,7 @@ return [
     'ukloni' => 'Remove',
     'nastavi_na_naplatu' => 'PROCEED TO CHECKOUT',
     'sazetak' => 'Order Summary',
+    'izvrseno' => 'Finished',
     'kupon_kod' => 'Coupon Code',
     'pdv_u_cijeni' => 'VAT Included',
     'imate_kod' => 'Do you have a discount code?',
