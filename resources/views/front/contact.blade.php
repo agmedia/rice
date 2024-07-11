@@ -67,6 +67,7 @@
                 </form>
             </div>
 
+            <div class="col-md-12"><iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d11124.017953831606!2d15.979905!3d45.8111685!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47667fd7306782ed%3A0xa50559d5f9f01e7d!2sRice%20Kakis%20Asian%20Store!5e0!3m2!1shr!2shr!4v1720693241731!5m2!1shr!2shr" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
         </div>
     </section>
 
