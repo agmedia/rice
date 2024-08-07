@@ -125,7 +125,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                 {{--    <div class="form-group row items-push mb-0 mt-4">
+                                    <div class="form-group row items-push mb-0 mt-4">
                                         <div class="col-md-4 pt-2">
                                             <label>{{ __('back/action.zahtjeva_kupon_kod') }} @include('back.layouts.partials.popover', ['title' => 'If you enter code', 'content' => 'It will be considered that you request it when purchasing to benefit from the action and the corresponding discount...'])</label>
                                         </div>
@@ -142,8 +142,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    ---}}
                                 </div>
                             </div>
                         </div>

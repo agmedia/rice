@@ -116,7 +116,7 @@
                     </a>
                 </li>
 
-                <li class="nav-main-item{{ request()->is([current_locale() . '/admin/marketing/*']) ? ' open' : '' }}">
+                <li class="nav-main-item{{ request()->is([current_locale() . '/admin/marketing/*', 'admin/marketing/*']) ? ' open' : '' }}">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="true" href="#">
                         <i class="nav-main-link-icon si si-bar-chart"></i>
                         <span class="nav-main-link-name">{{ __('back/layout.sidebar.marketing') }}</span>

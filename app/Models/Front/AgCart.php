@@ -320,9 +320,6 @@ class AgCart extends Model
     {
         $this->cart->clearCartConditions();
 
-        Log::info('setCartConditions()');
-        Log::info($this->loyalty);
-
         $shipping_method   = ShippingMethod::condition($this->cart);
         $payment_method    = PaymentMethod::condition($this->cart);
         $special_condition = Helper::hasSpecialCartCondition($this->cart);
@@ -345,7 +342,7 @@ class AgCart extends Model
             $this->cart->condition($special_condition);
         }
 
-        if ($coupon_conditions) {
+        if ($coupon_conditions) {;
             $this->cart->condition($coupon_conditions);
         }
 
@@ -418,27 +415,27 @@ class AgCart extends Model
     {
         $product = Product::where('id', $request['item']['id'])->first();
 
-                $product->dataLayer = TagManager::getGoogleProductDataLayer($product);
+        $product->dataLayer = TagManager::getGoogleProductDataLayer($product);
 
-                if ($request['item']['quantity'] > $product->quantity) {
-                    return ['error' => 'Nažalost nema dovoljnih količina artikla..!'];
-                }
+        if ($request['item']['quantity'] > $product->quantity) {
+            return ['error' => 'Nažalost nema dovoljnih količina artikla..!'];
+        }
 
-                $response = [
-                    'id'              => $product->id,
-                    'name'            => $product->name,
-                    'price'           => $product->price,
-                    'sec_price'       => $product->secondary_price,
-                    'quantity'        => $request['item']['quantity'],
-                    'associatedModel' => $product,
-                    'attributes'      => $this->structureCartItemAttributes($product)
-                ];
+        $response = [
+            'id'              => $product->id,
+            'name'            => $product->name,
+            'price'           => $product->price,
+            'sec_price'       => $product->secondary_price,
+            'quantity'        => $request['item']['quantity'],
+            'associatedModel' => $product,
+            'attributes'      => $this->structureCartItemAttributes($product)
+        ];
 
-                $conditions = $this->structureCartItemConditions($product);
+        $conditions = $this->structureCartItemConditions($product);
 
-            if ($conditions) {
-                $response['conditions'] = $conditions;
-            }
+        if ($conditions) {
+            $response['conditions'] = $conditions;
+        }
 
 
 
