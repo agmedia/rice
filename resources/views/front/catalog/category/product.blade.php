@@ -17,7 +17,8 @@
 
 
         @if ($product->main_price > $product->main_special or $product->action and !$product->action->min_cart)
-            <span class="badge bg-primary badge-shadow">-{{ number_format(floatval(\App\Helpers\Helper::calculateDiscount($product->price, $product->special())), 0) }}%</span>
+            {{ \Illuminate\Support\Facades\Log::info($product->toArray()) }}
+            <span class="badge bg-primary badge-shadow">-{{ number_format(floatval(\App\Helpers\Helper::calculateDiscount($product->price, $product->special()))) }}%</span>
         @endif
         <a class="card-img-top pb-2 d-block overflow-hidden" href="{{ url($product->url) }}">
             <img load="lazy" src="{{ str_replace('.webp','-thumb.webp', $product->image) }}" width="400" height="400" alt="{{ $product->name }}">

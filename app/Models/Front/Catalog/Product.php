@@ -4,6 +4,7 @@ namespace App\Models\Front\Catalog;
 
 use App\Helpers\Currency;
 use App\Helpers\ProductHelper;
+use App\Helpers\Special;
 use App\Models\Back\Catalog\Product\ProductAction;
 use App\Models\Back\Catalog\Product\ProductCombo;
 use App\Models\Back\Marketing\Review;
@@ -385,40 +386,14 @@ class Product extends Model
      */
     public function special()
     {
-        $action = $this->action;
+        $special = new Special($this);
 
-        if ($action && $action->min_cart) {
-            return $this->price;
-        }
+        $action    = $special->resolveAction();
+        $coupon_ok = $special->checkCoupon($action);
+        $dates_ok  = $special->checkDates($action);
 
-        $coupon_session_key = config('session.cart') . '_coupon';
-        $coupon_ok = false;
-
-        if ( ! $action || ($action && ! $action->coupon)) {
-            $coupon_ok = true;
-        }
-
-        if (isset($action->status) && $action->status) {
-            if ((isset($action->coupon) && $action->coupon) && session()->has($coupon_session_key) && session($coupon_session_key) == $action->coupon) {
-                $coupon_ok = true;
-            }
-        }
-
-        // If special is set, return special.
-        if ($this->special && $coupon_ok) {
-            $from = now()->subDay();
-            $to = now()->addDay();
-
-            if ($this->special_from && $this->special_from != '0000-00-00 00:00:00') {
-                $from = Carbon::make($this->special_from);
-            }
-            if ($this->special_to && $this->special_to != '0000-00-00 00:00:00') {
-                $to = Carbon::make($this->special_to);
-            }
-
-            if ($from <= now() && now() <= $to) {
-                return $this->special;
-            }
+        if ($coupon_ok && $dates_ok) {
+            return $special->getDiscountPrice($action);
         }
 
         return $this->price;
@@ -428,23 +403,12 @@ class Product extends Model
     /**
      * @return string
      */
-    public function coupon(): string
+    public function coupon(): bool
     {
-        $action = $this->action;
-        $coupon_session_key = config('session.cart') . '_coupon';
-        $coupon_ok = '';
+        $special = new Special($this);
+        $action  = $special->resolveAction();
 
-        if ( ! $action || ($action && ! $action->coupon)) {
-            $coupon_ok = '';
-        }
-
-        if ($action && $action->status) {
-            if ((isset($action->coupon) && $action->coupon) && session()->has($coupon_session_key) && session($coupon_session_key) == $action->coupon) {
-                $coupon_ok = true;
-            }
-        }
-
-        return $coupon_ok;
+        return $special->checkCoupon($action);
     }
 
 

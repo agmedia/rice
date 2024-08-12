@@ -52,14 +52,16 @@ class Helper
      */
     public static function calculateDiscount($list_price, $seling_price, string $type = 'P')
     {
-        if (is_string($list_price)) {
+        /*if (is_string($list_price)) {
             $list_price = str_replace('.', '', $list_price);
             $list_price = str_replace(',', '.', $list_price);
         }
         if (is_string($seling_price)) {
             $seling_price = str_replace('.', '', $seling_price);
             $seling_price = str_replace(',', '.', $seling_price);
-        }
+        }*/
+
+        //Log::info($list_price . ' - ' . $seling_price);
 
         if ($type == 'F') {
             return $list_price - $seling_price;

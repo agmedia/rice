@@ -37,9 +37,13 @@
                                 <i class="fa fa-arrow-left mr-1"></i> {{ __('back/action.back') }}
                             </a>
                             <div class="block-options">
+                                <div class="custom-control custom-switch custom-control-info block-options-item ml-4">
+                                    <input type="checkbox" class="custom-control-input" id="lock-switch" name="lock" @if (isset($action) and $action->lock) checked @endif>
+                                    <label class="custom-control-label pt-1" for="lock-switch">Zaključaj</label>
+                                </div>
                                 <div class="custom-control custom-switch custom-control-success">
                                     <input type="checkbox" class="custom-control-input" id="status-switch" name="status" @if (isset($action) and $action->status) checked @endif>
-                                    <label class="custom-control-label" for="status-switch">{{ __('back/action.publish') }}</label>
+                                    <label class="custom-control-label pt-1" for="status-switch">{{ __('back/action.publish') }}</label>
                                 </div>
                             </div>
                         </div>
@@ -58,8 +62,6 @@
                                                     </li>
                                                 @endforeach
                                             </ul>
-
-
                                             <div class="tab-content">
                                                 @foreach(ag_lang() as $lang)
                                                     <div id="title-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
@@ -67,8 +69,6 @@
                                                     </div>
                                                 @endforeach
                                             </div>
-
-
                                         </div>
                                         <div class="col-md-4">
                                             <label for="group-select">{{ __('back/action.action_group') }}  <span class="text-danger">*</span></label>
@@ -125,6 +125,16 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {{--<div class="form-group row items-push mb-2">
+                                        <div class="col-md-6">
+                                            <label for="min-input">Obuhvati artikle u rasponu cijene</label>
+                                            <input type="text" class="form-control" id="min-input" name="min" placeholder="Cijena od" value="{{ isset($action->data['min']) ? $action->data['min'] : old('min') }}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="max-input">&nbsp;</label>
+                                            <input type="text" class="form-control" id="max-input" name="max" placeholder="Cijena do" value="{{ isset($action->data['max']) ? $action->data['max'] : old('max') }}">
+                                        </div>
+                                    </div>--}}
                                     <div class="form-group row items-push mb-0 mt-4">
                                         <div class="col-md-4 pt-2">
                                             <label>{{ __('back/action.zahtjeva_kupon_kod') }} @include('back.layouts.partials.popover', ['title' => 'If you enter code', 'content' => 'It will be considered that you request it when purchasing to benefit from the action and the corresponding discount...'])</label>
