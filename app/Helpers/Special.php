@@ -32,11 +32,6 @@ class Special
     protected $action;
 
     /**
-     * @var ProductAction|null
-     */
-    protected $user_group_action;
-
-    /**
      * @var Collection|null
      */
     private $active_actions;
@@ -54,15 +49,6 @@ class Special
 
 
     /**
-     * @return mixed
-     */
-    public function getUserGroupAction(): ?ProductAction
-    {
-        return $this->user_group_action;
-    }
-
-
-    /**
      * @return ProductAction|null
      */
     public function getAction(): ?ProductAction
@@ -76,32 +62,7 @@ class Special
      */
     public function resolveAction(): ?ProductAction
     {
-        /*if (Auth::check() && $this->userHasGroupDiscount()) {
-            return $this->getUserGroupAction();
-        }*/
-
         return $this->setupAvailableActions()->getAction();
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function userHasGroupDiscount(): bool
-    {
-        $group_id = $this->user->details->group ? $this->user->details->group->id : null;
-
-        if ($group_id) {
-            $this->active_actions = ProductAction::query()->where('user_group_id', $group_id)->active()->get();
-
-            if ($this->active_actions->count()) {
-                $this->user_group_action = $this->getBestAction();
-
-                return true;
-            }
-        }
-
-        return false;
     }
 
 
@@ -110,19 +71,19 @@ class Special
      *
      * @return float|int
      */
-    public function getDiscountPrice(ProductAction|null $product_action = null): float|int|null
+    public function getDiscountPrice(ProductAction|null $product_action = null): float|int
     {
         $action = $product_action ?: $this->action;
 
         if ( ! $action) {
-            return null;
+            return $this->product->price;
         }
 
         if ($this->isProductOnAction($action)) {
             return Helper::calculateDiscountPrice($this->product->price, $action->discount, $action->type);
         }
 
-        return null;
+        return $this->product->price;
     }
 
 
@@ -250,9 +211,6 @@ class Special
      */
     public function getBestAction()
     {
-
-        Log::info('active actions ' . $this->active_actions->count());
-
         if ($this->active_actions->count() > 1) {
             $price          = $this->product->price;
             $best_action_id = 0;

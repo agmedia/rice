@@ -59,7 +59,6 @@ class Product extends Model
      */
     protected $eur;
 
-
     /**
      * @var string
      */
@@ -94,7 +93,7 @@ class Product extends Model
      *
      * @return Model|never|null
      */
-    public function resolveRouteBinding($value, $field = NULL)
+    public function resolveRouteBinding($value, $field = null)
     {
         return static::whereHas('translation', function ($query) use ($value) {
             $query->where('slug', $value);
@@ -130,6 +129,7 @@ class Product extends Model
         return $this->hasMany(ProductCombo::class, 'product_id')->where('products', '!=', '[]')->orderBy('sort_order');
     }
 
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -140,9 +140,9 @@ class Product extends Model
 
             foreach ($this->combos()->get() as $combo) {
                 $preset_session = null;
-                $prod_response = [];
-                $session = session('combo.' . $this->id);
-                $products = Product::query()->whereIn('id', json_decode($combo->products, true))->available()->active()->get();
+                $prod_response  = [];
+                $session        = session('combo.' . $this->id);
+                $products       = Product::query()->whereIn('id', json_decode($combo->products, true))->available()->active()->get();
 
                 foreach ($products as $key => $product) {
                     $selected = false;
@@ -157,16 +157,16 @@ class Product extends Model
                     }
 
                     $prod_response[] = [
-                        'id' => $product->id,
-                        'name' => $product->name,
-                        'image' => asset($product->image),
+                        'id'       => $product->id,
+                        'name'     => $product->name,
+                        'image'    => asset($product->image),
                         'selected' => $selected
                     ];
                 }
 
                 $response[$combo->id] = [
-                    'group' => $combo->group,
-                    'title' => $combo->value['title'][current_locale()],
+                    'group'    => $combo->group,
+                    'title'    => $combo->value['title'][current_locale()],
                     'products' => $prod_response
                 ];
             }
@@ -250,6 +250,7 @@ class Product extends Model
         return Currency::secondary($this->price);
     }
 
+
     /**
      * @param $value
      *
@@ -301,6 +302,7 @@ class Product extends Model
 
         return null;
     }
+
 
     /**
      * @return string
@@ -372,7 +374,8 @@ class Product extends Model
      *
      * @return float|void
      */
-    public function percentreviews($ocjena, $total) {
+    public function percentreviews($ocjena, $total)
+    {
         if ($total) {
             return round(($ocjena / $total) * 100, 2);
         }
@@ -382,12 +385,11 @@ class Product extends Model
 
 
     /**
-     * @return false|float|int|mixed
+     * @return float|int|null
      */
-    public function special()
+    public function special(): float|int
     {
-        $special = new Special($this);
-
+        $special   = new Special($this);
         $action    = $special->resolveAction();
         $coupon_ok = $special->checkCoupon($action);
         $dates_ok  = $special->checkDates($action);
@@ -454,8 +456,8 @@ class Product extends Model
     public function category()
     {
         return $this->hasOneThrough(Category::class, CategoryProducts::class, 'product_id', 'id', 'id', 'category_id')
-            ->where('parent_id', 0)
-            ->first();
+                    ->where('parent_id', 0)
+                    ->first();
     }
 
 
@@ -465,8 +467,8 @@ class Product extends Model
     public function subcategory()
     {
         return $this->hasOneThrough(Category::class, CategoryProducts::class, 'product_id', 'id', 'id', 'category_id')
-            ->where('parent_id', '!=', 0)
-            ->first();
+                    ->where('parent_id', '!=', 0)
+                    ->first();
     }
 
 
