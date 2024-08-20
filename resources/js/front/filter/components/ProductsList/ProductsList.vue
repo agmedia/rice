@@ -36,8 +36,10 @@
                         <button class="btn-wishlist  me-1"  v-if="product.glutenfree" type="button" v-tooltip:top="'Gluten Free'"><img src="image/gluten-free.svg" alt="Gluten Free"  width="35px"/></button>
                     </div>
 
+
+
                     <span class="badge bg-warning mt-1 ms-1 badge-end"  v-if="product.quantity <= 0">{{ trans.rasprodano }}</span>
-                    <span class="badge rounded-pill bg-primary mt-1 ms-1 badge-shadow" v-if="product.special || product.action && !product.action.min_cart">-{{ ($store.state.service.getDiscountAmount(product.price, product.special)) }}%</span>
+                    <span class="badge rounded-pill bg-primary mt-1 ms-1 badge-shadow" v-if="product.main_price >product.special && product.action && !product.action.min_cart && !product.action.coupon">-{{ ($store.state.service.getDiscountAmount(product.price, product.special)) }}%</span>
 
                     <a class="card-img-top d-block pb-2 overflow-hidden " :href="origin + product.url"><img load="lazy" :src="product.image.replace('.webp', '-thumb.webp')" width="400" height="400" :alt="product.name">
                     </a>
@@ -48,10 +50,10 @@
                             <div class="fs-sm me-2"><span v-html="product.category_string"></span></div>
                         </div>
                         <div class="product-price">
-                            <span class="fs-sm text-muted"  v-if="product.special || product.action && !product.action.min_cart"><small>NC 30 dana: {{ product.main_price_text }} </small> <small v-if="product.secondary_price_text">{{ product.secondary_price_text }} </small></span>
+                            <span class="fs-sm text-muted"  v-if="product.main_price >product.special && product.action && !product.action.min_cart && !product.action.coupon"><small>NC 30 dana: {{ product.main_price_text }} </small> <small v-if="product.secondary_price_text">{{ product.secondary_price_text }} </small></span>
                         </div>
                         <div class="product-price">
-                            <span class="text-red fs-md" v-if="product.special || product.action && !product.action.min_cart">{{ product.main_special_text }} <small v-if="product.secondary_special_text">{{ product.secondary_special_text }} </small></span>
+                            <span class="text-red fs-md" v-if="product.main_price >product.special && product.action && !product.action.min_cart && !product.action.coupon">{{ product.main_special_text }} <small v-if="product.secondary_special_text">{{ product.secondary_special_text }} </small></span>
                         </div>
                         <div class="product-price">
                             <span class="text-dark fs-md" v-if="!product.special">{{ product.main_price_text }} <small v-if="product.secondary_price_text ">{{ product.secondary_price_text }} </small></span>
