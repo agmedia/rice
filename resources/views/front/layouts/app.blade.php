@@ -23,13 +23,7 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
 
-
-
-
-
-
     @stack('css_after')
-
 
     @if (config('app.env') == 'production')
         @yield('google_data_layer')
@@ -51,8 +45,6 @@
 
             gtag('config', 'G-3KWGQKLWE8');
         </script>
-
-
 
     @endif
 
@@ -115,10 +107,8 @@
 <script src="{{ asset('js/imagesloaded/imagesloaded.pkgd.min.js') }}"></script>
 <script src="{{ asset('js/shufflejs/dist/shuffle.min.js') }}"></script>
 <!-- Main theme script-->
-<script src="{{ asset('js/cart.js?v=2.1.0') }}"></script>
+<script src="{{ asset('js/cart.js?v=2.1.1') }}"></script>
 <script src="{{ asset('js/theme.min.js') }}"></script>
-
-
 
 <script type="text/javascript">
     $(document).ready(function() {

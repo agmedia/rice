@@ -13,7 +13,7 @@
             @endif
         </div>
 
-        @if ($product->main_price > $product->main_special and $product->action and !$product->action->min_cart and !$product->action->coupon)
+        @if ($product->main_price > $product->main_special and $product->action and !$product->action->min_cart)
             <span class="badge bg-primary badge-shadow">-{{ number_format(floatval(\App\Helpers\Helper::calculateDiscount($product->price, $product->special()))) }}%</span>
         @endif
         <a class="card-img-top pb-2 d-block overflow-hidden" href="{{ url($product->url) }}">
@@ -22,7 +22,7 @@
         <div class="card-body pt-2" style="min-height: 120px;">
             <h3 class="product-title fs-sm text-truncate"><a href="{{ url($product->url) }}">{{ $product->name }}</a></h3>
             {!! $product->category_string !!}
-            @if ($product->main_price > $product->main_special  and $product->action and !$product->action->min_cart and !$product->action->coupon)
+            @if ($product->main_price > $product->main_special  and $product->action and !$product->action->min_cart)
                 <div class="product-price"><small><span class="text-muted">{{ __('front/ricekakis.nc_30') }}: {{ $product->main_price_text }}  @if($product->secondary_price_text){{ $product->secondary_price_text }} @endif</span></small></div>
                 <div class="product-price text-red"><span class="text-red fs-md">{{ $product->main_special_text }} @if($product->secondary_special_text) <small class="text-muted">{{ $product->secondary_special_text }}</small> @endif</span></div>
             @else

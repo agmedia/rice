@@ -4,8 +4,10 @@ namespace App\Models\Back\Marketing;
 
 use App\Helpers\Helper;
 use App\Models\Back\Catalog\Product\Product;
+use App\Models\Back\Catalog\Product\ProductAction;
 use App\Models\Back\Catalog\Product\ProductCategory;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -384,12 +386,52 @@ class Action extends Model
                 return $products->whereIn('brand_id', $links);
             }
 
-            return $products->where('special_lock', 0)
-                            ->pluck('id')
+            $products = $this->removeLockedActionsProducts($products);
+
+            return $products->pluck('id')
                             ->unique();
         }
 
         return $this->request->group;
+    }
+
+
+    /**
+     * @param Builder $products
+     *
+     * @return Builder
+     */
+    private function removeLockedActionsProducts(Builder $products): Builder
+    {
+        $locked_actions = Action::query()->where('lock', 1)->get();
+
+        foreach ($locked_actions as $locked_action) {
+            $links = json_decode($locked_action->links, true);
+
+            if ($locked_action->group == 'product') {
+                $products->whereNotIn('id', $links);
+            }
+
+            if ($locked_action->group == 'category') {
+                $ids = ProductCategory::whereIn('category_id', $links)->pluck('product_id')->unique();
+
+                $products->whereNotIn('id', $ids);
+            }
+
+            if ($locked_action->group == 'brand') {
+                $products->whereNotIn('brand_id', $links);
+            }
+
+            if ($locked_action->group == 'all') {
+                $ids = Product::query()->pluck('id')->unique();
+
+                $products->whereNotIn('id', $ids);
+            }
+        }
+
+        //dd($products->pluck('id'));
+
+        return $products;
     }
 
 
@@ -436,9 +478,11 @@ class Action extends Model
 
 
     /**
-     * @return mixed
+     * @param int $action_id
+     *
+     * @return int
      */
-    private function truncateProducts(int $action_id = 0)
+    private function truncateProducts(int $action_id = 0): int
     {
         $id = $this->id ?? 0;
 
@@ -446,11 +490,17 @@ class Action extends Model
             $id = $action_id;
         }
 
-        return Product::where('action_id', $id)->update([
-            'action_id'    => 0,
-            'special'      => null,
-            'special_from' => null,
-            'special_to'   => null,
-        ]);
+        $products = Product::query()->where('action_id', $id)->count();
+
+        if ($products) {
+            return Product::query()->where('action_id', $id)->update([
+                'action_id'    => 0,
+                'special'      => null,
+                'special_from' => null,
+                'special_to'   => null,
+            ]);
+        }
+
+        return 1;
     }
 }
