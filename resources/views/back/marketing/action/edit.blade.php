@@ -91,7 +91,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-                                            <label for="min_cart-input">Min qty @include('back.layouts.partials.required-star')</label>
+                                            <label for="min_cart-input">Min qty</label>
                                             <div class="input-group">
                                                 <input type="text" class="form-control" id="min_cart-input" name="min_cart" placeholder="" value="{{ isset($action) ? $action->min_cart : old('min_cart') }}">
 
