@@ -19,7 +19,7 @@
         <a class="card-img-top pb-2 d-block overflow-hidden" href="{{ url($product->url) }}">
             <img load="lazy" src="{{ str_replace('.webp','-thumb.webp', $product->image) }}" width="400" height="400" alt="{{ $product->name }}">
         </a>
-        <div class="card-body pt-2" style="min-height: 120px;">
+        <div class="card-body pt-2 px-2" style="min-height: 120px;">
             <h3 class="product-title fs-sm text-truncate"><a href="{{ url($product->url) }}">{{ $product->name }}</a></h3>
             {!! $product->category_string !!}
             @if ($product->main_price > $product->main_special  and $product->action and !$product->action->min_cart)
@@ -49,7 +49,7 @@
             @if ( $product->combo == 0)
                 <add-to-cart-btn-simple id="{{ $product->id }}" available="{{ $product->quantity }}"></add-to-cart-btn-simple>
             @else
-                <a href="{{ url($product->url) }}" class="btn btn-primary btn-shadow btn-sm"  type="button">+<i class="ci-cart fs-base ms-1"></i></a>
+                <a href="{{ url($product->url) }}" class="btn btn-primary btn-shadow btn-sm"  type="button"><i class="ci-cart fs-base ms-0"></i></a>
             @endif
         </div>
     </div>

@@ -43,7 +43,7 @@
 
                     <a class="card-img-top d-block pb-2 overflow-hidden " :href="origin + product.url"><img load="lazy" :src="product.image.replace('.webp', '-thumb.webp')" width="400" height="400" :alt="product.name">
                     </a>
-                    <div class="card-body py-2 pt-0">
+                    <div class="card-body py-2 px-2 pt-0">
 
                         <h3 class="product-title fs-sm text-truncate"><a :href="origin + product.url">{{ product.name }} </a></h3>
                         <div class="d-flex flex-wrap justify-content-between align-items-center" v-if="product.category_string">
@@ -72,7 +72,7 @@
                         </div>
                     </div>
                     <div class="product-floating-btn" v-if="product.quantity > 0 && product.combo == 0">
-                        <button class="btn btn-primary btn-shadow btn-sm" :disabled="product.disabled" v-on:click="add(product.id, product.quantity)" type="button">+<i class="ci-cart fs-base ms-1"></i></button>
+                        <button class="btn btn-primary btn-shadow btn-sm" :disabled="product.disabled" v-on:click="add(product.id, product.quantity)" type="button"><i class="ci-cart fs-base ms-0"></i></button>
                     </div>
 
                     <div class="product-floating-btn" v-if="product.quantity > 0 && product.combo == 1">

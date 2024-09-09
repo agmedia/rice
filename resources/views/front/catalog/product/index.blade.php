@@ -163,7 +163,7 @@
                 <h1 class="h3 fs-3 fw-medium">{{ $prod->name }}</h1>
 
                 <div class="mb-1">
-                    @if ($prod->main_price > $prod->main_special or $prod->action and !$prod->action->min_cart)
+                    @if ($prod->main_price > $prod->main_special or $prod->action and !$prod->action->min_cart and !$prod->action->coupon)
                         <span class="h3 fw-normal text-accent me-1">{{ $prod->main_special_text }}</span>
                         <span class="text-muted fs-lg me-3">*{{ $prod->main_price_text }}</span>
                     @else
