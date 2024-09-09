@@ -25,6 +25,7 @@ return [
     'action' => 'Discount',
     'status' => 'Status',
     'edit' => 'Edit',
+    'lock' => 'Lock',
     'no_action' => 'No discounts or extra set so far...',
     'save' => 'Save',
     'delete' => 'Delete',

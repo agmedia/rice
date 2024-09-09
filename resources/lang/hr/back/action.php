@@ -25,6 +25,7 @@ return [
     'action' => 'Popust',
     'status' => 'Status',
     'edit' => 'Uredi',
+    'lock' => 'Zaključaj',
     'no_action' => 'Nema akcija...',
     'save' => 'Snimi',
     'delete' => 'Obriši',
