@@ -326,6 +326,7 @@ class AgCart extends Model
         $coupon_conditions = Helper::hasCouponCartConditions($this->cart, $this->coupon);
         $loyalty_conditions = Helper::hasLoyaltyCartConditions($this->cart, intval($this->loyalty));
         $min_cart_condition = Helper::hasMinQuantityCartCondition($this->cart);
+        $action_on_total_cart_condition = Helper::hasActionOnTotalCartCondition($this->cart);
 
         if ($payment_method) {
             $str = str_replace('+', '', $payment_method->getValue());
@@ -352,6 +353,10 @@ class AgCart extends Model
 
         if ($min_cart_condition) {
             $this->cart->condition($min_cart_condition);
+        }
+
+        if ($action_on_total_cart_condition) {
+            $this->cart->condition($action_on_total_cart_condition);
         }
 
         // Style response array

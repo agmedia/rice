@@ -195,14 +195,16 @@ class Action extends Model
     public function setConditionAttributes(string $coupon = ''): array
     {
         $response = [
+            'name' => 'Akcija',
             'type'        => '',
-            'description' => ''
+            'value' => ''
         ];
 
         if ($coupon != '') {
             $response = [
+                'name' => 'Akcija',
                 'type'        => 'coupon',
-                'description' => $coupon
+                'value' => $coupon
             ];
         }
 

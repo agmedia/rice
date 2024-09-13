@@ -8,6 +8,7 @@ use App\Models\Back\Marketing\Action;
 use App\Models\Back\Settings\Settings;
 use App\Models\Back\Widget\WidgetGroup;
 use App\Models\Front\Blog;
+use App\Models\Front\Catalog\ProductAction;
 use App\Models\Front\Loyalty;
 use App\Models\Front\Recepti;
 use App\Models\Front\Catalog\Author;
@@ -755,6 +756,38 @@ class Helper
         return $condition;
     }
 
+    /**
+     * @param $cart
+     *
+     * @return CartCondition|false
+     * @throws \Darryldecode\Cart\Exceptions\InvalidConditionException
+     */
+    public static function hasActionOnTotalCartCondition($cart = null)
+    {
+        $condition     = false;
+        $special = new Special();
+        $action   = $special->resolveAction('total');
+
+        if ($action) {
+            $real_action = Action::query()->where('id', $action->id)->first();
+            $value    = self::calculateDiscountPrice($cart->getTotal(), $real_action->discount, $real_action->type);
+            $discount = $cart->getTotal() - $value;
+
+            $condition = new CartCondition(array(
+                'name'       => $real_action->translation->title,
+                'type'       => 'special',
+                'target'     => 'total', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+                'value'      => '-' . $discount,
+                'attributes' => [
+                    'type'        => 'total',
+                    'description' => 'Action on total amount'
+                ]
+            ));
+        }
+
+        return $condition;
+    }
+
 
     /**
      * @param        $cart
@@ -775,7 +808,7 @@ class Helper
                     $discount = $cart->getTotal() - $value;
 
                     $condition = new CartCondition(array(
-                        'name'       => $action->title,
+                        'name'       => $action->translation->title,
                         'type'       => 'special',
                         'target'     => 'total', // this condition will be applied to cart's subtotal when getSubTotal() is called.
                         'value'      => '-' . $discount,

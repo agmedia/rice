@@ -58,11 +58,13 @@ class Special
 
 
     /**
+     * @param string $group
+     *
      * @return ProductAction|null
      */
-    public function resolveAction(): ?ProductAction
+    public function resolveAction(string $group = ''): ?ProductAction
     {
-        return $this->setupAvailableActions()->getAction();
+        return $this->setupAvailableActions($group)->getAction();
     }
 
 
@@ -171,7 +173,7 @@ class Special
      */
     public function isActionOnAllProducts(ProductAction|null $product_action = null): bool
     {
-        if (in_array($product_action->group, ['all', 'total'])) {
+        if (in_array($product_action->group, ['all'])) {
             return true;
         }
 
@@ -212,24 +214,40 @@ class Special
     public function getBestAction()
     {
         if ($this->active_actions->count() > 1) {
-            $price          = $this->product->price;
-            $best_action_id = 0;
+            if ($this->active_actions->first()->group != 'total') {
+                $price          = $this->product->price;
+                $best_action_id = 0;
 
-            foreach ($this->active_actions as $action) {
-                $coupon_ok = $this->checkCoupon($action);
-                $dates_ok  = $this->checkDates($action);
+                foreach ($this->active_actions as $action) {
+                    $coupon_ok = $this->checkCoupon($action);
+                    $dates_ok  = $this->checkDates($action);
 
-                if ($coupon_ok && $dates_ok) {
-                    $temp_price = $this->getDiscountPrice($action);
+                    if ($coupon_ok && $dates_ok) {
+                        $temp_price = $this->getDiscountPrice($action);
 
-                    if ($price > $temp_price) {
-                        $price          = $temp_price;
+                        if ($price > $temp_price) {
+                            $price          = $temp_price;
+                            $best_action_id = $action->id;
+                        }
+                    }
+                }
+
+                return $this->active_actions->where('id', $best_action_id)->first();
+            }
+            else {
+                $best_action_id = 0;
+
+                foreach ($this->active_actions as $action) {
+                    $coupon_ok = $this->checkCoupon($action);
+                    $dates_ok  = $this->checkDates($action);
+
+                    if ($coupon_ok && $dates_ok) {
                         $best_action_id = $action->id;
                     }
                 }
-            }
 
-            return $this->active_actions->where('id', $best_action_id)->first();
+                return $this->active_actions->where('id', $best_action_id)->first();
+            }
         }
 
         return $this->active_actions->first();
@@ -237,11 +255,17 @@ class Special
 
 
     /**
+     * @param string $group
+     *
      * @return Special
      */
-    private function setupAvailableActions(): Special
+    private function setupAvailableActions(string $group = ''): Special
     {
-        $this->active_actions = ProductAction::query()->active()->get();
+        if ($group == '') {
+            $this->active_actions = ProductAction::query()->where('group', $group)->active()->get();
+        } else {
+            $this->active_actions = ProductAction::query()->where('group', '!=', 'total')->active()->get();
+        }
 
         if ($this->active_actions->count()) {
             $this->action = $this->getBestAction();
