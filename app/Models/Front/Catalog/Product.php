@@ -484,12 +484,12 @@ class Product extends Model
                 $set[1] = '00';
             }
 
-            return number_format($price, 0, '', '.') . ',' . substr($set[1], 0, 2) . ' kn';
+            return number_format($price, 0, '', '.') . ',' . substr($set[1], 0, 2) . ' €';
         }
 
         $set = explode('.', $this->price);
 
-        return number_format($this->price, 0, '', '.') . ',' . substr($set[1], 0, 2) . ' kn';
+        return number_format($this->price, 0, '', '.') . ',' . substr($set[1], 0, 2) . ' €';
     }
 
 

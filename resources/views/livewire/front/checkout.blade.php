@@ -279,12 +279,12 @@
                         <td class="align-middle">
                             @if ($is_free_shipping and $s_method->code != 'gls_eu')
                                 0€
-                                @if ($secondary_price)0kn
+                                @if ($secondary_price)0€
                                 @endif
                             @else
                                 {{ $s_method->data->price }}€
                                 @if ($secondary_price)
-                                    <br>{{ $s_method->data->price ? number_format($s_method->data->price * $secondary_price, 2) : '0' }}kn
+                                    <br>{{ $s_method->data->price ? number_format($s_method->data->price * $secondary_price, 2) : '0' }}€
                                 @endif
                             @endif
                         </td>
