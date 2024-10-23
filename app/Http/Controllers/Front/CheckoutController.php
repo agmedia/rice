@@ -31,7 +31,7 @@ class CheckoutController extends FrontBaseController
     public function cart(Request $request)
     {
         if ($this->comboSessionProblem()) {
-            Log::info('Tu sam 3.1');
+            //Log::info('Tu sam 3.1');
             return redirect($this->getComboUrl())->with(['error' => 'Molimo odaberite combo proizvod.']);
         }
 
@@ -169,8 +169,8 @@ class CheckoutController extends FrontBaseController
             //Log::info($cart->get());
 
             $order->decreaseItems($order->products);
-            Log::info($order);
-            Log::info($order['payment_code']);
+            //Log::info($order);
+            //Log::info($order['payment_code']);
             if($order['payment_code'] !='cod'){
             Loyalty::resolveOrder($cart->get(), $order);
             }
@@ -327,15 +327,15 @@ class CheckoutController extends FrontBaseController
                 $key = 'combo.' . $item->id;
                 $session = session($key);
 
-                Log::info('$session');
+                /*Log::info('$session');
                 Log::info($session);
 
                 Log::info('$item->associatedModel->combo_set');
-                Log::info($item->associatedModel->combo_set);
+                Log::info($item->associatedModel->combo_set);*/
 
                 foreach ($item->associatedModel->combo_set as $combo_id => $combo_item) {
-                    Log::info('$combo_id');
-                    Log::info($combo_id);
+                    /*Log::info('$combo_id');
+                    Log::info($combo_id);*/
                     if ( ! isset($session[$combo_id])) {
                         //$combo_session_problem = true;
 

@@ -203,7 +203,7 @@ class ProductHelper
     {
         if ($product_id) {
             if (session()->has('combo.' . $product_id)) {
-                Log::info(session('combo.' . $product_id));
+                //Log::info(session('combo.' . $product_id));
                 return 1;
             }
         }

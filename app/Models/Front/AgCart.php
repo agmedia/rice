@@ -383,7 +383,7 @@ class AgCart extends Model
      *
      * @return array
      */
-    private function addToCart($request): array
+    public function addToCart($request): array
     {
         $this->cart->add($this->structureCartItem($request));
 

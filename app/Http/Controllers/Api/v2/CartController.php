@@ -150,9 +150,6 @@ class CartController extends Controller
      */
     public function loyalty($loyalty)
     {
-        Log::info('loyalty($loyalty)');
-        Log::info($loyalty);
-
         session([$this->key . '_loyalty' => $loyalty]);
 
         return response()->json($this->cart->hasLoyalty());
