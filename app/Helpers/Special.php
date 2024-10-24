@@ -261,7 +261,7 @@ class Special
      */
     private function setupAvailableActions(string $group = ''): Special
     {
-        if ($group == '') {
+        if ($group != '') {
             $this->active_actions = ProductAction::query()->where('status', 1)->where('group', $group)->active()->get();
         } else {
             $this->active_actions = ProductAction::query()->where('status', 1)->where('group', '!=', 'total')->active()->get();
