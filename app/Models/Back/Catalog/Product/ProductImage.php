@@ -215,7 +215,7 @@ class ProductImage extends Model
         $path = Image::cleanPath('products', $this->resource->id, $old->image);
 
         // Obriši staru i snimi novu fotku
-        Image::delete('product', $this->resource->id, $path);
+        Image::delete('products', $this->resource->id, $path);
         $new_path = Image::save('products', $image, $this->resource);
 
         $updated = $this->where('id', $id)->update([
