@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 /**
  * Class Payway
@@ -88,7 +89,7 @@ class WSpay
 
         $data['action'] = $action;
         $data['shop_id'] = $payment_method->data->shop_id;
-        $data['order_id'] = $this->order->id.'-'.date("Y");
+        $data['order_id'] = $this->order->id.'-'.date("Y").Str::random(3);
         $data['total'] = $total;
         $data['md5'] = $hash;
         $data['firstname'] = $this->order->payment_fname;
@@ -128,15 +129,15 @@ class WSpay
 
         Transaction::insert([
             'order_id' => $order->id,
-            //'success' => 1,
+            'success' => 0,
             'amount' => $request->input('Amount'),
             'signature' => $request->input('Signature'),
             'payment_type' => 'wspay',
             'payment_plan' => $request->input('PaymentPlan'),
             'payment_partner' => $request->input('Partner'),
-            'datetime' => $request->input('"TransactionDateTime'),
-            'approval_code' => $request->input('"ShoppingCartID'),
-            'pg_order_id' => $request->input('"WsPayOrderId'),
+            'datetime' => $request->input('DateTime'),
+            'approval_code' => $request->input('ShoppingCartID'),
+            'pg_order_id' => $request->input('WsPayOrderId'),
             'lang' => 'HR',
             'stan' => $request->input('STAN'),
             //'error' => $request->input('ErrorMessage'),
@@ -148,7 +149,7 @@ class WSpay
         if ($request->input('Success')) {
             Transaction::query()->where('order_id', $order->id)->update([
                 'success' => 1,
-                'error' => $request->json(),
+                'error' => json_encode($request->toArray()),
             ]);
 
             return true;
@@ -163,6 +164,12 @@ class WSpay
     }
 
 
+    /**
+     * @param \stdClass  $payment_method
+     * @param Order|null $order
+     *
+     * @return bool
+     */
     public function checkStatus(\stdClass $payment_method, Order $order = null)
     {
         if ( ! $order && ! $this->order) {
