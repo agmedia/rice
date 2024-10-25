@@ -7,6 +7,7 @@ use App\Models\Back\Orders\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -27,6 +28,12 @@ class WSpay
     private $url = [
         'test' => 'https://formtest.wspay.biz/Authorization.aspx',
         'live' => 'https://form.wspay.biz/Authorization.aspx'
+    ];
+
+
+    private $check_url = [
+        'test' => 'https://test.wspay.biz/api/services/statusCheck',
+        'live' => 'https://secure.wspay.biz/api/services/statusCheck'
     ];
 
 
@@ -119,49 +126,86 @@ class WSpay
             'order_status_id' => $status
         ]);
 
+        Transaction::insert([
+            'order_id' => $order->id,
+            //'success' => 1,
+            'amount' => $request->input('Amount'),
+            'signature' => $request->input('Signature'),
+            'payment_type' => 'wspay',
+            'payment_plan' => $request->input('PaymentPlan'),
+            'payment_partner' => $request->input('Partner'),
+            'datetime' => $request->input('"TransactionDateTime'),
+            'approval_code' => $request->input('"ShoppingCartID'),
+            'pg_order_id' => $request->input('"WsPayOrderId'),
+            'lang' => 'HR',
+            'stan' => $request->input('STAN'),
+            //'error' => $request->input('ErrorMessage'),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]);
 
 
         if ($request->input('Success')) {
-            Transaction::insert([
-                'order_id' => $order->id,
+            Transaction::query()->where('order_id', $order->id)->update([
                 'success' => 1,
-                /* 'amount' => $request->input('Amount'),
-                 'signature' => $request->input('Signature'),
-                 'payment_type' => $request->input('PaymentType'),
-                 'payment_plan' => $request->input('PaymentPlan'),
-                 'payment_partner' => $request->input('Partner'),
-                 'datetime' => $request->input('DateTime'),
-                 'approval_code' => $request->input('ApprovalCode'),
-                 'pg_order_id' => $request->input('WsPayOrderId'),
-                 'lang' => $request->input('Lang'),
-                 'stan' => $request->input('STAN'),
-                 'error' => $request->input('ErrorMessage'),*/
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
+                'error' => $request->json(),
             ]);
 
             return true;
         }
 
-        Transaction::insert([
-            'order_id' => $order->id,
+        Transaction::query()->where('order_id', $order->id)->update([
             'success' => 0,
-            /* 'amount' => $request->input('Amount'),
-             'signature' => $request->input('Signature'),
-             'payment_type' => $request->input('PaymentType'),
-             'payment_plan' => $request->input('PaymentPlan'),
-             'payment_partner' => null,
-             'datetime' => $request->input('DateTime'),
-             'approval_code' => $request->input('ApprovalCode'),
-             'pg_order_id' => null,
-             'lang' => $request->input('Lang'),
-             'stan' => null,
-             'error' => $request->input('ErrorMessage'),*/
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'error' => $request->input('ErrorMessage'),
         ]);
 
         return false;
+    }
+
+
+    public function checkStatus(\stdClass $payment_method, Order $order = null)
+    {
+        if ( ! $order && ! $this->order) {
+            return false;
+        }
+
+        if ($order) {
+            $this->order = $order;
+        }
+
+        if ($this->order->transaction()->count()) {
+            $action = $this->check_url['live'];
+
+            if ($payment_method->data->test) {
+                $action = $this->check_url['test'];
+            }
+
+            $secret_key = $payment_method->data->secret_key;
+            $shop_id = $payment_method->data->shop_id;
+            $shop_cart_id = $this->order->transaction->approval_code;
+            $signature = md5($shop_id . $secret_key . $shop_cart_id . $secret_key . $shop_id . $shop_cart_id);
+
+            $post_data = [
+                'Version' => '2.0',
+                'ShopID' => $shop_id,
+                'ShoppingCartID' => $shop_cart_id,
+                'Signature' => $signature
+            ];
+
+            try {
+                $response = Http::post($action, $post_data);
+
+                Log::info('json_encode($response)');
+                Log::info(json_encode($response));
+
+            } catch (\Exception $e) {
+                Log::error($e->getMessage());
+
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }

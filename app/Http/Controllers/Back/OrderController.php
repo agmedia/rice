@@ -10,6 +10,7 @@ use App\Mail\StatusCanceled;
 use App\Mail\StatusPaid;
 use App\Models\Back\Orders\Order;
 use App\Models\Back\Orders\OrderHistory;
+use App\Models\Back\Orders\Transaction;
 use App\Models\Back\Settings\Settings;
 use App\Models\Front\Checkout\Shipping\Gls;
 use Illuminate\Http\Request;
@@ -206,6 +207,18 @@ class OrderController extends Controller
         if (isset($label['ParcelIdList'])) {
             return response()->json(['message' => 'GLS je uspješno poslan sa ID: ' . $label['ParcelIdList'][0]]);
         }
+
+        return response()->json(['error' => 'Greška..! Molimo pokušajte ponovo ili kontaktirajte administratora..']);
+    }
+
+
+    public function api_status_check(Request $request)
+    {
+        $request->validate(['order_id' => 'required']);
+
+        $response = Transaction::checkStatus((int) $request->input('order_id'));
+
+        Log::info($response);
 
         return response()->json(['error' => 'Greška..! Molimo pokušajte ponovo ili kontaktirajte administratora..']);
     }

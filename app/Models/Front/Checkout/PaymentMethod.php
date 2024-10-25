@@ -67,6 +67,17 @@ class PaymentMethod
 
 
     /**
+     * @param string|null $code
+     *
+     * @return \Illuminate\Config\Repository|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    public function getProvider(string $code = null)
+    {
+        return $this->providers($code);
+    }
+
+
+    /**
      * @param bool $only_active
      *
      * @return array|false|Collection

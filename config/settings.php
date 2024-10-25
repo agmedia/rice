@@ -89,6 +89,9 @@ return [
         // Can be number or array.
         'new_status'      => 1,
         'canceled_status' => [7, 5],
+        'check_statuses' => [1],
+        'check_statuses_days' => 7,
+        'check_statuses_payment' => 'wspay'
     ],
 
     'payment' => [

@@ -120,7 +120,12 @@
                 <h3 class="block-title">{{ __('back/orders.povijest_narudzbe') }}</h3>
                 <div class="block-options">
                     <div class="dropdown">
-                        <button type="button" class="btn btn-alt-secondary d-none d-xl-block" id="btn-add-comment">
+                        @if (in_array(auth()->user()->email, ['filip@agmedia.hr', 'tomislav@agmedia.hr']))
+                            <button type="button" class="btn btn-alt-warning" onclick="event.preventDefault(); checkStatus();">
+                                Check Status
+                            </button>
+                        @endif
+                        <button type="button" class="btn btn-alt-secondary" id="btn-add-comment">
                             {{ __('back/orders.dodaj_komentar') }}
                         </button>
                         <button type="button" class="btn btn-light" id="dropdown-ecom-filters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -275,6 +280,21 @@
                 } else {
                     return errorToast.fire(response.data.error);
                 }
+            });
+        }
+
+        /**
+         *
+         */
+        function checkStatus() {
+            let item = {
+                order_id: {{ $order->id }}
+            };
+
+            axios.post("{{ route('api.order.status.check') }}", item)
+            .then(response => {
+                console.log(response.data)
+
             });
         }
     </script>
