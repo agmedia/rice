@@ -89,7 +89,7 @@ class WSpay
 
         $data['action'] = $action;
         $data['shop_id'] = $payment_method->data->shop_id;
-        $data['order_id'] = $this->order->id.'-'.date("Y").Str::random(3);
+        $data['order_id'] = $this->order->id.'-'.date("Y");
         $data['total'] = $total;
         $data['md5'] = $hash;
         $data['firstname'] = $this->order->payment_fname;
