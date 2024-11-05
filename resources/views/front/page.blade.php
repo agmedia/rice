@@ -25,7 +25,7 @@
     @endpush
 
     @push('js_after')
-        @if ( ! empty($og_schema))
+        @if (isset($og_schema) && ! empty($og_schema))
             <script type="application/ld+json">
                 {!! collect($og_schema)->toJson() !!}
             </script>
