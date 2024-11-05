@@ -1,6 +1,6 @@
 @extends('front.layouts.app')
-@if (request()->routeIs(['index']))
 
+@if (request()->routeIs(['index']))
 
     @section ( 'title', $page->translation->meta_title )
     @section ( 'description', $page->translation->meta_description )
@@ -22,7 +22,14 @@
         <meta name="twitter:title" content="{{ $page->translation->meta_title }}" />
         <meta name="twitter:description" content="{{ $page->translation->meta_description }}" />
         <meta name="twitter:image" content="{{ asset('media/rice-kakis.jpg') }}" />
+    @endpush
 
+    @push('js_after')
+        @if ( ! empty($og_schema))
+            <script type="application/ld+json">
+                {!! collect($og_schema)->toJson() !!}
+            </script>
+        @endif
     @endpush
 
 @else

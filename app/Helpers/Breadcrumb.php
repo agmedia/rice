@@ -94,61 +94,6 @@ class Breadcrumb
 
 
     /**
-     * @param Product|null $prod
-     *
-     * @return array
-     */
-    public function productSchema(Product $prod = null, Collection $reviews = null)
-    {
-        if ($prod) {
-            $response = [
-                '@context' => 'https://schema.org/',
-                '@type' => 'Product',
-                'description' => $prod->translation->meta_description,
-                'name' => $prod->name,
-                'image' => asset($prod->image),
-                //'url' => url($prod->url),
-                'offers' => [
-                    '@type' => 'Offer',
-                    'priceCurrency' => 'EUR',
-                    'price' => ($prod->special()) ? $prod->special() : number_format($prod->price, 2, '.', ''),
-                    'sku' => $prod->sku,
-                    'availability' => ($prod->quantity) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
-                ],
-            ];
-
-            if ($reviews->count()) {
-                $response['aggregateRating'] = [
-                    '@type' => 'AggregateRating',
-                    'ratingValue' => floor($reviews->avg('stars')),
-                    'reviewCount' => $reviews->count(),
-                ];
-                
-                foreach ($reviews as $review) {
-                    $res_review = [
-                        '@type' => 'Review',
-                        'author' => $review->fname,
-                        'datePublished' => Carbon::make($review->created_at)->locale('hr')->format('Y-m-d'),
-                        'reviewBody' => strip_tags($review->message),
-                        'name' => $prod->name,
-                        'reviewRating' => [
-                            '@type' => 'Rating',
-                            'bestRating' => '5',
-                            'ratingValue' => floor($review->stars),
-                            'worstRating' => '1'
-                        ]
-                    ];
-                }
-
-                $response['review'] = $res_review;
-            }
-
-            return $response;
-        }
-    }
-
-
-    /**
      * @return array
      */
     public function resolve()

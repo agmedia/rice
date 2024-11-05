@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Helpers\Breadcrumb;
 use App\Helpers\Helper;
+use App\Helpers\Metatags;
 use App\Helpers\ProductHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FrontBaseController;
@@ -72,7 +73,7 @@ class CatalogRouteController extends FrontBaseController
 
             $bc = new Breadcrumb();
             $crumbs = $bc->product($group, $cat, $subcat, $prod)->resolve();
-            $bookscheme = $bc->productSchema($prod, $reviews);
+            $bookscheme = Metatags::productSchema($prod, $reviews);
 
             $shipping_methods = Settings::getList('shipping', 'list.%', true);
             $payment_methods = Settings::getList('payment', 'list.%', true);
