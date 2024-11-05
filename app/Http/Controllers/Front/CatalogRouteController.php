@@ -67,16 +67,16 @@ class CatalogRouteController extends FrontBaseController
 
             $seo = Seo::getProductData($prod);
             $gdl = TagManager::getGoogleProductDataLayer($prod);
+            $reviews = $prod->reviews()->get();
+            $related = Helper::getRelated($cat, $subcat);
 
             $bc = new Breadcrumb();
             $crumbs = $bc->product($group, $cat, $subcat, $prod)->resolve();
-            $bookscheme = $bc->productBookSchema($prod);
+            $bookscheme = $bc->productSchema($prod, $reviews);
 
             $shipping_methods = Settings::getList('shipping', 'list.%', true);
             $payment_methods = Settings::getList('payment', 'list.%', true);
 
-            $reviews = $prod->reviews()->get();
-            $related = Helper::getRelated($cat, $subcat);
             $has_combo_session = 1;
 
             if ($prod->combo) {
