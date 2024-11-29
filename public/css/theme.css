@@ -18275,8 +18275,8 @@ html:not([dir=rtl]) .range-slider-ui.noUi-horizontal .noUi-handle {
     opacity: 0;
 }
 .product-card .badge {
-    right: auto;
-    left: 0.75rem;
+    left: auto;
+    right: 0.75rem;
 }
 .product-card .badge.badge-end {
     right: 0.75rem;
