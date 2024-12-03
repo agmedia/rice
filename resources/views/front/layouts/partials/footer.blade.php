@@ -123,7 +123,7 @@
 
         <div class="bg-darker px-lg-5 py-3">
             <div class="d-sm-flex justify-content-between align-items-center mx-auto px-3" >
-                <div class="fs-sm text-white  text-center text-sm-start py-3">Rice Kakis Asian Store © {{ __('front/ricekakis.sva_prava') }}. Web by <a class="text-white" href="https://www.agmedia.hr" target="_blank" rel="noopener">AG media</a></div>
+                <div class="fs-sm text-white  text-center text-sm-start py-3">Rice Kakis Asian Store © {{ __('front/ricekakis.sva_prava') }}. Web by <a class="text-white" href="https://www.agmedia.hr/usluge/izrada-web-shopa/" title="Izrada web shopa - AG media" target="_blank" rel="noopener">AG media</a></div>
                 <div class="widget widget-links widget-light pt-1 text-center text-md-end">
 
 
