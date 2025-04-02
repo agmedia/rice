@@ -51,7 +51,8 @@ class Product extends Model
         'secondary_special',
         'secondary_special_text',
         'stars',
-        'combo_set'
+        'combo_set',
+        'alt'
     ];
 
     /**
@@ -338,6 +339,18 @@ class Product extends Model
     public function getThumbAttribute($value)
     {
         return str_replace('.webp', '-thumb.webp', $this->image);
+    }
+
+
+    public function getAltAttribute($value)
+    {
+        $image = ProductImage::query()->where('image', $this->image)->with('translation')->first();
+
+        if ($image) {
+            return $image->translation->alt;
+        }
+
+        return '';
     }
 
 
