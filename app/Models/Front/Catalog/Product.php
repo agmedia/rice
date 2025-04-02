@@ -355,7 +355,10 @@ class Product extends Model
             ];
         }
 
-        return null;
+        return [
+            'title' => null,
+            'alt'   => null,
+        ];
     }
 
 
