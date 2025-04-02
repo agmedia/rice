@@ -41,7 +41,7 @@
                     <span class="badge bg-warning mt-1 ms-1 badge-end"  v-if="product.quantity <= 0">{{ trans.rasprodano }}</span>
                     <span class="badge rounded-pill bg-primary mt-1 ms-1 badge-shadow" v-if="product.main_price > product.main_special && product.action && !product.action.min_cart">-{{ ($store.state.service.getDiscountAmount(product.main_price, product.main_special)) }}%</span>
 
-                    <a class="card-img-top d-block pb-2 overflow-hidden " :href="origin + product.url"><img load="lazy" :src="product.image.replace('.webp', '-thumb.webp')" width="400" height="400" :alt="product.name">
+                    <a class="card-img-top d-block pb-2 overflow-hidden " :href="origin + product.url"><img loading="lazy" :src="product.image.replace('.webp', '-thumb.webp')" width="400" height="400" :alt="product.alt.alt" :title="product.alt.title">
                     </a>
                     <div class="card-body py-2 px-2 pt-0">
 

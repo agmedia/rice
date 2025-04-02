@@ -4631,11 +4631,12 @@ var render = function render() {
       }
     }, [_c("img", {
       attrs: {
-        load: "lazy",
+        loading: "lazy",
         src: product.image.replace(".webp", "-thumb.webp"),
         width: "400",
         height: "400",
-        alt: product.name
+        alt: product.alt.alt,
+        title: product.alt.title
       }
     })]), _vm._v(" "), _c("div", {
       staticClass: "card-body py-2 px-2 pt-0"

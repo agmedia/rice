@@ -17,7 +17,7 @@
             <span class="badge bg-primary badge-shadow">-{{ number_format(floatval(\App\Helpers\Helper::calculateDiscount($product->price, $product->special()))) }}%</span>
         @endif
         <a class="card-img-top pb-2 d-block overflow-hidden" href="{{ url($product->url) }}">
-            <img load="lazy" src="{{ str_replace('.webp','-thumb.webp', $product->image) }}" width="400" height="400" alt="{{ $product->name }}">
+            <img loading="lazy" src="{{ str_replace('.webp','-thumb.webp', $product->image) }}" width="400" height="400" alt="{{ $product->alt['alt'] }}" title="{{ $product->alt['title'] }}">
         </a>
         <div class="card-body pt-2 px-2" style="min-height: 120px;">
             <h3 class="product-title fs-sm text-truncate"><a href="{{ url($product->url) }}">{{ $product->name }}</a></h3>
