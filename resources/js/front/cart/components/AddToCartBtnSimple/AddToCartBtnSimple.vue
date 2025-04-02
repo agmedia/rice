@@ -1,5 +1,5 @@
 <template>
-    <button class="btn btn-primary btn-shadow btn-sm" :disabled="disabled" @click="add()" type="button"><i class="ci-cart fs-base ms-0"></i></button>
+    <button class="btn btn-primary btn-shadow btn-sm" :disabled="disabled" @click="add()" type="button" aria-label="add to cart button"><i class="ci-cart fs-base ms-0"></i></button>
 </template>
 
 <script>

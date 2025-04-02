@@ -3489,7 +3489,8 @@ var render = function render() {
   }), _vm._v(" "), _c("button", {
     staticClass: "btn btn-primary btn-shadow me-3 mb-1",
     attrs: {
-      disabled: _vm.disabled
+      disabled: _vm.disabled,
+      "aria-label": "add to cart button"
     },
     on: {
       click: function click($event) {
@@ -3543,7 +3544,8 @@ var render = function render() {
     staticClass: "btn btn-primary btn-shadow btn-sm",
     attrs: {
       disabled: _vm.disabled,
-      type: "button"
+      type: "button",
+      "aria-label": "add to cart button"
     },
     on: {
       click: function click($event) {
