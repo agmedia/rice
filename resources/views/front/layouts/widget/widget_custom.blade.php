@@ -14,7 +14,7 @@
                             <p class="text-black pb-1">{{ $widget['subtitle'] }}</p>
                             <div class="d-flex flex-wrap justify-content-center justify-content-xl-start"><a class="btn btn-primary btn-shadow me-2 mb-2" href="{{ url($widget['url']) }}" role="button">{{ __('front/ricekakis.pogledajte_ponudu') }} <i class="ci-arrow-right ms-2 me-n1"></i></a></div>
                         </div>
-                        <div><a href="{{ url($widget['url']) }}"><img src="{{ $widget['image'] }}" alt="{{ $widget['title'] }}" width="400" height="400"></a></div>
+                        <div><a href="{{ url($widget['url']) }}"><img src="{{ $widget['image'] }}" loading="lazy" alt="{{ $widget['title'] }}" width="400" height="400"></a></div>
                     </div>
                 </div>
             </div>
