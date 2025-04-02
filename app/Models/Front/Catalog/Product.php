@@ -349,10 +349,13 @@ class Product extends Model
         $image  = ProductImage::query()->where('image', $search)->with('translation')->first();
 
         if ($image) {
-            return $image->translation->alt;
+            return [
+                'title' => $image->translation->title,
+                'alt'   => $image->translation->alt,
+            ];
         }
 
-        return '';
+        return null;
     }
 
 
