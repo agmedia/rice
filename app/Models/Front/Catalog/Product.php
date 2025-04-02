@@ -344,7 +344,9 @@ class Product extends Model
 
     public function getAltAttribute($value)
     {
-        $image = ProductImage::query()->where('image', $this->image)->with('translation')->first();
+        $search = str_replace(config('app.url'), '', $this->image);
+        $search = str_replace('.webp', '.jpg', $search);
+        $image  = ProductImage::query()->where('image', $search)->with('translation')->first();
 
         if ($image) {
             return $image->translation->alt;
