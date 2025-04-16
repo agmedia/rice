@@ -96,6 +96,8 @@ Route::group(
             //
             Route::get('product/create/combo', [ProductController::class, 'createCombo'])->name('products.create.combo');
             Route::get('product/{product}/edit/combo', [ProductController::class, 'editCombo'])->name('products.edit.combo');
+            //
+            Route::get('product/{slug}/delete/slug', [ProductController::class, 'deleteSlug'])->name('products.delete.slug');
 
             // IZDAVAČI
             Route::get('publishers', [PublisherController::class, 'index'])->name('publishers');

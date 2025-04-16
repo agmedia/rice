@@ -9,6 +9,7 @@ use App\Models\Back\Catalog\Product\Product;
 use App\Models\Back\Catalog\Product\ProductAction;
 use App\Models\Back\Catalog\Product\ProductCategory;
 use App\Models\Back\Catalog\Product\ProductImage;
+use App\Models\Back\Catalog\Product\ProductSlug;
 use App\Models\Back\Catalog\Publisher;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -130,6 +131,8 @@ class ProductController extends Controller
     {
         $data = $product->getRelationsData();
 
+        //dd($data['slugs']->where('lang', 'hr')->all());
+
         return view('back.catalog.product.edit', compact('product', 'data'));
     }
 
@@ -171,6 +174,12 @@ class ProductController extends Controller
         }
 
         return redirect()->back()->with(['error' => 'Ops..! Greška prilikom snimanja.']);
+    }
+
+
+    public function deleteSlug(Request $request, ProductSlug $slug)
+    {
+        dd($request->all(), $slug->toArray());
     }
 
 

@@ -128,7 +128,13 @@ class ProductTranslation extends Model
             $product = Product::query()->where('id', $id)->first();
 
             if ($product) {
-                $slug = $product->translation->slug;
+                $slug_check = $product->translation($lang)->slug;
+
+                //dd($request->toArray(), $product->translation($lang)->slug, Str::slug($request->slug[$lang]));
+
+                if ($slug_check != Str::slug($request->slug[$lang])) {
+                    ProductSlug::create($slug_check, $lang, $product->id);
+                }
             }
         }
 
@@ -136,15 +142,17 @@ class ProductTranslation extends Model
             $query->where('slug', $slug);
         })->count();
 
+        $slug_exist = ProductSlug::query()->where('slug', $slug)->where('lang', $lang)->count();
+
         $cat_exist = Category::query()->whereHas('translation', function ($query) use ($slug) {
             $query->where('slug', $slug);
         })->count();
 
-        if (($cat_exist || $exist > 1) && $target == 'update') {
+        if (($cat_exist || $exist > 1 || $slug_exist) && $target == 'update') {
             return $slug . '-' . time();
         }
 
-        if (($cat_exist || $exist) && $target == 'insert') {
+        if (($cat_exist || $exist || $slug_exist) && $target == 'insert') {
             return $slug . '-' . time();
         }
 

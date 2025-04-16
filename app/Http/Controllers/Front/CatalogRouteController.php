@@ -9,6 +9,7 @@ use App\Helpers\ProductHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FrontBaseController;
 use App\Imports\ProductImport;
+use App\Models\Back\Catalog\Product\ProductSlug;
 use App\Models\Back\Settings\Settings;
 use App\Models\Front\Blog;
 use App\Models\Front\Recepti;
@@ -55,6 +56,14 @@ class CatalogRouteController extends FrontBaseController
                 $prod = Product::query()->whereHas('translation', function ($query) use ($subcat) {
                     $query->where('slug', $subcat);
                 })->first();
+
+                if ( ! $prod) {
+                    $check_slug = ProductSlug::query()->where('slug', $subcat)->first();
+
+                    if ($check_slug) {
+                        $prod = Product::query()->where('id', $check_slug->product_id)->first();
+                    }
+                }
             }
 
             $subcat = $sub_category;

@@ -495,8 +495,21 @@
                                             <div class="tab-content">
                                                 @foreach(ag_lang() as $lang)
                                                     <div id="slug-input-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-                                                        <input type="text" class="form-control" id="slug-input-{{ $lang->code }}" placeholder="{{ $lang->code }}" value="{{ isset($product) ? $product->translation($lang->code)->slug : old('slug.*') }}" disabled>
-                                                        <input type="hidden" name="slug[{{ $lang->code }}]" value="{{ isset($product) ? $product->translation($lang->code)->slug : old('slug.*') }}">
+                                                        <input type="text" name="slug[{{ $lang->code }}]" class="form-control" id="slug-input-{{ $lang->code }}" placeholder="{{ $lang->code }}" value="{{ isset($product) ? $product->translation($lang->code)->slug : old('slug.*') }}">
+                                                        {{--<input type="hidden" name="slug[{{ $lang->code }}]" value="{{ isset($product) ? $product->translation($lang->code)->slug : old('slug.*') }}">--}}
+
+                                                        @if ($data['slugs']->where('lang', $lang->code)->count())
+                                                            @foreach ($data['slugs']->where('lang', $lang->code)->all() as $slug)
+                                                                <div class="row">
+                                                                    <div class="col-md-9">{{ $slug->slug }}</div>
+                                                                    <div class="col-md-3">
+                                                                        <a class="btn btn-sm btn-alt-danger" href="{{ route('products.delete.slug', ['slug' => $slug->id]) }}">
+                                                                            <i class="fa fa-fw fa-trash-alt"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        @endif
                                                     </div>
                                                 @endforeach
                                             </div>

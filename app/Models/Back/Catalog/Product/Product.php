@@ -259,7 +259,8 @@ class Product extends Model
             'brands'     => '',
             'images'     => ProductImage::getExistingImages($this),
             'taxes'      => Settings::get('tax', 'list'),
-            'combo'      => $combo
+            'combo'      => $combo,
+            'slugs'      => ProductSlug::query()->where('product_id', $this->id)->get()
         ];
     }
 
