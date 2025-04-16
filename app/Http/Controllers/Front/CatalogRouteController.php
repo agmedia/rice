@@ -62,6 +62,10 @@ class CatalogRouteController extends FrontBaseController
 
                     if ($check_slug) {
                         $prod = Product::query()->where('id', $check_slug->product_id)->first();
+
+                        if ($prod) {
+                            return redirect($prod->url, 301);
+                        }
                     }
                 }
             }
