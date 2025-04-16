@@ -499,16 +499,17 @@
                                                         {{--<input type="hidden" name="slug[{{ $lang->code }}]" value="{{ isset($product) ? $product->translation($lang->code)->slug : old('slug.*') }}">--}}
 
                                                         @if ($data['slugs']->where('lang', $lang->code)->count())
+                                                                <div class="row mt-4">
+                                                                    <div class="col-md-12 pb-2"><label>Arhiva SEO url-ova</label></div>
                                                             @foreach ($data['slugs']->where('lang', $lang->code)->all() as $slug)
-                                                                <div class="row">
-                                                                    <div class="col-md-9">{{ $slug->slug }}</div>
-                                                                    <div class="col-md-3">
+                                                                    <div class="col-md-9"><p class="pl-3">{{ $slug->slug }}</p></div>
+                                                                    <div class="col-md-3 text-right">
                                                                         <a class="btn btn-sm btn-alt-danger" href="{{ route('products.delete.slug', ['slug' => $slug->id]) }}">
                                                                             <i class="fa fa-fw fa-trash-alt"></i>
                                                                         </a>
                                                                     </div>
-                                                                </div>
                                                             @endforeach
+                                                                </div>
                                                         @endif
                                                     </div>
                                                 @endforeach
