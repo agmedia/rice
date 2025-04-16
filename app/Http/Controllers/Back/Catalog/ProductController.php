@@ -177,9 +177,17 @@ class ProductController extends Controller
     }
 
 
+    /**
+     * @param Request     $request
+     * @param ProductSlug $slug
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function deleteSlug(Request $request, ProductSlug $slug)
     {
-        dd($request->all(), $slug->toArray());
+        $slug->delete();
+
+        return redirect()->back()->with(['success' => 'SEO Url je uspješno obrisan!']);
     }
 
 
