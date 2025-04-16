@@ -241,6 +241,7 @@ class Product extends Model
             $this->resolveCategories($this->id)
                  ->resolveCombo($this->id);
             ProductTranslation::edit($this->id, $this->request);
+            ProductTranslation::updateURL($this->id);
 
             return $this;
         }

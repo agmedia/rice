@@ -58,7 +58,7 @@ class CatalogRouteController extends FrontBaseController
                 })->first();
 
                 if ( ! $prod) {
-                    $check_slug = ProductSlug::query()->where('slug', $subcat)->first();
+                    $check_slug = ProductSlug::query()->where('slug', $subcat)->where('lang', current_locale())->first();
 
                     if ($check_slug) {
                         $prod = Product::query()->where('id', $check_slug->product_id)->first();
