@@ -78,12 +78,18 @@ class Metatags
                 'sku' => $prod->sku,
                 'description' => $prod->translation->meta_description,
                 'name' => $prod->name,
-                'image' => asset($prod->image),
+                'url' => url($prod->url),
+                'image' => [
+                    '@type' => 'ImageObject',
+                    'url' => asset($prod->image),
+                    'name' => $prod->alt,
+                    'width' => 500,
+                    'height' => 500,
+                ],
                 'brand' => [
                     '@type' => 'Brand',
                     'name' => $prod->brand->title,
                 ],
-                'url' => url($prod->url),
                 'offers' => [
                     '@type' => 'Offer',
                     'priceCurrency' => 'EUR',
