@@ -23,6 +23,8 @@
         <meta name="twitter:title" content="{{ $page->translation->meta_title }}" />
         <meta name="twitter:description" content="{{ $page->translation->meta_description }}" />
         <meta name="twitter:image" content="{{ asset('media/rice-kakis.jpg') }}" />
+
+        <meta property="og:updated_time"  content="{{ $page->updated_at }}">
     @endpush
 
     @push('js_after')

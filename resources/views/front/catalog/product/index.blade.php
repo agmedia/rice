@@ -26,6 +26,7 @@
     <meta name="twitter:title" content="{{ $seo['title'] }}" />
     <meta name="twitter:description" content="{{ $seo['description'] }}" />
     <meta name="twitter:image" content="{{ asset($prod->image) }}" />
+    <meta property="og:updated_time"  content="{{ $prod->updated_at }}">
 
 @endpush
 {{--
