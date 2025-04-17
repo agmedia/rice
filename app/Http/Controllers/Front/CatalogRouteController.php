@@ -24,6 +24,7 @@ use App\Models\Seo;
 use App\Models\TagManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -97,7 +98,9 @@ class CatalogRouteController extends FrontBaseController
                 $has_combo_session = ProductHelper::checkComboProductSession($prod->id);
             }
 
-            return view('front.catalog.product.index', compact('prod', 'group', 'cat', 'subcat', 'related', 'seo', 'shipping_methods' , 'payment_methods', 'crumbs', 'bookscheme', 'gdl', 'reviews', 'has_combo_session'));
+            $view = view('front.catalog.product.index', compact('prod', 'group', 'cat', 'subcat', 'related', 'seo', 'shipping_methods' , 'payment_methods', 'crumbs', 'bookscheme', 'gdl', 'reviews', 'has_combo_session'));
+
+            return response($view)->header('Last-Modified', Carbon::make($prod->updated_at)->toRfc7231String());
         }
 
         $list = [];
@@ -384,7 +387,9 @@ class CatalogRouteController extends FrontBaseController
      */
     public function page(Page $page)
     {
-        return view('front.page', compact('page'));
+        $view = view('front.page', compact('page'));
+
+        return response($view)->header('Last-Modified', Carbon::make($page->updated_at)->toRfc7231String());
     }
 
 
@@ -405,7 +410,9 @@ class CatalogRouteController extends FrontBaseController
 
         $blog->description = Helper::setDescription($blog->description, $blog->id);
 
-        return view('front.blog', compact('blog','frontblogs'));
+        $view = view('front.blog', compact('blog','frontblogs'));
+
+        return response($view)->header('Last-Modified', Carbon::make($blog->updated_at)->toRfc7231String());
     }
 
 
@@ -427,7 +434,9 @@ class CatalogRouteController extends FrontBaseController
 
         $recepti->description = Helper::setDescription($recepti->description, $recepti->id);
 
-        return view('front.recepti', compact('recepti','receptin'));
+        $view = view('front.recepti', compact('recepti','receptin'));
+
+        return response($view)->header('Last-Modified', Carbon::make($recepti->updated_at)->toRfc7231String());
     }
 
 
