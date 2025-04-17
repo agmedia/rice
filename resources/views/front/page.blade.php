@@ -6,6 +6,7 @@
     @section ( 'description', $page->translation->meta_description )
     @push('meta_tags')
         <link rel="canonical" href="{{ env('APP_URL')}}{{ current_locale() == 'hr' ? '' : current_locale() }}" />
+        <meta property="fb:app_id" content="1201186234921048" />
         <meta property="og:locale" content="hr_HR" />
         <meta property="og:site_name" content="Rice Kakis | Asian Store" />
         <meta property="og:type" content="website" />
