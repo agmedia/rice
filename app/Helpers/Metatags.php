@@ -79,6 +79,7 @@ class Metatags
                 'description' => $prod->translation->meta_description,
                 'name' => $prod->name,
                 'url' => url($prod->url),
+                'itemCondition' => 'https://schema.org/NewCondition',
                 'image' => [
                     '@type' => 'ImageObject',
                     'url' => asset($prod->image),
