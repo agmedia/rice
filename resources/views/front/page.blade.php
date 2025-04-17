@@ -46,7 +46,9 @@
 
       {{--@include('front.layouts.partials.hometemp') --}}
 
-      <h1 style="visibility: hidden;height:1px "> Rice Kakis Azijski Webshop</h1>
+      <h1 style="visibility: hidden;height:1px "> $page->translation->meta_title</h1>
+
+      <p style="visibility: hidden;height:1px ">Naručite noodles,japanski mochi, bubble tea, korejske grickalice, azijske umake i začine i smrznute  gyoze – online ili posjetite nas u trgovini Petrinjska 9, Zagreb!</p>
 
       <div class="d-flex row justify-content-between">
           <div class="col-md-12">
