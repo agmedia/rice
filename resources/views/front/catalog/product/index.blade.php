@@ -4,6 +4,7 @@
 @push('meta_tags')
 
     <link rel="canonical" href="{{ url($prod->url) }}" />
+    <meta property="fb:app_id" content="1201186234921048" />
     <meta property="og:locale" content="hr_HR" />
     <meta property="og:type" content="product" />
     <meta property="og:title" content="{{ $seo['title'] }}" />
@@ -349,7 +350,6 @@
                         <!-- Specs table-->
                         <div class="row pt-2">
                             <div class="col-lg-7 col-sm-12">
-                                <h2 class="h6">{{ $prod->name  }}</h2>
                                 <div class=" fs-md pb-2 mb-4">
                                     {!! $prod->description !!}
                                 </div>
