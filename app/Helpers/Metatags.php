@@ -25,15 +25,35 @@ class Metatags
     public static function indexSchema(): array
     {
         return [
-            '@context' => 'https://schema.org/',
-            '@type' => 'WebSite',
-            'name' => config('app.name'),
-            'url' => config('app.url'),
-            'logo' => asset('img/logo-kakis.png'),
-            'contactPoint' => [
-                '@type' => 'ContactPoint',
-                'telephone' => '+385 99 3334448',
-                'contactType' => 'Customer Service'
+            '@context'=> 'https://schema.org',
+            '@type'=> 'LocalBusiness',
+            '@id'=> config('app.url') . '#store',
+            'name'=> config('app.name'),
+            'image'=> asset('img/logo-kakis.png'),
+            'logo'=> asset('img/logo-kakis.png'),
+            'url'=> config('app.url'),
+            'address'=> [
+                '@type'=> 'PostalAddress',
+                'streetAddress'=> 'Petrinjska 9',
+                'addressLocality'=> 'Zagreb',
+                'postalCode'=> '10000',
+                'addressCountry'=> 'HR'
+            ],
+            'geo'=> [
+                '@type'=> 'GeoCoordinates',
+                'latitude'=> 45.808,
+                'longitude'=> 15.978
+            ],
+            'telephone'=> '+385915207047',
+            'openingHours'=> [
+                'Mo-Fr 11:00-19:00',
+                'Sa 10:00-18:00'
+            ],
+            'priceRange'=> '€€',
+            'sameAs'=> [
+                'https://www.facebook.com/ricekakis',
+                'https://www.instagram.com/ricekakis',
+                'https://www.tiktok.com/@ricekakis'
             ]
         ];
     }
@@ -50,17 +70,24 @@ class Metatags
         $response = [];
 
         if ($prod) {
+            $price = ($prod->special()) ? $prod->special() : number_format($prod->price, 2, '.', '');
+
             $response = [
                 '@context' => 'https://schema.org/',
                 '@type' => 'Product',
+                'sku' => $prod->sku,
                 'description' => $prod->translation->meta_description,
                 'name' => $prod->name,
                 'image' => asset($prod->image),
-                //'url' => url($prod->url),
+                'brand' => [
+                    '@type' => 'Brand',
+                    'name' => $prod->brand->title,
+                ],
+                'url' => url($prod->url),
                 'offers' => [
                     '@type' => 'Offer',
                     'priceCurrency' => 'EUR',
-                    'price' => ($prod->special()) ? $prod->special() : number_format($prod->price, 2, '.', ''),
+                    'price' => (string) $price,
                     'sku' => $prod->sku,
                     'availability' => ($prod->quantity) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
                 ],
