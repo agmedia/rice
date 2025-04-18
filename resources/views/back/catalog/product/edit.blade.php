@@ -564,7 +564,11 @@
         $(() => {
             {!! ag_lang() !!}.forEach(function(item) {
                 ClassicEditor
-                .create(document.querySelector('#description-editor-' + item.code ))
+                .create(document.querySelector('#description-editor-' + item.code ), {
+                    ckfinder: {
+                        uploadUrl: '{{ route('products.description.image.upload') }}?_token=' + document.querySelector('meta[name="csrf-token"]').getAttribute('content') + '&product_id={{ (isset($product->id) && $product->id) ?: 0 }}',
+                    },
+                })
                 .then(editor => {
                     console.log(editor);
                 })

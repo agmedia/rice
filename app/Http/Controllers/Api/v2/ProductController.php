@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -157,5 +158,27 @@ class ProductController extends Controller
         }
 
         return response()->json(['error' => 300]);
+    }
+
+
+    public function uploadDescriptionImage(Request $request)
+    {
+        if ( ! $request->hasFile('upload')) {
+            return response()->json(['uploaded' => false]);
+        }
+
+        $product_id = $request->input('product_id');
+        $img = $request->file('upload');
+        $name = Str::random(9) . '_' . $img->getClientOriginalName();
+
+        $path = '';
+
+        if ($product_id) {
+            $path = $product_id . '/';
+        }
+
+        Storage::disk('products')->putFileAs($path, $img, $name);
+
+        return response()->json(['fileName' => $name, 'uploaded' => true, 'url' => url(config('filesystems.disks.products.url') . $path . $name)]);
     }
 }
