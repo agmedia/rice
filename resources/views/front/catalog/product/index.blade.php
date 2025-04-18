@@ -364,7 +364,7 @@
 
                                 @if ($prod->translation->sastojci or $prod->translation->podaci)
 
-                                    <h3 class="h6">{{ __('front/ricekakis.dodatne_informacije') }}</h3>
+                                    <h2 class="h6">{{ __('front/ricekakis.dodatne_informacije') }}</h2>
 
                                     <!-- Light table with striped rows -->
 
@@ -376,7 +376,7 @@
 
                                             @if ($prod->translation->sastojci)
                                                 <tr>
-                                                    <th>{{ __('front/ricekakis.sastojci') }}</th>
+                                                    <th><h3 class="h6 mb-0">{{ __('front/ricekakis.sastojci') }}</h3></th>
                                                 </tr>
                                                 <tr>
                                                     <td>{!! $prod->translation->sastojci !!}</td>
@@ -384,7 +384,7 @@
                                             @endif
                                             @if ($prod->translation->podaci)
                                                 <tr>
-                                                    <th>{{ __('front/ricekakis.podaci_o_prehrani') }}</th>
+                                                    <th><h3 class="h6 mb-0">{{ __('front/ricekakis.podaci_o_prehrani') }}</h3></th>
                                                 </tr>
                                                 <tr>
                                                     <td>{!! $prod->translation->podaci !!}</td>
