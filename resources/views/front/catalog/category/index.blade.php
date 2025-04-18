@@ -215,8 +215,6 @@
         <section class="col">
             <div class="card p2-5 border-0 mt-5 shadow mb-5" >
                 <div class="card-body py-md-4 py-3 px-4 ">
-                    <h2 class="fs-5 mb-4 mt-2">{{ $author->meta_title }}</h2>
-
                     {!!$author->description !!}
                 </div>
             </div>
