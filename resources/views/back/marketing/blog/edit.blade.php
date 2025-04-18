@@ -279,7 +279,7 @@
 @endsection
 
 @push('js_after')
-    <script src="{{ asset('js/plugins/ckeditor5-classic/build/ckeditor.js') }}"></script>
+    <script src="{{ asset('js/plugins/ckeditor5-classic/build/ckeditor.js?v=1') }}"></script>
     <script src="{{ asset('js/plugins/flatpickr/flatpickr.min.js') }}"></script>
 
     <!-- Page JS Helpers (CKEditor 5 plugins) -->

@@ -553,7 +553,7 @@
 @push('js_after')
     <!-- Page JS Plugins -->
     <script src="{{ asset('js/plugins/select2/js/select2.full.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/ckeditor5-classic/build/ckeditor.js') }}"></script>
+    <script src="{{ asset('js/plugins/ckeditor5-classic/build/ckeditor.js?v=1') }}"></script>
     <script src="{{ asset('js/plugins/dropzone/min/dropzone.min.js') }}"></script>
     <script src="{{ asset('js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
     <script src="{{ asset('js/plugins/jquery.maskedinput/jquery.maskedinput.min.js') }}"></script>
