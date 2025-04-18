@@ -34,6 +34,7 @@ return [
     'meta_naslov' => 'Meta title',
     '70_znakova_max' => '70 characters max',
     'meta_opis' => 'Meta description',
+    'kratki_opis' => 'Short description',
     '160_znakova_max' => '160 characters max',
     'open_graph_slika' => 'Open Graph image',
     'odaberite_sliku' => 'Choose image',

@@ -16,18 +16,18 @@ use Intervention\Image\Facades\Image;
 
 class CategoryTranslation extends Model
 {
-    
+
     /**
      * @var string
      */
     protected $table = 'category_translations';
-    
+
     /**
      * @var array
      */
     protected $guarded = ['id', 'created_at', 'updated_at'];
-    
-    
+
+
     /**
      * @param int     $id
      * @param Request $request
@@ -38,25 +38,26 @@ class CategoryTranslation extends Model
     {
         foreach (ag_lang() as $lang) {
             $saved = self::insertGetId([
-                'category_id'      => $id,
-                'lang'             => $lang->code,
-                'title'            => $request->title[$lang->code],
-                'description'      => $request->description[$lang->code],
-                'meta_title'       => $request->meta_title[$lang->code],
-                'meta_description' => $request->meta_description[$lang->code],
-                'slug'             => Str::slug($request->title[$lang->code]),
-                'created_at'       => Carbon::now(),
-                'updated_at'       => Carbon::now()
+                'category_id'       => $id,
+                'lang'              => $lang->code,
+                'title'             => $request->title[$lang->code],
+                'description'       => $request->description[$lang->code],
+                'short_description' => $request->short_description[$lang->code],
+                'meta_title'        => $request->meta_title[$lang->code],
+                'meta_description'  => $request->meta_description[$lang->code],
+                'slug'              => Str::slug($request->title[$lang->code]),
+                'created_at'        => Carbon::now(),
+                'updated_at'        => Carbon::now()
             ]);
             if ( ! $saved) {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
-    
+
+
     /**
      * @param int     $id
      * @param Request $request
@@ -67,19 +68,20 @@ class CategoryTranslation extends Model
     {
         foreach (ag_lang() as $lang) {
             $saved = self::where('category_id', $id)->where('lang', $lang->code)->update([
-                'title'            => $request->title[$lang->code],
-                'description'      => $request->description[$lang->code],
-                'meta_title'       => $request->meta_title[$lang->code],
-                'meta_description' => $request->meta_description[$lang->code],
-                'slug'             => Str::slug($request->title[$lang->code]),
-                'updated_at'       => Carbon::now()
+                'title'             => $request->title[$lang->code],
+                'description'       => $request->description[$lang->code],
+                'short_description' => $request->short_description[$lang->code],
+                'meta_title'        => $request->meta_title[$lang->code],
+                'meta_description'  => $request->meta_description[$lang->code],
+                'slug'              => Str::slug($request->title[$lang->code]),
+                'updated_at'        => Carbon::now()
             ]);
             if ( ! $saved) {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
 }

@@ -90,9 +90,9 @@
                                     @endforeach
                                 </select>
                             </div>
+
                             <div class="form-group">
                                 <label for="slug-input">{{ __('back/categories.seo_url') }}</label>
-
                                 <ul class="nav nav-pills float-right">
                                     @foreach(ag_lang() as $lang)
                                         <li @if ($lang->code == current_locale()) class="active" @endif>
@@ -102,27 +102,17 @@
                                         </li>
                                     @endforeach
                                 </ul>
-
-
                                 <div class="tab-content">
                                     @foreach(ag_lang() as $lang)
                                         <div id="slug-input-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-
-
                                             <input type="text" class="form-control" id="slug-input-{{ $lang->code }}" name="slug[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ isset($category) ? $category->translation($lang->code)->slug : old('slug.*') }}" >
-
-
                                         </div>
                                     @endforeach
                                 </div>
-
-
-
                             </div>
 
                             <div class="form-group">
                                 <label for="dm-post-edit-slug">{{ __('back/categories.opis_kategorije') }}</label>
-
                                 <ul class="nav nav-pills float-right">
                                     @foreach(ag_lang() as $lang)
                                         <li @if ($lang->code == current_locale()) class="active" @endif>
@@ -132,8 +122,6 @@
                                         </li>
                                     @endforeach
                                 </ul>
-
-
                                 <div class="tab-content">
                                     @foreach(ag_lang() as $lang)
                                         <div id="description-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
@@ -141,10 +129,31 @@
                                         </div>
                                     @endforeach
                                 </div>
-
-
-
                             </div>
+
+                            <div class="form-group">
+                                <label for="short-description-input">{{ __('back/categories.kratki_opis') }}</label>
+                                <ul class="nav nav-pills float-right">
+                                    @foreach(ag_lang() as $lang)
+                                        <li @if ($lang->code == current_locale()) class="active" @endif>
+                                            <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif " data-toggle="pill" href="#short-description-{{ $lang->code }}">
+                                                <img src="{{ asset('media/flags/' . $lang->code . '.png') }}" />
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                                <div class="tab-content">
+                                    @foreach(ag_lang() as $lang)
+                                        <div id="short-description-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
+                                            <textarea class="js-maxlength form-control" id="short-description-input-{{ $lang->code }}" name="short_description[{{ $lang->code }}]" placeholder="{{ $lang->code }}" rows="4" maxlength="160" data-always-show="true" data-placement="top">{{ isset($category) ? $category->translation($lang->code)->short_description : old('short_description.*') }}</textarea>
+                                            <small class="form-text text-muted">
+                                                {{ __('back/products.160_znakova_max') }}
+                                            </small>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -159,8 +168,6 @@
                         <div class="col-md-10">
                             <div class="form-group">
                                 <label for="meta-title-input">{{ __('back/categories.meta_naslov') }}</label>
-
-
                                 <ul class="nav nav-pills float-right">
                                     @foreach(ag_lang() as $lang)
                                         <li @if ($lang->code == current_locale()) class="active" @endif>
@@ -170,23 +177,16 @@
                                         </li>
                                     @endforeach
                                 </ul>
-
                                 <div class="tab-content">
                                     @foreach(ag_lang() as $lang)
                                         <div id="meta_title-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-
-
                                             <input type="text" class="js-maxlength form-control" id="meta-title-input-{{ $lang->code }}" name="meta_title[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ isset($category) ? $category->translation($lang->code)->meta_title : old('meta_title.*') }}" maxlength="70" data-always-show="true" data-placement="top">
-
-
                                             <small class="form-text text-muted">
                                                 {{ __('back/products.70_znakova_max') }}
                                             </small>
                                         </div>
                                     @endforeach
                                 </div>
-
-
                             </div>
 
                             <div class="form-group">
@@ -201,11 +201,8 @@
                                     @endforeach
                                 </ul>
                                 <div class="tab-content">
-
-
                                     @foreach(ag_lang() as $lang)
                                         <div id="meta-description-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-
                                             <textarea class="js-maxlength form-control" id="meta-description-input-{{ $lang->code }}" name="meta_description[{{ $lang->code }}]" placeholder="{{ $lang->code }}" rows="4" maxlength="160" data-always-show="true" data-placement="top">{{ isset($category) ? $category->translation($lang->code)->meta_description : old('meta_description.*') }}</textarea>
                                             <small class="form-text text-muted">
                                                 {{ __('back/products.160_znakova_max') }}
@@ -213,9 +210,6 @@
                                         </div>
                                     @endforeach
                                 </div>
-
-
-
                             </div>
 
                             <div class="form-group row">
