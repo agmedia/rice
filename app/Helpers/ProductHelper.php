@@ -83,7 +83,7 @@ class ProductHelper
         if ( ! $subcategory) {
             $psub = $product->subcategory();
 
-            if ($psub) {
+            if ($psub and $category) {
                 foreach ($category->subcategories()->get() as $sub) {
                     if ($sub->id == $psub->id) {
                         $subcategory = $psub;
