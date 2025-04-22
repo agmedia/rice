@@ -7,6 +7,7 @@ use App\Helpers\ProductHelper;
 use App\Helpers\Special;
 use App\Models\Back\Catalog\Product\ProductAction;
 use App\Models\Back\Catalog\Product\ProductCombo;
+use App\Models\Back\Catalog\Product\ProductSlug;
 use App\Models\Back\Marketing\Review;
 use App\Models\Back\Settings\Settings;
 use Carbon\Carbon;
@@ -98,7 +99,26 @@ class Product extends Model
     {
         return static::whereHas('translation', function ($query) use ($value) {
             $query->where('slug', $value);
-        })->first() ?? abort(404);
+        })->first() ?? $this->checkSlug($value);;
+    }
+
+
+    private function checkSlug(string $slug)
+    {
+        $check_slug = ProductSlug::query()->where('slug', $slug)->where('lang', current_locale())->first();
+
+        if ($check_slug) {
+            $prod = self::query()->where('id', $check_slug->product_id)->first();
+
+            if ($prod) {
+                //dd($prod->url);
+                //return route('catalog.route', ['group' => 'kategorija-proizvoda', 'cat' => $prod->category(), 'subcat' => $prod->subcategory(), 'prod' => $prod]);
+                //return redirect($prod->url, 301);
+                return $prod;
+            }
+        }
+
+        return abort(404);
     }
 
 

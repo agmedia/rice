@@ -47,6 +47,7 @@ class CatalogRouteController extends FrontBaseController
     public function resolve(Request $request, $group, Category $cat = null, $subcat = null, Product $prod = null)
     {
         //dd($request->toArray(), $group, $cat, $subcat, $prod);
+        //dd($request->all(), $request->path(), $request->url(), $request->getRequestUri());
         //
         if ($subcat) {
             $sub_category = Category::whereHas('translation', function ($query) use ($subcat) {
@@ -59,14 +60,10 @@ class CatalogRouteController extends FrontBaseController
                 })->first();
 
                 if ( ! $prod) {
-                    $check_slug = ProductSlug::query()->where('slug', $subcat)->where('lang', current_locale())->first();
+                    $prod = $this->checkSlug($subcat);
 
-                    if ($check_slug) {
-                        $prod = Product::query()->where('id', $check_slug->product_id)->first();
-
-                        if ($prod) {
-                            return redirect($prod->url, 301);
-                        }
+                    if ($prod) {
+                        return redirect($prod->url, 301);
                     }
                 }
             }
@@ -76,6 +73,12 @@ class CatalogRouteController extends FrontBaseController
 
         // Check if there is Product set.
         if ($prod) {
+            $slug = substr($request->path(), strrpos($request->path(), '/') + 1);
+            //dd($slug, $prod->translation->slug, $slug == $prod->translation->slug);
+            if ($slug != $prod->translation->slug) {
+                return redirect($prod->url, 301);
+            }
+
             if ( ! $prod->status) {
                 abort(404);
             }
@@ -129,6 +132,22 @@ class CatalogRouteController extends FrontBaseController
         $crumbs = (new Breadcrumb())->category($group, $cat, $subcat)->resolve();
 
         return view('front.catalog.category.index', compact('group', 'list', 'cat', 'subcat', 'prod', 'crumbs', 'meta_tags'));
+    }
+
+
+    private function checkSlug(string $slug)
+    {
+        $check_slug = ProductSlug::query()->where('slug', $slug)->where('lang', current_locale())->first();
+
+        if ($check_slug) {
+            $prod = Product::query()->where('id', $check_slug->product_id)->first();
+
+            if ($prod) {
+                return $prod;
+            }
+        }
+
+        return null;
     }
 
 
