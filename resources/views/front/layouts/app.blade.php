@@ -173,7 +173,6 @@
     })
 </script>
 
-{{-- <script src="https://grwapi.net/widget.min.js"></script>--}}
 @stack('js_after')
 
 </body>
