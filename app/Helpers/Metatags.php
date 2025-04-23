@@ -83,7 +83,7 @@ class Metatags
                 'image' => [
                     '@type' => 'ImageObject',
                     'url' => asset($prod->image),
-                    'name' => $prod->alt,
+                    'name' => $prod->alt['title'],
                     'width' => 500,
                     'height' => 500,
                 ],
