@@ -203,7 +203,9 @@
 
                     @endif
 
-                @if ( $prod->quantity > 0)
+
+
+                @if ( $prod->quantity > 0 and $prod->category()->id != 36 )
                     <add-to-cart-btn id="{{ $prod->id }}" available="{{ $prod->quantity }}" @if (isset($prod->action->min_cart)) fullprice="{{ $fullprice }}" min_cart="{{ $prod->action->min_cart }}" @else min_cart="1"  @endif></add-to-cart-btn>
                 @endif
 
