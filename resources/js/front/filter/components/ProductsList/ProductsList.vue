@@ -71,13 +71,21 @@
                             </span>
                         </div>
                     </div>
-                    <div class="product-floating-btn" v-if="product.quantity > 0 && product.combo == 0">
-                        <button class="btn btn-primary btn-shadow btn-sm" :disabled="product.disabled" v-on:click="add(product.id, product.quantity)" type="button"><i class="ci-cart fs-base ms-0"></i></button>
+                    <div v-if="(product.url).includes('smrznuti-proizvodi')">
+<!--                        <div class="product-floating-btn">
+                            <a href="#" class="btn btn-primary btn-shadow btn-sm" ></a>
+                        </div>-->
+                    </div>
+                    <div v-else>
+                        <div class="product-floating-btn" v-if="product.quantity > 0 && product.combo == 0">
+                            <button class="btn btn-primary btn-shadow btn-sm" :disabled="product.disabled" v-on:click="add(product.id, product.quantity)" type="button"><i class="ci-cart fs-base ms-0"></i></button>
+                        </div>
+
+                        <div class="product-floating-btn" v-if="product.quantity > 0 && product.combo == 1">
+                            <a :href="origin + product.url" class="btn btn-primary btn-shadow btn-sm" >+<i class="ci-cart fs-base ms-1"></i></a>
+                        </div>
                     </div>
 
-                    <div class="product-floating-btn" v-if="product.quantity > 0 && product.combo == 1">
-                        <a :href="origin + product.url" class="btn btn-primary btn-shadow btn-sm" >+<i class="ci-cart fs-base ms-1"></i></a>
-                    </div>
                 </div>
             </div>
         </div>
