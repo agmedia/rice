@@ -4,7 +4,7 @@
         @section ( 'description', 'Gastronomske poslastice vas očekuju: Uživajte u primamljivom mochiju, bubble tea-u, kimchiju, proizvodima bez glutena i ukusnim umacima.' )
 @else
     @section ( 'title', $blog->title. ' - Rice Kakis | Asian Store' )
-@section ( 'description', $blog->meta_description )
+@section ( 'description',  $blog->translation->meta_description )
     @push('meta_tags')
         <link rel="canonical" href="{{ route('catalog.route.blog', ['blog' => $blog]) }}" />
         <meta property="og:locale" content="hr_HR" />
