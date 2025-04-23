@@ -109,7 +109,7 @@
 <!-- Main theme script-->
 <script src="{{ asset('js/cart.js?v=2.1.4') }}"></script>
 <script src="{{ asset('js/theme.min.js') }}"></script>
-<script src="https://grwapi.net/widget.min.js"></script>
+t>
 
 <script type="text/javascript">
     $(document).ready(function() {
