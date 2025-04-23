@@ -78,7 +78,6 @@ class Metatags
                 'sku' => $prod->sku,
                 'description' => $prod->translation->meta_description,
                 'name' => $prod->name,
-                'url' => url($prod->url),
                 'itemCondition' => 'https://schema.org/NewCondition',
                 'image' => [
                     '@type' => 'ImageObject',
@@ -96,6 +95,7 @@ class Metatags
                     'priceCurrency' => 'EUR',
                     'price' => (string) $price,
                     'sku' => $prod->sku,
+                    'url' => url($prod->url),
                     'availability' => ($prod->quantity) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
                 ],
             ];
