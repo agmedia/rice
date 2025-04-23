@@ -6,7 +6,7 @@
     @section ( 'title', $blog->title. ' - Rice Kakis | Asian Store' )
 @section ( 'description',  $blog->translation->meta_description )
     @push('meta_tags')
-        <link rel="canonical" href="{{ route('catalog.route.blog', ['blog' => $blog]) }}" />
+        <link rel="canonical" href="{{ route('catalog.route.blog', ['blog' => $blog]) }}/{{ $blog->translation->slug }}" />
         <meta property="og:locale" content="hr_HR" />
         <meta property="og:type" content="product" />
         <meta property="og:title" content="{{ $blog->title }}" />
