@@ -88,7 +88,7 @@ class Metatags
                 ],
                 'brand' => [
                     '@type' => 'Brand',
-                    'name' => $prod->brand->title,
+                    'name' => $prod->brand ? $prod->brand->title : '',
                 ],
                 'offers' => [
                     '@type' => 'Offer',
