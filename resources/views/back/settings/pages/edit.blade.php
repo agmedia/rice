@@ -73,6 +73,29 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="short-description-input">{{ __('back/blog.sazetak') }}</label>
+
+                                <ul class="nav nav-pills float-right">
+                                    @foreach(ag_lang() as $lang)
+                                        <li @if ($lang->code == current_locale()) class="active" @endif>
+                                            <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif " data-toggle="pill" href="#short-description-{{ $lang->code }}">
+                                                <img src="{{ asset('media/flags/' . $lang->code . '.png') }}" />
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+
+                                <div class="tab-content">
+                                    @foreach(ag_lang() as $lang)
+                                        <div id="short-description-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
+                                            <textarea class="form-control" id="short-description-input-{{ $lang->code }}" name="short_description[{{ $lang->code }}]" rows="3" placeholder="{{ $lang->code }}">{{ isset($page) ? $page->translation($lang->code)->short_description : old('short_description.*') }}</textarea>
+                                            <div class="form-text text-muted font-size-sm font-italic">{{ __('back/blog.vidljivo_na_pocetnoj_stranici') }}</div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="group-select">{{ __('back/info.grupa') }}</label>
                                 <select class="js-select2 form-control" id="group-select" name="group" style="width: 100%;">
                                     @foreach ($groups as $group)
@@ -107,12 +130,14 @@
                                     </ul>
 
 
+
+
                                     <div class="tab-content">
                                         @foreach(ag_lang() as $lang)
                                             <div id="description-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
                                                 <textarea id="description-editor-{{ $lang->code }}" name="description[{{ $lang->code }}]" placeholder="{{ $lang->code }}">{!! isset($page) ? $page->translation($lang->code)->description : old('description.*') !!}</textarea>
                                             </div>
-                                            <input type="hidden" name="short_description[{{ $lang->code }}]" value="">
+
                                         @endforeach
                                     </div>
 
