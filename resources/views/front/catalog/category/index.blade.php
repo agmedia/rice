@@ -155,9 +155,17 @@
             @endif
             @if ($cat && ! $subcat)
                 <h1 class="h2 mb-2 mb-md-0 me-3">{{ $cat->translation->title }}</h1>
+                @if($cat->translation->short_description)
+                    <p class="mb-0 mt-2"> {{ $cat->translation->short_description }}</p>
+               @endif
             @elseif ($cat && $subcat)
                 <h1 class="h2 mb-2 mb-md-0 me-3">{{ $subcat->translation->title }}</h1>
+                    @if($subcat->translation->short_description)
+                      <p class="mb-0 mt-2"> {{ $subcat->translation->short_description }}</p>
+                   @endif
             @endif
+
+
 
 
         </section>
