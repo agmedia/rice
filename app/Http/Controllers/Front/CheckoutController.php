@@ -190,12 +190,13 @@ class CheckoutController extends FrontBaseController
 
         $data['order'] = CheckoutSession::getOrder();
 
-        if ( ! $data['order'] || ! $request->has('oid')) {
-            return redirect()->route('index');
-        }
+        if ( ! $data['order']) {
+            if ($request->has('oid')) {
+                $data['order']['id'] = $request->input('oid');
 
-        if ($request->has('oid')) {
-            $data['order']['id'] = $request->input('oid');
+            } else {
+                return redirect()->route('index');
+            }
         }
 
         $order = \App\Models\Back\Orders\Order::where('id', $data['order']['id'])->first();
