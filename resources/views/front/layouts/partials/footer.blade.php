@@ -128,7 +128,7 @@
 
 
 
-                    <img src="{{ asset('img/logici/ws.svg') }}" loading="lazy" alt="Visa" class="d-inline-block" style="width: 55px; margin-right: 3px; " width="55" height="35">
+                    <img src="{{ asset('media/cards/teya.svg') }}" loading="lazy" alt="Teya" class="d-inline-block" style="height: 35px; margin-right: 3px;background-color: #fff;padding:5px " width="65" height="35">
                 <img src="{{ asset('media/cards/visa.svg') }}" loading="lazy" alt="Visa" class="d-inline-block" style="width: 55px; margin-right: 3px;" width="55" height="35"> <img src="{{ asset('media/cards/maestro.svg') }}" loading="lazy" alt="Maestro" class="d-inline-block" style="width: 55px; margin-right: 3px;" width="55" height="35"> <img src="{{ asset('media/cards/mastercard.svg') }}" loading="lazy" alt="MasterCard" class="d-inline-block" style="width: 55px; margin-right: 3px;" width="55" height="35"> <img src="{{ asset('media/cards/diners.svg') }}" alt="Diners" class="d-inline-block" loading="lazy" style="width: 55px; margin-right: 3px;" width="55" height="35">
 
                 </div>
