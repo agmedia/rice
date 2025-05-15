@@ -155,6 +155,31 @@ class CheckoutController extends FrontBaseController
         return redirect()->route('checkout.error');
     }
 
+    public function orderBorgun(Request $request)
+    {
+        $order = new Order();
+
+        Log::info('Response Corvus::::::::::::::::::::::::::::::::::::::');
+        Log::info($request->toArray());
+
+
+        if ($request->has('orderid')) {
+            $id =  $request->input('orderid');
+
+            $order->setData($id);
+        }
+
+        if ($order->finish($request)) {
+            if ($request->has('return_json') && intval($request->input('return_json'))) {
+                return response()->json(['success' => 1, 'href' => route('checkout.success')]);
+            }
+
+            return redirect()->route('checkout.success');
+        }
+
+        return redirect()->route('checkout.error');
+    }
+
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
