@@ -138,6 +138,12 @@ class CheckoutController extends FrontBaseController
             $order->setData($id);
         }
 
+        if ($request->has('orderid')) {
+            $id =  $request->input('orderid');
+
+            $order->setData($id);
+        }
+
         if ($order->finish($request)) {
             if ($request->has('return_json') && intval($request->input('return_json'))) {
                 return response()->json(['success' => 1, 'href' => route('checkout.success')]);

@@ -170,6 +170,7 @@ return [
         'bank' => 'Bank transfer',
         'wspay' => 'WSPay',
         'payway' => 'T-Com Payway',
+        'borgun' => 'SecurePay',
         'corvus' => 'Corvus Pay',
         'min_order_amount' => 'Minimum order amount',
         'fee_amount' => 'Fee amount',
