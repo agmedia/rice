@@ -174,7 +174,7 @@ class CheckoutController extends FrontBaseController
                 return response()->json(['success' => 1, 'href' => route('checkout.success')]);
             }
 
-            return redirect()->route('checkout.success');
+            return redirect()->route('checkout.success', ['oid' => $id]);
         }
 
         return redirect()->route('checkout.error');
@@ -186,13 +186,23 @@ class CheckoutController extends FrontBaseController
      */
     public function success(Request $request)
     {
+        Log::info($request->toArray());
+
         $data['order'] = CheckoutSession::getOrder();
 
-        if ( ! $data['order']) {
+        if ( ! $data['order'] || ! $request->has('oid')) {
             return redirect()->route('index');
         }
 
+        if ($request->has('oid')) {
+            $data['order']['id'] = $request->input('oid');
+        }
+
         $order = \App\Models\Back\Orders\Order::where('id', $data['order']['id'])->first();
+
+        if ($request->has('oid')) {
+            $data['order'] = $order;
+        }
 
         if ($order) {
             $cart = $this->shoppingCart();
