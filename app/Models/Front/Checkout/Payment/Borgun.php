@@ -66,9 +66,9 @@ class Borgun
 
         $total = number_format($this->order->total,2, '.', '');
 
-        $merchantid         = '9256684';
-        $secretkey          = 'cdedfbb6ecab4a4994ac880144dd92dc';
-        $payment_gateway_id = '7';
+        $merchantid         = '5075304';
+        $secretkey          = '5c12a58d08e85e08407e598695e56969';
+        $payment_gateway_id = '95925';
         $success_url        = $payment_method->data->callback;
         $orderid = $this->order->id;
         $currency_code = 'EUR';
