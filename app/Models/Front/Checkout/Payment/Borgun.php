@@ -65,7 +65,6 @@ class Borgun
         }
 
         $total = number_format($this->order->total,2, '.', '');
-        $_total = $total;
 
         $merchantid         = '9256684';
         $secretkey          = 'cdedfbb6ecab4a4994ac880144dd92dc';
@@ -136,7 +135,6 @@ class Borgun
 
         $data['return'] = $payment_method->data->callback;
         $data['cancel'] = route('kosarica');
-       // $data['method'] = 'POST';
 
         return view('front.checkout.payment.borgun', compact('data'));
     }
@@ -151,14 +149,14 @@ class Borgun
     public function finishOrder(Order $order, Request $request): bool
     {
 
-         $status = ($request->has('status') && $request->input('status') == 'Ok') ? config('settings.order.status.paid') : config('settings.order.status.declined');;
+         $status = ($request->has('status') && $request->input('status') == 'OK') ? config('settings.order.status.paid') : config('settings.order.status.declined');;
 
         $order->update([
             'order_status_id' => $status
         ]);
 
         Transaction::insert([
-            'order_id' => $order->id,
+            'order_id' => $request->input('orderid'),
             'success' => 0,
             'amount' => $order->total,
             'signature' => $request->input('orderhash'),
@@ -168,7 +166,7 @@ class Borgun
         ]);
 
 
-        if ($request->input('status') == 'Ok') {
+        if ($request->input('status') == 'OK') {
             Transaction::query()->where('order_id', $order->id)->update([
                 'success' => 1,
                 'error' => json_encode($request->toArray()),
