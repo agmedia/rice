@@ -140,7 +140,7 @@ class Checkout extends Component
         if (CheckoutSession::hasPayment()) {
             $this->payment = CheckoutSession::getPayment();
         } else {
-            $this->selectPayment('corvus');
+            $this->selectPayment('bank');
         }
 
         if (CheckoutSession::hasComment()) {
