@@ -51,6 +51,9 @@
                 @elseif ($order->payment_code == 'wspay')
                     <b>{{ __('WSPay') }}</b>
                     <p style="font-size:12px">{{ __('front/cart.sb1') }} {{ $order->id }} {{ __('front/cart.sb2') }}.</p>
+                @elseif ($order->payment_code == 'borgun')
+                    <b>{{ __('Taya') }}</b>
+                    <p style="font-size:12px">{{ __('front/cart.sb1') }} {{ $order->id }} {{ __('front/cart.sb2') }}.</p>
                 @elseif ($order->payment_code == 'keks')
                     <b>{{ __('KeksPay') }}</b>
                     <p style="font-size:12px">{{ __('front/cart.sb1') }} {{ $order->id }} {{ __('front/cart.sb2') }}.</p>                @else

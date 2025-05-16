@@ -33,6 +33,8 @@
                     <b>{{ __('CorvusPay') }}</b>
                 @elseif ($order->payment_code == 'wspay')
                     <b>{{ __('WSPay') }}</b>
+                @elseif ($order->payment_code == 'borgun')
+                    <b>{{ __('Teya Payment') }}</b>
                 @elseif ($order->payment_code == 'keks')
                     <b>{{ __('KeksPay') }}</b>
                 @else

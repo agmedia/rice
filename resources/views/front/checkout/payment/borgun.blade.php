@@ -14,6 +14,9 @@
     <input type="hidden" name="customField" value="{{ $data['total'] }}"/>
 
     <input type="hidden" name="pagetype" value="0"/>
+        <input type="hidden" name="merchantemail" value="ricekakis@gmail.com"/>
+
+
 
     <input type="hidden" name="skipreceiptpage" value="1"/>
 
