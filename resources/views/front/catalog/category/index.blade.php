@@ -54,7 +54,7 @@
     @section ('title',  $brand->translation->title)
     @section ('description', $brand->translation->descriptiom)
     @push('meta_tags')
-        <link rel="canonical" href="{{ route('catalog.route.brand', ['brand' => $brand]) }}" />
+        <link rel="canonical" href="{{ route('catalog.route.brand', ['brand' => $brand->translation->slug]) }}" />
     @endpush
 @endif
 
