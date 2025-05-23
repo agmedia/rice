@@ -94,6 +94,7 @@ class Metatags
                     '@type' => 'Offer',
                     'priceCurrency' => 'EUR',
                     'price' => (string) $price,
+                    'priceValidUntil'=> now()->endOfYear()->format('Y-m-d'),
                     'sku' => $prod->sku,
                     'url' => url($prod->url),
                     'availability' => ($prod->quantity) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
@@ -110,7 +111,10 @@ class Metatags
                 foreach ($reviews as $review) {
                     $res_review = [
                         '@type' => 'Review',
-                        'author' => $review->fname,
+                        'author' => [
+                            '@type' => 'author',
+                            'name' => $review->fname,
+                        ],
                         'datePublished' => Carbon::make($review->created_at)->locale('hr')->format('Y-m-d'),
                         'reviewBody' => strip_tags($review->message),
                         'name' => $prod->name,
