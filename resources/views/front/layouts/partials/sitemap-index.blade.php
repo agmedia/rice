@@ -4,7 +4,9 @@
 
     @foreach ($items as $item)
         <sitemap>
-            <loc>{{ route('sitemap', ['sitemap' => $item]) }}</loc>
+            {{--<loc>{{ route('sitemap', ['sitemap' => $item]) }}</loc>--}}
+            <loc>{{ $item['url'] }}</loc>
+            <lastmod>{{ $item['lastmod'] }}</lastmod>
         </sitemap>
     @endforeach
 </sitemapindex>

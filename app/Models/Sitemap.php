@@ -33,10 +33,16 @@ class Sitemap
     /**
      * Sitemap constructor.
      *
-     * @param string|null $sitemap
+     * @param string|array|null $sitemap
      */
-    public function __construct(string $sitemap = null)
+    public function __construct(string|array $sitemap = null)
     {
+        if (is_array($sitemap)) {
+            $this->sitemap = $sitemap;
+
+            return $this->getIndexLastMods();
+        }
+
         $this->sitemap = $this->setSitemap($sitemap);
     }
 
@@ -70,8 +76,6 @@ class Sitemap
             return $sitemap;
         }
 
-
-
         if ($sitemap == 'pages' || $sitemap == 'pages.xml') {
             return $this->getPages();
         }
@@ -88,9 +92,37 @@ class Sitemap
             return $this->getBrands();
         }
 
-
         if ($sitemap == 'images' || $sitemap == 'img') {
             return $this->getImages();
+        }
+    }
+
+
+    /**
+     * @return void
+     */
+    private function getIndexLastMods(): void
+    {
+        foreach ($this->sitemap as $group) {
+            if ($group == 'pages') {
+                $last = Page::query()->where('group', 'page')->where('status', '=', 1)->orderBy('updated_at', 'desc')->pluck('updated_at')->first();
+            }
+            if ($group == 'categories') {
+                $last = Category::query()->where('status', '=', 1)->orderBy('updated_at', 'desc')->pluck('updated_at')->first();
+            }
+            if ($group == 'products') {
+                $last = Product::query()->where('status', '=', 1)->orderBy('updated_at', 'desc')->pluck('updated_at')->first();
+            }
+            if ($group == 'brands') {
+                $last = Brand::query()->where('status', '=', 1)->orderBy('updated_at', 'desc')->pluck('updated_at')->first();
+            }
+
+            $mod = Carbon::parse($last)->tz('UTC')->toAtomString();
+
+            $this->response[] = [
+                'url' => route('sitemap', ['sitemap' => $group]),
+                'lastmod' => $mod
+            ];
         }
     }
 
