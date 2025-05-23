@@ -94,7 +94,7 @@ class Metatags
                     '@type' => 'Offer',
                     'priceCurrency' => 'EUR',
                     'price' => (string) $price,
-                    'priceValidUntil'=> now()->endOfYear()->format('Y-m-d'),
+                    'priceValidUntil' => now()->endOfYear()->format('Y-m-d'),
                     'sku' => $prod->sku,
                     'url' => url($prod->url),
                     'availability' => ($prod->quantity) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
