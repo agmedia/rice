@@ -8,8 +8,8 @@
         @foreach ($meta_tags as $tag)
             <meta name={{ $tag['name'] }} content={{ $tag['content'] }}>
         @endforeach
-        <link rel=”alternate” href=”https://www.ricekakis.com/brand/” hreflang=”hr” />
-        <link rel=”alternate” href=”https://www.ricekakis.com/en/brand/” hreflang=”en” />
+        <link rel="alternate" href="https://www.ricekakis.com/brand/" hreflang="hr" />
+        <link rel="alternate" href="https://www.ricekakis.com/en/brand/" hreflang="en" />
     @endpush
 @endif
 @section('content')
