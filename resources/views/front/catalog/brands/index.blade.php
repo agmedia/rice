@@ -7,6 +7,9 @@
         @endforeach
     @endpush
 @endif
+@push('meta_tags')
+    @include('front.layouts.partials.hreflang')
+@endpush
 
 @section('content')
 

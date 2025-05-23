@@ -2,6 +2,10 @@
 @if(isset($frontblogs))
         @section ( 'title', 'Blog - Rice Kakis | Asian Store' )
         @section ( 'description', 'Gastronomske poslastice vas očekuju: Uživajte u primamljivom mochiju, bubble tea-u, kimchiju, proizvodima bez glutena i ukusnim umacima.' )
+        @push('meta_tags')
+        <link rel=”alternate” href=”https://www.ricekakis.com/blog/” hreflang=”hr” />
+        <link rel=”alternate” href=”https://www.ricekakis.com/en/blog/” hreflang=”en” />
+        @endpush
 @else
     @section ( 'title', $blog->title. ' - Rice Kakis | Asian Store' )
 @section ( 'description',  $blog->translation->meta_description )
@@ -24,8 +28,10 @@
         <meta name="twitter:title" content="{{ $blog->title }}" />
         <meta name="twitter:description" content="{{ $blog->translation->meta_description }}" />
         <meta name="twitter:image" content="{{ asset($blog->image) }}" />
+        @include('front.layouts.partials.hreflang')
     @endpush
 @endif
+
 @section('content')
     <nav class="mb-4" aria-label="breadcrumb">
         <ol class="breadcrumb flex-lg-nowrap">

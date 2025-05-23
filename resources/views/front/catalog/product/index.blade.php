@@ -25,12 +25,9 @@
     <meta name="twitter:title" content="{{ $seo['title'] }}" />
     <meta name="twitter:description" content="{{ $seo['description'] }}" />
     <meta name="twitter:image" content="{{ asset($prod->image) }}" />
-
-
-
 @endpush
 @push('meta_tags')
-    @include('front.layouts.partials.hreflang')
+@include('front.layouts.partials.hreflang')
 @endpush
 {{--
 @if (isset($gdl))
