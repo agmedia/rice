@@ -9,18 +9,18 @@ use Illuminate\Support\Str;
 
 class BrandTranslation extends Model
 {
-    
+
     /**
      * @var string
      */
     protected $table = 'brand_translations';
-    
+
     /**
      * @var array
      */
-    protected $guarded = ['id', 'created_at', 'updated_at'];
-    
-    
+    protected $guarded = ['id', 'created_at'];
+
+
     /**
      * @param int     $id
      * @param Request $request
@@ -49,11 +49,11 @@ class BrandTranslation extends Model
                 return false;
             }
         }
-        
+
         return true;
     }
-    
-    
+
+
     /**
      * @param int     $id
      * @param Request $request
@@ -79,7 +79,7 @@ class BrandTranslation extends Model
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -112,5 +112,5 @@ class BrandTranslation extends Model
 
         return true;
     }
-    
+
 }

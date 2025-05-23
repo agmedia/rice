@@ -18,7 +18,7 @@ class ProductAction extends Model
     /**
      * @var array
      */
-    protected $guarded = ['id', 'created_at', 'updated_at'];
+    protected $guarded = ['id', 'created_at'];
 
 
     /**
@@ -28,8 +28,8 @@ class ProductAction extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
-    
-    
+
+
     /**
      * @return mixed
      */
