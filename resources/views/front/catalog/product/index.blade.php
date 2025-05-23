@@ -5,7 +5,7 @@
 
     <link rel="canonical" href="{{ url($prod->url) }}" />
     <meta property="fb:app_id" content="1201186234921048" />
-    <meta property="og:locale" content="hr_HR" />
+    <meta property="og:locale" content="{{ current_locale() == 'hr' ? 'hr_HR' : 'en_HR' }}" />
     <meta property="og:type" content="product" />
     <meta property="og:title" content="{{ $seo['title'] }}" />
     <meta property="og:description" content="{{ $seo['description']  }}" />
@@ -26,7 +26,6 @@
     <meta name="twitter:title" content="{{ $seo['title'] }}" />
     <meta name="twitter:description" content="{{ $seo['description'] }}" />
     <meta name="twitter:image" content="{{ asset($prod->image) }}" />
-    <meta property="og:updated_time"  content="{{ $prod->updated_at }}">
 
 @endpush
 {{--
