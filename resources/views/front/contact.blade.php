@@ -1,4 +1,16 @@
 @extends('front.layouts.app')
+@if(current_locale() == 'hr')
+@section ( 'title', 'Kontaktirajte nas – Rice Kakis' )
+@else
+@section ( 'title', 'Contact Us – Rice Kakis' )
+@endif
+@push('meta_tags')
+    <link rel=”alternate” href=”https://www.ricekakis.com/recepti/” hreflang=”hr” />
+    <link rel=”alternate” href=”https://www.ricekakis.com/en/recepti/” hreflang=”en” />
+@endpush
+
+
+
 
 @section('content')
 

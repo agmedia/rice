@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Carbon;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -43,7 +44,12 @@ class HomeController extends FrontBaseController
 
         $og_schema = Metatags::indexSchema();
 
-        return view('front.page', compact('page', 'og_schema'));
+       // return view('front.page', compact('page', 'og_schema'));
+
+
+        $view = view('front.page', compact('page', 'og_schema'));
+
+        return response($view)->header('Last-Modified', Carbon::make($page->updated_at)->toRfc7231String());
     }
 
 
