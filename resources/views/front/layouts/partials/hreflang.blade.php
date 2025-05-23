@@ -20,7 +20,11 @@
             <link rel="alternate" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.recepti'), [], true) }}"hreflang="{{ Str::lower($lang->code) }}-HR" />
         @endif
         @if (isset($brand)  )
-<link rel="alternate" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.brand'), [], true) }}" hreflang="{{ Str::lower($lang->code) }}-HR" />
+
+
+<link rel="alternate" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.brand', ['brand' => $brand->translation->slug]), true) }}" hreflang="{{ Str::lower($lang->code) }}-HR" />
+
+
         @endif
 @if (isset($page) && $page->id != 5)
 <link rel="alternate" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.page', ['page' => $page->translation($lang->code)->slug]), [], true) }}" hreflang="{{ Str::lower($lang->code) }}-HR" />
