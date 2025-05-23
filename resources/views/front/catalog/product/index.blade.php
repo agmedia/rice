@@ -2,7 +2,6 @@
 @section ('title', $seo['title'])
 @section ('description', $seo['description'])
 @push('meta_tags')
-
     <link rel="canonical" href="{{ url($prod->url) }}" />
     <meta property="fb:app_id" content="1201186234921048" />
     <meta property="og:locale" content="{{ current_locale() == 'hr' ? 'hr_HR' : 'en_HR' }}" />
@@ -27,6 +26,11 @@
     <meta name="twitter:description" content="{{ $seo['description'] }}" />
     <meta name="twitter:image" content="{{ asset($prod->image) }}" />
 
+
+
+@endpush
+@push('meta_tags')
+    @include('front.layouts.partials.hreflang')
 @endpush
 {{--
 @if (isset($gdl))
