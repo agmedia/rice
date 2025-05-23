@@ -1,35 +1,28 @@
 @extends('front.layouts.app')
 
+@section ( 'title', 'Brandovi - Rice Kakis | Asian Store' )
+@section ( 'description', 'Naši brandovi azijskih namirnica' )
+
 @if (isset($meta_tags))
     @push('meta_tags')
         @foreach ($meta_tags as $tag)
             <meta name={{ $tag['name'] }} content={{ $tag['content'] }}>
         @endforeach
+        <link rel=”alternate” href=”https://www.ricekakis.com/brand/” hreflang=”hr” />
+        <link rel=”alternate” href=”https://www.ricekakis.com/en/brand/” hreflang=”en” />
     @endpush
 @endif
-@push('meta_tags')
-    @include('front.layouts.partials.hreflang')
-@endpush
-
 @section('content')
-
     <nav class="mb-4" aria-label="breadcrumb">
         <ol class="breadcrumb flex-lg-nowrap">
             <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>{{ __('front/ricekakis.homepage') }}</a></li>
             <li class="breadcrumb-item text-nowrap active" aria-current="page"><a class="text-nowrap" href="{{ route('catalog.route.brand') }}">{{ __('front/ricekakis.lista_brandova') }}</a></li>
-
-
-
         </ol>
     </nav>
-
     <section class="d-md-flex justify-content-between align-items-center mb-2 pb-2">
         <h1 class="h2 mb-1 mb-md-0 me-3">{{ __('front/ricekakis.lista_brandova') }}</h1>
 
     </section>
-
-
-
     <!-- Topics grid-->
     <section class=" py-1 mb-5">
         <div class="row align-items-center py-md-1">
