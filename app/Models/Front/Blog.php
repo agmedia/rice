@@ -2,6 +2,8 @@
 
 namespace App\Models\Front;
 
+use App\Models\Back\Settings\PageCategory;
+use App\Models\Front\Catalog\Category;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -87,6 +89,37 @@ class Blog extends Model implements \Mcamara\LaravelLocalization\Interfaces\Loca
 
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function categories()
+    {
+        return $this->hasManyThrough(Category::class, PageCategory::class, 'page_id', 'id', 'id', 'category_id');
+    }
+
+
+    /**
+     * @return Model|\Illuminate\Database\Eloquent\Relations\HasOneThrough|\Illuminate\Database\Query\Builder|mixed|object|null
+     */
+    public function category()
+    {
+        return $this->hasOneThrough(Category::class, PageCategory::class, 'page_id', 'id', 'id', 'category_id')
+                    ->where('parent_id', 0)
+                    ->first();
+    }
+
+
+    /**
+     * @return Model|\Illuminate\Database\Eloquent\Relations\HasOneThrough|\Illuminate\Database\Query\Builder|mixed|object|null
+     */
+    public function subcategory()
+    {
+        return $this->hasOneThrough(Category::class, PageCategory::class, 'page_id', 'id', 'id', 'category_id')
+                    ->where('parent_id', '!=', 0)
+                    ->first();
+    }
+
+
+    /**
      * @return string
      */
     public function getTitleAttribute()
@@ -103,6 +136,14 @@ class Blog extends Model implements \Mcamara\LaravelLocalization\Interfaces\Loca
         return $this->translation->description;
     }
 
+
+    /**
+     * @return string
+     */
+    public function getSlugAttribute()
+    {
+        return $this->translation->slug;
+    }
 
 
     /**

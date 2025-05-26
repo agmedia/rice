@@ -422,16 +422,17 @@ Route::group(
     Route::post('newsletter', [HomeController::class, 'newsletter'])->name('newsletter');
 //
     Route::get('info/{page}', [CatalogRouteController::class, 'page'])->name('catalog.route.page');
-    Route::get('blog/{blog?}', [CatalogRouteController::class, 'blog'])->name('catalog.route.blog');
 
+
+
+    Route::get('blog/{cat?}/{subcat?}/{blog?}', [CatalogRouteController::class, 'blog'])->name('catalog.route.blog');
     Route::get('blogs', [CatalogRouteController::class, 'blog'])->name('frontblogs');
 
-
-
-
-    Route::get('recepti/{recepti?}', [CatalogRouteController::class, 'recepti'])->name('catalog.route.recepti');
-
+    Route::get('recepti/{cat?}/{subcat?}/{recepti?}', [CatalogRouteController::class, 'recepti'])->name('catalog.route.recepti');
     Route::get('recepti', [CatalogRouteController::class, 'recepti'])->name('receptin');
+
+
+
 //
     Route::get('cache/image', [HomeController::class, 'imageCache']);
     Route::get('cache/thumb', [HomeController::class, 'thumbCache']);

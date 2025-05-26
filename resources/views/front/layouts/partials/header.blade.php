@@ -79,6 +79,30 @@
                          subcat="{{ isset($subcat) ? $subcat : null }}"
                          locale="{{ current_locale() }}">
             </filter-view>
+
+            <div id="pages-filter-app">
+                <div class="sidebar-nav tab-pane fade show active" id="pages-filter-blog" role="tabpanel">
+                    <pages-filter-view
+                            group="blog"
+                            title="Blog"
+                            url="{{ route('catalog.route.blog') }}"
+                            cat="{{ isset($cat) ? $cat : null }}"
+                            subcat="{{ isset($subcat) ? $subcat : null }}"
+                            locale="{{ current_locale() }}">
+                    </pages-filter-view>
+                </div>
+                <div class="sidebar-nav tab-pane fade show active" id="pages-filter-recipe" role="tabpanel">
+                    <pages-filter-view
+                            group="recepti"
+                            title="{{ __('front/ricekakis.recepti') }}"
+                            url="{{ route('catalog.route.recepti') }}"
+                            cat="{{ isset($cat) ? $cat : null }}"
+                            subcat="{{ isset($subcat) ? $subcat : null }}"
+                            locale="{{ current_locale() }}">
+                    </pages-filter-view>
+                </div>
+            </div>
+
             <!-- Menu-->
             <div class="sidebar-nav tab-pane fade" id="menu" role="tabpanel">
                 <div class="widget widget-categories">

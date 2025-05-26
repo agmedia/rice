@@ -108,6 +108,9 @@
 <script src="{{ asset('js/shufflejs/dist/shuffle.min.js') }}"></script>
 <!-- Main theme script-->
 <script src="{{ asset('js/cart.js?v=2.1.5') }}"></script>
+
+<script src="{{ asset('js/pages-filter.js') }}"></script>
+
 <script src="{{ asset('js/theme.min.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function() {

@@ -110,6 +110,8 @@ export default {
             categories: [],
             category: null,
             subcategory: null,
+            blog_categories: [],
+            recipe_categories: [],
             authors: [],
             brands: [],
             publishers: [],
@@ -211,6 +213,19 @@ export default {
             axios.post('filter/getCategories', { params }).then(response => {
                 this.categories = response.data;
                 console.log(this.categories);
+            });
+        },
+
+        /**
+         *
+         **/
+        getBlogCategories() {
+            let params = this.setParams();
+            params.group = 'blog';
+
+            axios.post('filter/getCategories', { params }).then(response => {
+                this.blog_categories = response.data;
+                console.log(this.blog_categories);
             });
         },
 

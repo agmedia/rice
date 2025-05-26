@@ -2,194 +2,146 @@
 
 namespace App\Helpers;
 
+use App\Models\Front\Blog;
 use App\Models\Front\Catalog\Category;
-use App\Models\Front\Catalog\Product;
-use App\Models\Seo;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 
+/**
+ *
+ */
 class RouteResolver
 {
 
-    private $request;
-
-    public $group;
-    public $category;
-    public $subcategory;
-    public $product;
-    //
-    public $title;
-    public $description;
-    public $canonical;
-
-    private $all_path;
+    /**
+     * @var string
+     */
+    private $group = '';
 
     /**
-     * RouteResolver constructor.
+     * @var string
      */
-    public function __construct(Request $request, $group, $cat = null, $subcat = null, Product $prod = null)
+    private $category = '';
+
+    /**
+     * @var string
+     */
+    private $subcategory = '';
+
+    /**
+     * @var string
+     */
+    private $model = '';
+
+
+    private $breadcrumbs = [];
+
+
+    /**
+     * @param string      $group
+     * @param string|null $model
+     */
+    public function __construct(string $group, string $model = null)
     {
-        $this->request = $request;
         $this->group = $group;
-        $this->category = $cat;
-        $this->subcategory = $subcat;
-        $this->product = $prod;
-        $this->all_path = Str::slug(config('settings.group_path'));
+
+        if ($model) {
+            $this->setModel($model);
+        }
     }
 
 
     /**
-     * @return bool
+     * @param string $category
+     * @param int    $parent_id
+     *
+     * @return Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
-    public function isUnwantedRoute(): bool
+    public function getCategory(string $category, int $parent_id = 0)
     {
-        if ($this->group == 'media') {
-            return true;
-        }
-
-        return false;
+        return Category::query()->whereHas('translation', function ($query) use ($category) {
+            $query->where('slug', $category);
+        })->where('parent_id', $parent_id)->first();
     }
 
 
-    public function isAllowedGroup()
+    /**
+     * @param string $slug
+     *
+     * @return string|Blog
+     */
+    public function getModel(string $slug): string|Blog
     {
-        if ($this->group) {
-            $groups = Category::getGroups();
-            $group_exist = false;
+        return $this->setModel($slug)->model;
+    }
 
-            foreach ($groups as $item) {
-                if ($item->slug == $this->group) {
-                    $this->title = $item->title;
-                    $this->description = $item->title . ' - Antikvarijat Vremeplov';
-                    $this->canonical = url($item->slug);
-                    $group_exist = true;
-                }
-            }
 
-            if ($this->group == $this->all_path) {
-                $this->group = null;
-                $this->title = 'Web shop';
-                $this->description = 'Dobro došli na stranice antikvarijata Vremeplov. Specijalizirani smo za stare razglednice, pisma, knjige, plakate,časopise te vršimo otkup i prodaju navedenih.';
-                $this->canonical = url($this->all_path);
-                $group_exist = true;
-            }
+    /**
+     * @param Builder  $model_query
+     * @param Category $category
+     *
+     * @return Builder
+     */
+    public function getModelsByCategory(Builder $model_query, Category $category)
+    {
+        return $model_query->whereHas('categories', function ($query) use ($category) {
+            $query->where('category_id', $category->id);
+        });
+    }
 
-            if ( ! $group_exist) {
-                $product = Product::query()->where('slug', $this->group)->first();
 
-                if ( ! $product) {
-                    abort(404);
-                }
+    public function attachBreadcrumbs(Category $category = null, Category $subcategory = null, $model = null)
+    {
+        if ($category) {
+            $this->breadcrumbs[] = [
+                'title' => $category->title,
+                'url' => route('catalog.route.blog', [
+                    'cat'    => $category->slug,
+                    'subcat' => null,
+                    'blog'   => null
+                ]),
+                'active' => $subcategory ? true : false
+            ];
+        }
 
-                $this->product = $product;
-            }
+        if ($subcategory) {
+            $this->breadcrumbs[] = [
+                'title' => $subcategory->title,
+                'url' => route('catalog.route.blog', [
+                    'cat'    => $category->slug,
+                    'subcat' => $subcategory->slug,
+                    'blog'   => null
+                ]),
+                'active' => $model ? true : false
+            ];
+        }
+
+        if ($model) {
+            $this->breadcrumbs[] = [
+                'title' => $subcategory->title,
+                'url' => route('catalog.route.blog', [
+                    'cat'    => $category->slug,
+                    'subcat' => $subcategory->slug,
+                    'blog'   => $model->slug
+                ]),
+                'active' => false
+            ];
+        }
+    }
+
+
+    /**
+     * @param string $model
+     *
+     * @return RouteResolver
+     */
+    private function setModel(string $model): RouteResolver
+    {
+        if ($this->group === 'blog') {
+            $this->model = Blog::query()->whereHas('translation', function ($query) use ($model) {
+                $query->where('slug', $model);
+            })->where('status', 1)->first();
         }
 
         return $this;
-    }
-
-
-    public function setRoute()
-    {
-        // Ako je grupa i kategorija_ili_artikl
-        if ( ! $this->product && ! $this->subcategory && $this->category) {
-            $category = Category::query()->where('slug', $this->category)->where('parent_id', 0)->first();
-
-            if ( ! $category) {
-                $this->product = Product::where('slug', $this->category)->first();
-
-                if ( ! $this->product) {
-                    abort(404);
-                }
-
-            } else {
-                $this->title = $category->title;
-                $this->description = $category->meta_description;
-                $this->canonical = url($this->group . '/' . $category->slug);
-            }
-
-            $this->category = $category;
-        }
-
-        // Ako je grupa, kategorija, podkategorija_ili_artikl
-        if ( ! $this->product && $this->subcategory && $this->category) {
-            $category = Category::query()->where('slug', $this->category)->where('parent_id', 0)->first();
-
-            if ( ! $category) {
-                abort(404);
-            }
-
-            $subcategory = Category::where('slug', $this->subcategory)->where('parent_id', $category->id)->first();
-
-            if ( ! $subcategory) {
-                $this->product = Product::where('slug', $this->subcategory)->first();
-
-                if ( ! $this->product) {
-                    abort(404);
-                }
-
-            } else {
-                $this->title = $subcategory->title;
-                $this->description = $subcategory->meta_description;
-                $this->canonical = url($this->group . '/' . $category->slug . '/' . $subcategory->slug);
-            }
-
-            $this->category = $category;
-            $this->subcategory = $subcategory;
-        }
-
-        if ($this->product && $this->subcategory && $this->category) {
-            $category = Category::query()->where('slug', $this->category)->where('parent_id', 0)->first();
-
-            if ( ! $category) {
-                abort(404);
-            }
-
-            $subcategory = Category::where('slug', $this->subcategory)->where('parent_id', $category->id)->first();
-
-            if ( ! $subcategory) {
-                abort(404);
-            }
-
-            if ( ! isset($this->product->id)) {
-                abort(404);
-            }
-
-            $this->category = $category;
-            $this->subcategory = $subcategory;
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * @return \stdClass
-     */
-    public function setData(): \stdClass
-    {
-        $data = new \stdClass();
-
-        $data->group = $this->group;
-        $data->category = $this->category;
-        $data->subcategory = $this->subcategory;
-
-        return $data;
-    }
-
-
-    /**
-     * @return \stdClass
-     */
-    public function setMeta(): array
-    {
-        $data = [];
-
-        $data['title'] = $this->title;
-        $data['description'] = $this->description;
-        $data['canonical'] = $this->canonical;
-        $data['tags'] = Seo::getMetaTags($this->request, 'filter');
-
-        return $data;
     }
 }

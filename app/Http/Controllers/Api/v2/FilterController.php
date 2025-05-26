@@ -42,7 +42,13 @@ class FilterController extends Controller
             $response = Helper::resolveCache('categories')->remember($cache_tag, config('cache.life'), function () use ($params) {
                 $categories = Category::active()->topList($params['group'])->sortByName()->with('subcategories')/*->withCount('products')*/ ->get();
 
-                return $this->resolveCategoryArray($categories, 'categories');
+                $type = $params['group'];
+
+                if ($type == config('settings.group_path')) {
+                    $type = 'categories';
+                }
+
+                return $this->resolveCategoryArray($categories, $type);
             });
         }
 
@@ -60,7 +66,7 @@ class FilterController extends Controller
      */
     private function resolveCategoryArray($categories, string $type, $target = null, string $parent_slug = null): array
     {
-        $locale = session('locale');
+        $locale   = session('locale');
         $response = [];
 
         foreach ($categories as $category) {
@@ -110,9 +116,27 @@ class FilterController extends Controller
 
         if ($type == 'brand') {
             $route = route('catalog.route.brand', [
-                'brand' => $target,
-                'cat'       => $parent_slug ?: $category->translation($locale)->slug,
-                'subcat'    => $parent_slug ? $category->translation($locale)->slug : null
+                'brand'  => $target,
+                'cat'    => $parent_slug ?: $category->translation($locale)->slug,
+                'subcat' => $parent_slug ? $category->translation($locale)->slug : null
+            ]);
+
+            return LaravelLocalization::getLocalizedUrl($locale, $route);
+
+        } elseif ($type == 'blog') {
+            $route = route('catalog.route.blog', [
+                'blog'   => $target,
+                'cat'    => $parent_slug ?: $category->translation($locale)->slug,
+                'subcat' => $parent_slug ? $category->translation($locale)->slug : null
+            ]);
+
+            return LaravelLocalization::getLocalizedUrl($locale, $route);
+
+        } elseif ($type == 'recepti') {
+            $route = route('catalog.route.recepti', [
+                'recepti' => $target,
+                'cat'     => $parent_slug ?: $category->translation($locale)->slug,
+                'subcat'  => $parent_slug ? $category->translation($locale)->slug : null
             ]);
 
             return LaravelLocalization::getLocalizedUrl($locale, $route);
@@ -193,7 +217,7 @@ class FilterController extends Controller
 
         if (isset($params['ids']) && $params['ids'] != '') {
             $products = (new Product())->filter($request)
-                                 ->with('action')
+                                       ->with('action')
                                        ->paginate(config('settings.pagination.front'));
         } else {
             /*$products = Helper::resolveCache('products')->remember($cache_string, config('cache.life'), function () use ($request) {
@@ -203,7 +227,7 @@ class FilterController extends Controller
             });*/
 
             $products = (new Product())->filter($request)
-                                    ->with('action')
+                                       ->with('action')
                                        ->paginate(config('settings.pagination.front'));
 
             /*foreach ($products as $product) {
@@ -225,25 +249,21 @@ class FilterController extends Controller
         if ($request->has('params')) {
             return response()->json(
                 (new Brand())->filter($request->input('params'))
-                    ->get()
-                    ->toArray()
+                             ->get()
+                             ->toArray()
             );
         }
 
         return response()->json(
             Helper::resolveCache('brands')->remember('featured', config('cache.life'), function () {
                 return Brand::query()->active()
-                    ->featured()
-                    ->basicData()
-                    ->withCount('products')
-                    ->get()
-                    ->toArray();
+                            ->featured()
+                            ->basicData()
+                            ->withCount('products')
+                            ->get()
+                            ->toArray();
             })
         );
     }
-
-
-
-
 
 }

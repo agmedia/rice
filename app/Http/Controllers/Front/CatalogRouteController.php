@@ -6,6 +6,7 @@ use App\Helpers\Breadcrumb;
 use App\Helpers\Helper;
 use App\Helpers\Metatags;
 use App\Helpers\ProductHelper;
+use App\Helpers\RouteResolver;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FrontBaseController;
 use App\Imports\ProductImport;
@@ -417,19 +418,47 @@ class CatalogRouteController extends FrontBaseController
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function blog(Blog $blog)
+    public function blog(string $cat = null, string $subcat = null, Blog $blog = null)
     {
-        if (! $blog->exists) {
-            $frontblogs = Blog::active()->get();
+        if ( ! $blog || ! $blog->exists) {
+            $frontblogs = Blog::query()->where('status', 1);
 
-            return view('front.blog', compact('frontblogs'));
+            if ($cat) {
+                $route = new RouteResolver('blog', $blog);
+
+                $category = $route->getCategory($cat);
+
+                if ( ! $category) {
+                    $blog = $route->getModel($cat);
+                }
+
+                if ( ! $blog && ! $subcat && $category) {
+                    $frontblogs = $route->getModelsByCategory($frontblogs, $category);
+                }
+
+                if ($subcat && $category) {
+                    $subcategory = $route->getCategory($subcat, $category->id);
+
+                    if ( ! $subcategory) {
+                        abort(404);
+                    }
+
+                    $frontblogs = $route->getModelsByCategory($frontblogs, $subcategory);
+                }
+            }
+
+            if ( ! $blog) {
+                $frontblogs = $frontblogs->orderBy('id', 'desc')->get();
+
+                return view('front.blog', compact('frontblogs'));
+            }
         }
 
         $frontblogs = null;
 
         $blog->description = Helper::setDescription($blog->description, $blog->id);
 
-        $view = view('front.blog', compact('blog','frontblogs'));
+        $view = view('front.blog', compact('blog', 'frontblogs'));
 
         return response($view)->header('Last-Modified', Carbon::make($blog->updated_at)->toRfc7231String());
     }
