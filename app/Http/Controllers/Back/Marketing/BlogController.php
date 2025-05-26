@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Back\Marketing;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\Catalog\Category;
 use App\Models\Back\Marketing\Blog;
+use App\Models\Back\Settings\PageCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -36,7 +38,9 @@ class BlogController extends Controller
      */
     public function create()
     {
-        return view('back.marketing.blog.edit');
+        $cats = (new Category())->getList(false, 'blog');
+
+        return view('back.marketing.blog.edit', compact('cats'));
     }
 
 
@@ -72,7 +76,9 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-        return view('back.marketing.blog.edit', compact('blog'));
+        $cats = (new Category())->getList(false, 'blog')->get('blog');
+
+        return view('back.marketing.blog.edit', compact('blog', 'cats'));
     }
 
 
@@ -110,6 +116,8 @@ class BlogController extends Controller
         $destroyed = Blog::destroy($blog->id);
 
         if ($destroyed) {
+            PageCategory::query()->where('page_id', $blog->id)->delete();
+
             return redirect()->route('blogs')->with(['success' => 'Blog was succesfully deleted!']);
         }
 
@@ -130,6 +138,8 @@ class BlogController extends Controller
             $destroyed = Blog::destroy($request->input('id'));
 
             if ($destroyed) {
+                PageCategory::query()->where('page_id', $request->input('id'))->delete();
+
                 return response()->json(['success' => 200]);
             }
         }

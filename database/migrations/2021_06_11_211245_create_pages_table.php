@@ -43,6 +43,18 @@ class CreatePagesTable extends Migration
                 ->references('id')->on('pages')
                 ->onDelete('cascade');
         });
+
+
+        Schema::create('page_category', function (Blueprint $table) {
+            $table->unsignedBigInteger('page_id')->index();
+            $table->unsignedBigInteger('category_id')->index();
+
+            $table->foreign('page_id')
+                  ->references('id')->on('pages');
+
+            $table->foreign('category_id')
+                  ->references('id')->on('categories');
+        });
     }
     
     /**
@@ -54,6 +66,7 @@ class CreatePagesTable extends Migration
     {
         Schema::dropIfExists('pages');
         Schema::dropIfExists('page_translations');
+        Schema::dropIfExists('page_category');
     }
 }
 

@@ -86,13 +86,30 @@
                                         </div>
                                     @endforeach
                                 </div>
-
-
-
-
-
-
                             </div>
+
+                            <div class="form-group row mb-4">
+                                <div class="col-md-12">
+                                    <label for="categories">{{ __('back/products.odaberi_kategorije') }}</label>
+                                    <select class="form-control" id="category-select" name="category[]" style="width: 100%;" multiple>
+                                        <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
+                                        @if ($cats)
+                                            @foreach ($cats as $id => $category)
+                                                <option value="{{ $id }}" class="font-weight-bold small" {{ ((isset($recepti)) and (in_array($id, $recepti->categories()->pluck('id')->toArray()))) ? 'selected' : '' }}>{{ $category['title'] }}</option>
+                                                @if ( ! empty($category['subs']))
+                                                    @foreach ($category['subs'] as $sub_id => $subcategory)
+                                                        <option value="{{ $sub_id }}" class="pl-3 text-sm" {{ ((isset($recepti) && $recepti->subcategory()) and ($sub_id == $recepti->subcategory()->id)) ? 'selected' : '' }}>{{ $category['title'] . ' >> ' . $subcategory['title'] }}</option>
+                                                    @endforeach
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    @error('category')
+                                    <span class="text-danger font-italic">{{ __('back/products.kategorija_je_obavezna') }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <div class="form-group row">
                                 <div class="col-xl-6">
                                     <label>{{ __('back/blog.glavna_slika') }}</label>
@@ -278,6 +295,7 @@
 @endsection
 
 @push('js_after')
+    <script src="{{ asset('js/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('js/plugins/ckeditor5-classic/build/ckeditor.js') }}"></script>
     <script src="{{ asset('js/plugins/flatpickr/flatpickr.min.js') }}"></script>
 
@@ -286,6 +304,10 @@
 
     <script>
         $(() => {
+            $('#category-select').select2({
+                placeholder: '{{ __('back/products.odaberi_kategorije') }}',
+                minimumResultsForSearch: Infinity
+            });
 
             {!! ag_lang() !!}.forEach(function(item) {
                 ClassicEditor

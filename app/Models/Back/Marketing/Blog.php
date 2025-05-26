@@ -2,10 +2,13 @@
 
 namespace App\Models\Back\Marketing;
 
+use App\Models\Back\Catalog\Category;
+use App\Models\Back\Settings\PageCategory;
 use App\Models\Back\Settings\PageTranslation;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -69,6 +72,46 @@ class Blog extends Model
 
 
     /**
+     * @return Relation
+     */
+    public function categories()
+    {
+        return $this->hasManyThrough(Category::class, PageCategory::class, 'page_id', 'id', 'id', 'category_id')->where('parent_id', '==', 0);
+    }
+
+
+    /**
+     * @return Relation
+     */
+    public function subcategories()
+    {
+        return $this->hasManyThrough(Category::class, PageCategory::class, 'page_id', 'id', 'id', 'category_id')->where('parent_id', '!=', 0);
+    }
+
+
+    /**
+     * @return Model|\Illuminate\Database\Eloquent\Relations\HasOneThrough|\Illuminate\Database\Query\Builder|mixed|object|null
+     */
+    public function category()
+    {
+        return $this->hasOneThrough(Category::class, PageCategory::class, 'page_id', 'id', 'id', 'category_id')
+                    ->where('parent_id', '=', 0)
+                    ->first();
+    }
+
+
+    /**
+     * @return Model|\Illuminate\Database\Eloquent\Relations\HasOneThrough|\Illuminate\Database\Query\Builder|mixed|object|null
+     */
+    public function subcategory()
+    {
+        return $this->hasOneThrough(Category::class, PageCategory::class, 'page_id', 'id', 'id', 'category_id')
+                    ->where('parent_id', '!=', 0)
+                    ->first();
+    }
+
+
+    /**
      * Validate new category Request.
      *
      * @param Request $request
@@ -97,6 +140,7 @@ class Blog extends Model
         $id = $this->insertGetId($this->createModelArray());
 
         if ($id) {
+            $this->resolveCategories($id);
             PageTranslation::create($id, $this->request);
 
             return $this->find($id);
@@ -116,6 +160,7 @@ class Blog extends Model
         $id = $this->update($this->createModelArray('update'));
 
         if ($id) {
+            $this->resolveCategories($this->id);
             PageTranslation::edit($this->id, $this->request);
 
             return $this;
@@ -184,5 +229,20 @@ class Blog extends Model
         }
 
         return $response;
+    }
+
+
+    /**
+     * @param int $page_id
+     *
+     * @return $this
+     */
+    private function resolveCategories(int $page_id): Blog
+    {
+        if ( ! empty($this->request->input('category')) && is_array($this->request->input('category'))) {
+            PageCategory::storeData($this->request->input('category'), $page_id);
+        }
+
+        return $this;
     }
 }

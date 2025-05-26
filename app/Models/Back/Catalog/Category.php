@@ -137,11 +137,18 @@ class Category extends Model
      *
      * @return Collection
      */
-    public function getList(bool $full = true): Collection
+    public function getList(bool $full = true, string $default_group = ''): Collection
     {
         $categories = collect();
 
-        $groups = $this->groups()->pluck('group');
+        $groups = $this->groups();
+
+        if ($default_group != '') {
+            //$groups->where('group', Str::slug(config('settings.group_path')));
+            $groups->where('group', $default_group);
+        }
+
+        $groups = $groups->pluck('group');
 
         foreach ($groups as $group) {
             if ($full) {

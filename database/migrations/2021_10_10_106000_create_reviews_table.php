@@ -18,6 +18,7 @@ class CreateReviewsTable extends Migration
             $table->bigInteger('product_id');
             $table->bigInteger('order_id');
             $table->bigInteger('user_id');
+            $table->string('lang', 2)->default(config('app.locale'));
             $table->string('fname')->nullable();
             $table->string('lname')->nullable();
             $table->string('email')->nullable();

@@ -81,7 +81,7 @@
                             </div>
 
 
-                            <div class="form-group">
+                            <div class="form-group" id="parent-select-group">
                                 <label for="parent-select">{{ __('back/categories.glavna_kategorija') }}</label>
                                 <select class="js-select2 form-control" id="parent-select" name="parent" style="width: 100%;">
                                     <option></option>
@@ -270,6 +270,20 @@
                 placeholder: '{{ __('back/categories.odaberite_ili_upisite_novu_grupu') }}',
                 tags: true
             });
+
+            // $('#group-select').on('select2:select', function (e) {
+            //     if (e.currentTarget.value == 'blog') {
+            //         $('#parent-select-group').hide();
+            //     } else {
+            //         $('#parent-select-group').show();
+            //     }
+            // })
+            //
+            // if ($('#group-select').val() == 'blog') {
+            //     $('#parent-select-group').hide();
+            // } else {
+            //     $('#parent-select-group').show();
+            // }
 
             $('#parent-select').select2({
                 placeholder: '{{ __('back/categories.ostavite_oprazno') }}'

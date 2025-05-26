@@ -110,8 +110,10 @@ class CreateProductsTable extends Migration
             $table->timestamp('date_end')->nullable();
             $table->string('badge')->nullable();
             $table->decimal('min_cart', 15, 4)->nullable();
+            $table->string('coupon')->nullable();
             $table->boolean('logged')->default(0);
             $table->integer('quantity')->unsigned()->default(0);
+            $table->boolean('lock')->default(0);
             $table->integer('viewed')->unsigned()->default(0);
             $table->integer('clicked')->unsigned()->default(0);
             $table->boolean('status')->default(0);

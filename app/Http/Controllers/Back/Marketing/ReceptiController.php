@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Back\Marketing;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\Catalog\Category;
 use App\Models\Back\Marketing\Recepti;
+use App\Models\Back\Settings\PageCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -36,7 +38,9 @@ class ReceptiController extends Controller
      */
     public function create()
     {
-        return view('back.marketing.recepti.edit');
+        $cats = (new Category())->getList(false, 'recepti');
+
+        return view('back.marketing.recepti.edit', compact('cats'));
     }
 
 
@@ -72,7 +76,9 @@ class ReceptiController extends Controller
      */
     public function edit(Recepti $recepti)
     {
-        return view('back.marketing.recepti.edit', compact('recepti'));
+        $cats = (new Category())->getList(false, 'recepti')->get('recepti');
+
+        return view('back.marketing.recepti.edit', compact('recepti', 'cats'));
     }
 
 
@@ -110,6 +116,7 @@ class ReceptiController extends Controller
         $destroyed = Recepti::destroy($recepti->id);
 
         if ($destroyed) {
+            PageCategory::query()->where('page_id', $recepti->id)->delete();
             return redirect()->route('receptis')->with(['success' => 'Recepti was succesfully deleted!']);
         }
 
@@ -130,6 +137,8 @@ class ReceptiController extends Controller
             $destroyed = Recepti::destroy($request->input('id'));
 
             if ($destroyed) {
+                PageCategory::query()->where('page_id', $request->input('id'))->delete();
+
                 return response()->json(['success' => 200]);
             }
         }

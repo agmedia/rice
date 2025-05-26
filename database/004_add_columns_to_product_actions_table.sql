@@ -1,3 +1,0 @@
-ALTER TABLE `product_actions`
-    ADD COLUMN `coupon` VARCHAR(15) NULL DEFAULT NULL AFTER `data`,
-    CHANGE COLUMN `badge` `data` TEXT NULL DEFAULT NULL;

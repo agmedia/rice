@@ -256,7 +256,7 @@ class Product extends Model
     public function getRelationsData(int $combo = 0): array
     {
         return [
-            'categories' => (new Category())->getList(false),
+            'categories' => (new Category())->getList(false, Str::slug(config('settings.group_path'))),
             'brands'     => '',
             'images'     => ProductImage::getExistingImages($this),
             'taxes'      => Settings::get('tax', 'list'),

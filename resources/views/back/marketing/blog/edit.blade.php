@@ -88,7 +88,27 @@
                                 </div>
                             </div>
 
-
+                            <div class="form-group row mb-4">
+                                <div class="col-md-12">
+                                    <label for="categories">{{ __('back/products.odaberi_kategorije') }}</label>
+                                    <select class="form-control" id="category-select" name="category[]" style="width: 100%;" multiple>
+                                        <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
+                                        @if ($cats)
+                                            @foreach ($cats as $id => $category)
+                                                <option value="{{ $id }}" class="font-weight-bold small" {{ ((isset($blog)) and (in_array($id, $blog->categories()->pluck('id')->toArray()))) ? 'selected' : '' }}>{{ $category['title'] }}</option>
+                                                @if ( ! empty($category['subs']))
+                                                    @foreach ($category['subs'] as $sub_id => $subcategory)
+                                                        <option value="{{ $sub_id }}" class="pl-3 text-sm" {{ ((isset($blog) && $blog->subcategory()) and ($sub_id == $blog->subcategory()->id)) ? 'selected' : '' }}>{{ $category['title'] . ' >> ' . $subcategory['title'] }}</option>
+                                                    @endforeach
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    @error('category')
+                                    <span class="text-danger font-italic">{{ __('back/products.kategorija_je_obavezna') }}</span>
+                                    @enderror
+                                </div>
+                            </div>
 
 
                             <div class="form-group row">
@@ -103,6 +123,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="form-group row  mb-4">
                                 <div class="col-md-12">
                                     <label for="description-editor">{{ __('back/blog.opis') }}</label>
@@ -117,7 +138,6 @@
                                         @endforeach
                                     </ul>
 
-
                                     <div class="tab-content">
                                         @foreach(ag_lang() as $lang)
                                             <div id="description-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
@@ -125,9 +145,6 @@
                                             </div>
                                         @endforeach
                                     </div>
-
-
-
                                 </div>
                             </div>
 
@@ -168,20 +185,13 @@
                                     <div class="tab-content">
                                         @foreach(ag_lang() as $lang)
                                             <div id="meta_title-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-
-
                                                 <input type="text" class="js-maxlength form-control" id="meta-title-input-{{ $lang->code }}" name="meta_title[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ isset($blog) ? $blog->translation($lang->code)->meta_title : old('meta_title.*') }}" maxlength="70" data-always-show="true" data-placement="top">
-
-
                                                 <small class="form-text text-muted">
                                                     {{ __('back/blog.70_znakova_max') }}
                                                 </small>
                                             </div>
                                         @endforeach
                                     </div>
-
-
-
                                 </div>
 
                                 <div class="form-group">
@@ -199,7 +209,6 @@
                                     <div class="tab-content">
                                         @foreach(ag_lang() as $lang)
                                             <div id="meta-description-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-
                                                 <textarea class="js-maxlength form-control" id="meta-description-input-{{ $lang->code }}" name="meta_description[{{ $lang->code }}]" placeholder="{{ $lang->code }}" rows="4" maxlength="160" data-always-show="true" data-placement="top">{{ isset($blog) ? $blog->translation($lang->code)->meta_description : old('meta_description.*') }}</textarea>
                                                 <small class="form-text text-muted">
                                                     {{ __('back/blog.160_znakova_max') }}
@@ -207,8 +216,6 @@
                                             </div>
                                         @endforeach
                                     </div>
-
-
 
                                 </div>
 
@@ -225,23 +232,14 @@
                                         @endforeach
                                     </ul>
 
-
                                     <div class="tab-content">
                                         @foreach(ag_lang() as $lang)
                                             <div id="slug-input-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-
-
                                                 <input type="text" class="form-control" id="slug-input-{{ $lang->code }}" placeholder="{{ $lang->code }}" value="{{ isset($blog) ? $blog->translation($lang->code)->slug : old('slug.*') }}" disabled>
-
                                                 <input type="hidden" name="slug[{{ $lang->code }}]" value="{{ isset($blog) ? $blog->translation($lang->code)->slug : old('slug.*') }}">
-
                                             </div>
                                         @endforeach
                                     </div>
-
-
-
-
                                 </div>
 
                             </form>
@@ -279,6 +277,7 @@
 @endsection
 
 @push('js_after')
+    <script src="{{ asset('js/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('js/plugins/ckeditor5-classic/build/ckeditor.js?v=1') }}"></script>
     <script src="{{ asset('js/plugins/flatpickr/flatpickr.min.js') }}"></script>
 
@@ -287,6 +286,11 @@
 
     <script>
         $(() => {
+            $('#category-select').select2({
+                placeholder: '{{ __('back/products.odaberi_kategorije') }}',
+                minimumResultsForSearch: Infinity
+            });
+
             {!! ag_lang() !!}.forEach(function(item) {
                 ClassicEditor
                 .create(document.querySelector('#description-editor-' + item.code), {
