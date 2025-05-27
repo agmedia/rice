@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\Front\Blog;
 use App\Models\Front\Catalog\Category;
+use App\Models\Front\Recepti;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -20,19 +21,11 @@ class RouteResolver
     /**
      * @var string
      */
-    private $category = '';
-
-    /**
-     * @var string
-     */
-    private $subcategory = '';
-
-    /**
-     * @var string
-     */
     private $model = '';
 
-
+    /**
+     * @var array
+     */
     private $breadcrumbs = [];
 
 
@@ -89,43 +82,56 @@ class RouteResolver
     }
 
 
-    public function attachBreadcrumbs(Category $category = null, Category $subcategory = null, $model = null)
+    /**
+     * @param Category|null $category
+     * @param Category|null $subcategory
+     * @param               $model
+     *
+     * @return array
+     */
+    public function attachBreadcrumbs(Category $category = null, Category $subcategory = null, $model = null): array
     {
         if ($category) {
             $this->breadcrumbs[] = [
-                'title' => $category->title,
-                'url' => route('catalog.route.blog', [
-                    'cat'    => $category->slug,
-                    'subcat' => null,
-                    'blog'   => null
-                ]),
+                'title'  => $category->title,
+                'url'    => route('catalog.route.blog', ['cat' => $category->slug, 'subcat' => null, 'blog' => null]),
                 'active' => $subcategory ? true : false
             ];
         }
 
-        if ($subcategory) {
+        if ($subcategory && $category) {
             $this->breadcrumbs[] = [
-                'title' => $subcategory->title,
-                'url' => route('catalog.route.blog', [
-                    'cat'    => $category->slug,
-                    'subcat' => $subcategory->slug,
-                    'blog'   => null
-                ]),
+                'title'  => $subcategory->title,
+                'url'    => route('catalog.route.blog', ['cat' => $category->slug, 'subcat' => $subcategory->slug, 'blog' => null]),
                 'active' => $model ? true : false
             ];
         }
 
         if ($model) {
+            if ($model->category()) {
+                $this->breadcrumbs[] = [
+                    'title'  => $model->category()->title,
+                    'url'    => route('catalog.route.blog', ['cat' => $model->category()->slug, 'subcat' => null, 'blog' => null]),
+                    'active' => true
+                ];
+            }
+
+            if ($model->subcategory()) {
+                $this->breadcrumbs[] = [
+                    'title'  => $model->subcategory()->title,
+                    'url'    => route('catalog.route.blog', ['cat' => $model->category()->slug, 'subcat' => $model->subcategory()->slug, 'blog' => null]),
+                    'active' => true
+                ];
+            }
+
             $this->breadcrumbs[] = [
-                'title' => $subcategory->title,
-                'url' => route('catalog.route.blog', [
-                    'cat'    => $category->slug,
-                    'subcat' => $subcategory->slug,
-                    'blog'   => $model->slug
-                ]),
+                'title'  => $model->title,
+                'url'    => route('catalog.route.blog', ['cat' => $model->slug]),
                 'active' => false
             ];
         }
+
+        return $this->breadcrumbs;
     }
 
 
@@ -142,6 +148,13 @@ class RouteResolver
             })->where('status', 1)->first();
         }
 
+        if ($this->group === 'recepti') {
+            $this->model = Recepti::query()->whereHas('translation', function ($query) use ($model) {
+                $query->where('slug', $model);
+            })->where('status', 1)->first();
+        }
+
         return $this;
     }
+
 }

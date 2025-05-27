@@ -1,14 +1,14 @@
 @extends('front.layouts.app')
 @if(isset($receptin))
-        @section ( 'title', 'Recepti - Rice Kakis | Asian Store' )
-        @section ( 'description', 'Gastronomske poslastice vas očekuju: Uživajte u primamljivom mochiju, bubble tea-u, kimchiju, proizvodima bez glutena i ukusnim umacima.' )
-        @push('meta_tags')
+    @section ( 'title', 'Recepti - Rice Kakis | Asian Store' )
+    @section ( 'description', 'Gastronomske poslastice vas očekuju: Uživajte u primamljivom mochiju, bubble tea-u, kimchiju, proizvodima bez glutena i ukusnim umacima.' )
+    @push('meta_tags')
         <link rel="alternate" href="https://www.ricekakis.com/recepti/" hreflang="hr-HR" />
         <link rel="alternate" href="https://www.ricekakis.com/en/recepti/" hreflang="en-HR" />
-        @endpush
+    @endpush
 @else
     @section ( 'title', $recepti->title. ' - Rice Kakis | Asian Store' )
-@section ( 'description', $recepti->translation->meta_description )
+    @section ( 'description', $recepti->translation->meta_description )
     @push('meta_tags')
         <link rel="canonical" href="{{ route('catalog.route.recepti', ['recepti' => $recepti]) }}/{{ $recepti->translation->slug }}" />
         <meta property="og:locale" content="hr_HR" />
@@ -38,6 +38,15 @@
         <ol class="breadcrumb flex-lg-nowrap">
             <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>{{ __('front/ricekakis.homepage') }}</a></li>
             <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('catalog.route.recepti') }}"><i class="ci-home"></i>{{ __('front/ricekakis.recepti') }}</a></li>
+            @if (isset($breadcrumbs))
+                @foreach ($breadcrumbs as $breadcrumb)
+                    @if ( ! $breadcrumb['active'])
+                        <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ $breadcrumb['title'] }}</li>
+                    @else
+                        <li class="breadcrumb-item text-nowrap active"><a class="text-nowrap" href="{{ $breadcrumb['url'] }}"><i class="ci-book"></i>{{ $breadcrumb['title'] }}</a></li>
+                    @endif
+                @endforeach
+            @endif
         </ol>
     </nav>
     <section class="d-md-flex justify-content-between align-items-center mb-4 pb-2">
@@ -46,53 +55,34 @@
         @else
             <h1 class="h2 mb-3 mb-md-0 me-3">{{ $recepti->title }}</h1>
         @endif
-
     </section>
 
-
-
     @if(isset($receptin))
-
-    <div class=" pb-5 mb-2 mb-md-4">
-
-
+        <div class=" pb-5 mb-2 mb-md-4">
             <!-- Entries grid-->
             <div class="masonry-grid" data-columns="3" >
                 @foreach ($receptin as $recepti)
-
-                <article class="masonry-grid-item">
-                    <div class="card">
-                        <a class="blog-entry-thumb" href="{{ route('catalog.route.recepti', ['cat' => $recepti]) }}/{{ $recepti->translation->slug }}"><span class="blog-entry-meta-label fs-sm"><i class="ci-pot"></i></span><img class="card-img-top" src="{{ $recepti->image }}" alt="{{ $recepti->translation->title }}"></a>
-                        <div class="card-body">
-                            <h2 class="h6 blog-entry-title"><a href="{{ route('catalog.route.recepti', ['cat' => $recepti]) }}/{{ $recepti->translation->slug }}">{{ $recepti->translation->title }}</a></h2>
-                            <p class="fs-sm">{{ $recepti->translation->short_description }}</p>
+                    <article class="masonry-grid-item">
+                        <div class="card">
+                            <a class="blog-entry-thumb" href="{{ route('catalog.route.recepti', ['cat' => $recepti]) }}/{{ $recepti->translation->slug }}"><span class="blog-entry-meta-label fs-sm"><i class="ci-pot"></i></span><img class="card-img-top" src="{{ $recepti->image }}" alt="{{ $recepti->translation->title }}"></a>
+                            <div class="card-body">
+                                <h2 class="h6 blog-entry-title"><a href="{{ route('catalog.route.recepti', ['cat' => $recepti]) }}/{{ $recepti->translation->slug }}">{{ $recepti->translation->title }}</a></h2>
+                                <p class="fs-sm">{{ $recepti->translation->short_description }}</p>
+                            </div>
                         </div>
-
-                    </div>
-                </article>
-
+                    </article>
                 @endforeach
-
             </div>
-
-
-
-    </div>
-    @else
-        <div class="mt-2 mb-5 fs-md" style="max-width:1240px">
-                    <!-- Post meta-->
-                    <!-- Gallery-->
-                    <div class=" row pb-2">
-                        <div class="col-sm-12 mb-2"><img src="{{ asset($recepti->image) }}" alt="{{ $recepti->translation->title }}"></div>
-
-                    </div>
-                    <!-- Post content-->
-
-                    {!! $recepti->description !!}
-
         </div>
 
-
+    @else
+        <div class="mt-2 mb-5 fs-md" style="max-width:1240px">
+            <div class=" row pb-2">
+                <div class="col-sm-12 mb-2"><img src="{{ asset($recepti->image) }}" alt="{{ $recepti->translation->title }}"></div>
+            </div>
+            <!-- Post content-->
+            {!! $recepti->description !!}
+        </div>
     @endif
 
 @endsection

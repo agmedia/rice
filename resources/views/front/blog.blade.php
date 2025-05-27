@@ -37,6 +37,15 @@
         <ol class="breadcrumb flex-lg-nowrap">
             <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>{{ __('front/ricekakis.homepage') }}</a></li>
             <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('catalog.route.blog') }}"><i class="ci-home"></i>Blog</a></li>
+            @if (isset($breadcrumbs))
+                @foreach ($breadcrumbs as $breadcrumb)
+                    @if ( ! $breadcrumb['active'])
+                        <li class="breadcrumb-item text-nowrap active" aria-current="page">{{ $breadcrumb['title'] }}</li>
+                    @else
+                        <li class="breadcrumb-item text-nowrap active"><a class="text-nowrap" href="{{ $breadcrumb['url'] }}"><i class="ci-book"></i>{{ $breadcrumb['title'] }}</a></li>
+                    @endif
+                @endforeach
+            @endif
         </ol>
     </nav>
     <section class="d-md-flex justify-content-between align-items-center mb-4 pb-2">

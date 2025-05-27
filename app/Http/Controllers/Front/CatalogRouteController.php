@@ -84,17 +84,17 @@ class CatalogRouteController extends FrontBaseController
                 abort(404);
             }
 
-            $seo = Seo::getProductData($prod);
-            $gdl = TagManager::getGoogleProductDataLayer($prod);
+            $seo     = Seo::getProductData($prod);
+            $gdl     = TagManager::getGoogleProductDataLayer($prod);
             $reviews = $prod->reviews()->get();
             $related = Helper::getRelated($cat, $subcat);
 
-            $bc = new Breadcrumb();
-            $crumbs = $bc->product($group, $cat, $subcat, $prod)->resolve();
+            $bc         = new Breadcrumb();
+            $crumbs     = $bc->product($group, $cat, $subcat, $prod)->resolve();
             $bookscheme = Metatags::productSchema($prod, $reviews);
 
             $shipping_methods = Settings::getList('shipping', 'list.%', true);
-            $payment_methods = Settings::getList('payment', 'list.%', true);
+            $payment_methods  = Settings::getList('payment', 'list.%', true);
 
             $has_combo_session = 1;
 
@@ -102,7 +102,7 @@ class CatalogRouteController extends FrontBaseController
                 $has_combo_session = ProductHelper::checkComboProductSession($prod->id);
             }
 
-            $view = view('front.catalog.product.index', compact('prod', 'group', 'cat', 'subcat', 'related', 'seo', 'shipping_methods' , 'payment_methods', 'crumbs', 'bookscheme', 'gdl', 'reviews', 'has_combo_session'));
+            $view = view('front.catalog.product.index', compact('prod', 'group', 'cat', 'subcat', 'related', 'seo', 'shipping_methods', 'payment_methods', 'crumbs', 'bookscheme', 'gdl', 'reviews', 'has_combo_session'));
 
             return response($view)->header('Last-Modified', Carbon::make($prod->updated_at)->toRfc7231String());
         }
@@ -203,7 +203,7 @@ class CatalogRouteController extends FrontBaseController
             $letters = Helper::resolveCache('authors')->remember('aut_' . 'letters', config('cache.life'), function () {
                 return Author::letters();
             });
-            $letter = 0; //$this->checkLetter($letters);
+            $letter  = 0; //$this->checkLetter($letters);
 
             if ($request->has('letter')) {
                 $letter = $request->input('letter');
@@ -212,16 +212,16 @@ class CatalogRouteController extends FrontBaseController
             $currentPage = request()->get('page', 1);
 
             $authors = Helper::resolveCache('authors')->remember('aut_' . $letter . '.' . $currentPage, config('cache.life'), function () use ($letter) {
-                $auts = Author::query()->select('id', 'title', 'url')->where('status',  1);
+                $auts = Author::query()->select('id', 'title', 'url')->where('status', 1);
 
                 if ($letter) {
                     $auts->where('letter', $letter);
                 }
 
                 return $auts->orderBy('title')
-                    ->withCount('products')
-                    ->paginate(36)
-                    ->appends(request()->query());
+                            ->withCount('products')
+                            ->paginate(36)
+                            ->appends(request()->query());
             });
 
             $meta_tags = Seo::getMetaTags($request, 'ap_filter');
@@ -231,8 +231,12 @@ class CatalogRouteController extends FrontBaseController
 
         $letter = null;
 
-        if ($cat) { $cat->count = $cat->products()->count(); }
-        if ($subcat) { $subcat->count = $subcat->products()->count(); }
+        if ($cat) {
+            $cat->count = $cat->products()->count();
+        }
+        if ($subcat) {
+            $subcat->count = $subcat->products()->count();
+        }
 
         $seo = Seo::getAuthorData($author, $cat, $subcat);
 
@@ -255,7 +259,7 @@ class CatalogRouteController extends FrontBaseController
             $letters = Helper::resolveCache('brands')->remember('aut_' . 'letters', config('cache.life'), function () {
                 return Brand::letters();
             });
-            $letter = 0; //$this->checkLetter($letters);
+            $letter  = 0; //$this->checkLetter($letters);
 
             if ($request->has('letter')) {
                 $letter = $request->input('letter');
@@ -264,16 +268,16 @@ class CatalogRouteController extends FrontBaseController
             $currentPage = request()->get('page', 1);
 
             $brands = Helper::resolveCache('brands')->remember('aut_' . $letter . '.' . $currentPage, config('cache.life'), function () use ($letter) {
-                $auts = Brand::query()->where('status',  1);
+                $auts = Brand::query()->where('status', 1);
 
                 if ($letter) {
                     $auts->where('letter', $letter);
                 }
 
                 return $auts->orderBy('id')
-                    ->withCount('products')
-                    ->paginate(36)
-                    ->appends(request()->query());
+                            ->withCount('products')
+                            ->paginate(36)
+                            ->appends(request()->query());
             });
 
             $meta_tags = Seo::getMetaTags($request, 'ap_filter');
@@ -283,8 +287,12 @@ class CatalogRouteController extends FrontBaseController
 
         $letter = null;
 
-        if ($cat) { $cat->count = $cat->products()->count(); }
-        if ($subcat) { $subcat->count = $subcat->products()->count(); }
+        if ($cat) {
+            $cat->count = $cat->products()->count();
+        }
+        if ($subcat) {
+            $subcat->count = $subcat->products()->count();
+        }
 
         $seo = Seo::getBrandData($brand, $cat, $subcat);
 
@@ -292,7 +300,6 @@ class CatalogRouteController extends FrontBaseController
 
         return view('front.catalog.category.index', compact('brand', 'letter', 'cat', 'subcat', 'seo', 'crumbs'));
     }
-
 
 
     /**
@@ -308,7 +315,7 @@ class CatalogRouteController extends FrontBaseController
             $letters = Helper::resolveCache('publishers')->remember('pub_' . 'letters', config('cache.life'), function () {
                 return Publisher::letters();
             });
-            $letter = 0; //$this->checkLetter($letters);
+            $letter  = 0; //$this->checkLetter($letters);
 
             if ($request->has('letter')) {
                 $letter = $request->input('letter');
@@ -317,16 +324,16 @@ class CatalogRouteController extends FrontBaseController
             $currentPage = request()->get('page', 1);
 
             $publishers = Helper::resolveCache('publishers')->remember('pub_' . $letter . '.' . $currentPage, config('cache.life'), function () use ($letter) {
-                $pubs = Publisher::query()->select('id', 'title', 'url')->where('status',  1);
+                $pubs = Publisher::query()->select('id', 'title', 'url')->where('status', 1);
 
                 if ($letter) {
                     $pubs->where('letter', $letter);
                 }
 
                 return $pubs->orderBy('title')
-                    ->withCount('products')
-                    ->paginate(36)
-                    ->appends(request()->query());
+                            ->withCount('products')
+                            ->paginate(36)
+                            ->appends(request()->query());
             });
 
             $meta_tags = Seo::getMetaTags($request, 'ap_filter');
@@ -336,8 +343,12 @@ class CatalogRouteController extends FrontBaseController
 
         $letter = null;
 
-        if ($cat) { $cat->count = $cat->products()->count(); }
-        if ($subcat) { $subcat->count = $subcat->products()->count(); }
+        if ($cat) {
+            $cat->count = $cat->products()->count();
+        }
+        if ($subcat) {
+            $subcat->count = $subcat->products()->count();
+        }
 
         $seo = Seo::getPublisherData($publisher, $cat, $subcat);
 
@@ -361,7 +372,9 @@ class CatalogRouteController extends FrontBaseController
                 return redirect()->back()->with(['error' => 'Oops..! Zaboravili ste upisati pojam za pretraživanje..!']);
             }
 
-            $group = null; $cat = null; $subcat = null;
+            $group  = null;
+            $cat    = null;
+            $subcat = null;
 
             $ids = Helper::search(
                 $request->input(config('settings.search_keyword'))
@@ -391,7 +404,7 @@ class CatalogRouteController extends FrontBaseController
      */
     public function actions(Request $request, Category $cat = null, $subcat = null)
     {
-        $ids = Product::query()->whereNotNull('special')->pluck('id');
+        $ids   = Product::query()->whereNotNull('special')->pluck('id');
         $group = 'snizenja';
 
         $crumbs = null;
@@ -420,12 +433,14 @@ class CatalogRouteController extends FrontBaseController
      */
     public function blog(string $cat = null, string $subcat = null, Blog $blog = null)
     {
+        $category    = null;
+        $subcategory = null;
+        $route       = new RouteResolver('blog', $blog);
+
         if ( ! $blog || ! $blog->exists) {
             $frontblogs = Blog::query()->where('status', 1);
 
             if ($cat) {
-                $route = new RouteResolver('blog', $blog);
-
                 $category = $route->getCategory($cat);
 
                 if ( ! $category) {
@@ -448,21 +463,22 @@ class CatalogRouteController extends FrontBaseController
             }
 
             if ( ! $blog) {
-                $frontblogs = $frontblogs->orderBy('id', 'desc')->get();
+                $frontblogs  = $frontblogs->orderBy('id', 'desc')->get();
+                $breadcrumbs = $route->attachBreadcrumbs($category, $subcategory, $blog);
 
-                return view('front.blog', compact('frontblogs'));
+                return view('front.blog', compact('frontblogs', 'breadcrumbs'));
             }
         }
 
-        $frontblogs = null;
+        $breadcrumbs = $route->attachBreadcrumbs($category, $subcategory, $blog);
+        $frontblogs  = null;
 
         $blog->description = Helper::setDescription($blog->description, $blog->id);
 
-        $view = view('front.blog', compact('blog', 'frontblogs'));
+        $view = view('front.blog', compact('blog', 'frontblogs', 'breadcrumbs'));
 
         return response($view)->header('Last-Modified', Carbon::make($blog->updated_at)->toRfc7231String());
     }
-
 
 
     /**
@@ -472,12 +488,14 @@ class CatalogRouteController extends FrontBaseController
      */
     public function recepti(string $cat = null, string $subcat = null, Recepti $recepti = null)
     {
+        $category    = null;
+        $subcategory = null;
+        $route       = new RouteResolver('recepti', $recepti);
+
         if ( ! $recepti || ! $recepti->exists) {
             $receptin = Recepti::query()->where('status', 1);
 
             if ($cat) {
-                $route = new RouteResolver('recepti', $recepti);
-
                 $category = $route->getCategory($cat);
 
                 if ( ! $category) {
@@ -500,17 +518,19 @@ class CatalogRouteController extends FrontBaseController
             }
 
             if ( ! $recepti) {
-                $receptin = $receptin->orderBy('id', 'desc')->get();
+                $receptin    = $receptin->orderBy('id', 'desc')->get();
+                $breadcrumbs = $route->attachBreadcrumbs($category, $subcategory, $recepti);
 
-                return view('front.recepti', compact('receptin'));
+                return view('front.recepti', compact('receptin', 'breadcrumbs'));
             }
         }
 
-        $receptin = null;
+        $breadcrumbs = $route->attachBreadcrumbs($category, $subcategory, $recepti);
+        $receptin    = null;
 
         $recepti->description = Helper::setDescription($recepti->description, $recepti->id);
 
-        $view = view('front.recepti', compact('recepti','receptin'));
+        $view = view('front.recepti', compact('recepti', 'receptin', 'breadcrumbs'));
 
         return response($view)->header('Last-Modified', Carbon::make($recepti->updated_at)->toRfc7231String());
     }
@@ -524,6 +544,7 @@ class CatalogRouteController extends FrontBaseController
     public function faq()
     {
         $faq = Faq::where('status', 1)->get();
+
         return view('front.faq', compact('faq'));
     }
 
