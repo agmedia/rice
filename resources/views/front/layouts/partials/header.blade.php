@@ -73,6 +73,8 @@
     </ul>
     <div class="offcanvas-body px-0 pt-3 pb-0" data-simplebar>
         <div class="tab-content">
+
+            <div class="sidebar-nav tab-pane fade show active" id="categories" role="tabpanel">
             <filter-view ids="{{ isset($ids) ? $ids : null }}"
                          group="kategorija-proizvoda"
                          cat="{{ isset($cat) ? $cat : null }}"
@@ -80,27 +82,31 @@
                          locale="{{ current_locale() }}">
             </filter-view>
 
-            <div id="pages-filter-app">
-                <div class="sidebar-nav tab-pane fade show active" id="pages-filter-blog" role="tabpanel">
-                    <pages-filter-view
+                <div id="pages-filter-app">
+                    <div class="sidebar-nav tab-pane fade show active" id="pages-filter-blog" role="tabpanel">
+                        <pages-filter-view
                             group="blog"
                             title="Blog"
                             url="{{ route('catalog.route.blog') }}"
                             cat="{{ isset($cat) ? $cat : null }}"
                             subcat="{{ isset($subcat) ? $subcat : null }}"
                             locale="{{ current_locale() }}">
-                    </pages-filter-view>
-                </div>
-                <div class="sidebar-nav tab-pane fade show active" id="pages-filter-recipe" role="tabpanel">
-                    <pages-filter-view
+                        </pages-filter-view>
+                    </div>
+                    <div class="sidebar-nav tab-pane fade show active" id="pages-filter-recipe" role="tabpanel">
+                        <pages-filter-view
                             group="recepti"
                             title="{{ __('front/ricekakis.recepti') }}"
                             url="{{ route('catalog.route.recepti') }}"
                             cat="{{ isset($cat) ? $cat : null }}"
                             subcat="{{ isset($subcat) ? $subcat : null }}"
                             locale="{{ current_locale() }}">
-                    </pages-filter-view>
+                        </pages-filter-view>
+                    </div>
                 </div>
+
+
+
             </div>
 
             <!-- Menu-->

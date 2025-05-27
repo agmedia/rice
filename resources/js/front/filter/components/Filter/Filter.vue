@@ -1,6 +1,6 @@
 <template>
 
-    <div class="sidebar-nav tab-pane fade show active" id="categories" role="tabpanel">
+
         <!-- Categories-->
         <div class="widget widget-categories" v-if="categories">
             <div class="accordion" id="shop-categories">
@@ -57,36 +57,12 @@
             </div>
 
 
-
-
-            <div class="accordion-item border-bottom">
-                <h3 class="accordion-header px-grid-gutter">
-                    <a class="nav-link-style d-block fs-md fw-normal py-3" :href="origin + 'blog'">
-                        <span class="d-flex align-items-center"> Blog</span>
-                    </a>
-                </h3>
-            </div>
-
-            <div class="accordion-item border-bottom">
-                <h3 class="accordion-header px-grid-gutter">
-                    <a class="nav-link-style d-block fs-md fw-normal py-3" :href="origin + 'recepti'">
-                        <span class="d-flex align-items-center"> {{ trans.recepti }}</span>
-                    </a>
-                </h3>
-            </div>
-
-
-
-
-
         </div>
 
 
 
-    </div>
+
 </template>
-
-
 
 
 <script>
