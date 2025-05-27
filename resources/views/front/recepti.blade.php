@@ -62,9 +62,9 @@
 
                 <article class="masonry-grid-item">
                     <div class="card">
-                        <a class="blog-entry-thumb" href="{{ route('catalog.route.recepti', ['recepti' => $recepti]) }}/{{ $recepti->translation->slug }}"><span class="blog-entry-meta-label fs-sm"><i class="ci-pot"></i></span><img class="card-img-top" src="{{ $recepti->image }}" alt="{{ $recepti->translation->title }}"></a>
+                        <a class="blog-entry-thumb" href="{{ route('catalog.route.recepti', ['cat' => $recepti]) }}/{{ $recepti->translation->slug }}"><span class="blog-entry-meta-label fs-sm"><i class="ci-pot"></i></span><img class="card-img-top" src="{{ $recepti->image }}" alt="{{ $recepti->translation->title }}"></a>
                         <div class="card-body">
-                            <h2 class="h6 blog-entry-title"><a href="{{ route('catalog.route.recepti', ['recepti' => $recepti]) }}/{{ $recepti->translation->slug }}">{{ $recepti->translation->title }}</a></h2>
+                            <h2 class="h6 blog-entry-title"><a href="{{ route('catalog.route.recepti', ['cat' => $recepti]) }}/{{ $recepti->translation->slug }}">{{ $recepti->translation->title }}</a></h2>
                             <p class="fs-sm">{{ $recepti->translation->short_description }}</p>
                         </div>
 
