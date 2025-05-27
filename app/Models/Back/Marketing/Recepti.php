@@ -237,7 +237,7 @@ class Recepti extends Model
      *
      * @return $this
      */
-    private function resolveCategories(int $page_id): Blog
+    private function resolveCategories(int $page_id): Recepti
     {
         if ( ! empty($this->request->input('category')) && is_array($this->request->input('category'))) {
             PageCategory::storeData($this->request->input('category'), $page_id);

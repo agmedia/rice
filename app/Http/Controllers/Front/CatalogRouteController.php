@@ -470,12 +470,40 @@ class CatalogRouteController extends FrontBaseController
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function recepti(Recepti $recepti)
+    public function recepti(string $cat = null, string $subcat = null, Recepti $recepti = null)
     {
-        if (! $recepti->exists) {
-            $receptin = Recepti::active()->get();
+        if ( ! $recepti || ! $recepti->exists) {
+            $receptin = Recepti::query()->where('status', 1);
 
-            return view('front.recepti', compact('receptin'));
+            if ($cat) {
+                $route = new RouteResolver('recepti', $recepti);
+
+                $category = $route->getCategory($cat);
+
+                if ( ! $category) {
+                    $recepti = $route->getModel($cat);
+                }
+
+                if ( ! $recepti && ! $subcat && $category) {
+                    $receptin = $route->getModelsByCategory($receptin, $category);
+                }
+
+                if ($subcat && $category) {
+                    $subcategory = $route->getCategory($subcat, $category->id);
+
+                    if ( ! $subcategory) {
+                        abort(404);
+                    }
+
+                    $receptin = $route->getModelsByCategory($receptin, $subcategory);
+                }
+            }
+
+            if ( ! $recepti) {
+                $receptin = $receptin->orderBy('id', 'desc')->get();
+
+                return view('front.recepti', compact('receptin'));
+            }
         }
 
         $receptin = null;
