@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Back\Catalog;
 
 use App\Http\Controllers\Controller;
 use App\Models\Back\Catalog\Category;
+use App\Models\Back\Catalog\Product\ProductCategory;
+use App\Models\Back\Settings\PageCategory;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -107,6 +109,9 @@ class CategoryController extends Controller
      */
     public function destroy(Request $request, Category $category)
     {
+        ProductCategory::query()->where('category_id', $category->id)->delete();
+        PageCategory::query()->where('category_id', $category->id)->delete();
+        
         $destroyed = Category::destroy($category->id);
 
         if ($destroyed) {

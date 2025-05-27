@@ -70,7 +70,7 @@
                                 <label for="group-select">{{ __('back/categories.grupa') }}</label>
                                 <select class="js-select2 form-control" id="group-select" name="group" style="width: 100%;">
                                     @foreach ($groups as $group)
-                                        <option value="{{ $group }}">{{ $group }}</option>
+                                        <option value="{{ $group }}" {{ (isset($category) && ($category->group == $group)) ? 'selected' : '' }}>{{ $group }}</option>
                                     @endforeach
                                 </select>
                             </div>
