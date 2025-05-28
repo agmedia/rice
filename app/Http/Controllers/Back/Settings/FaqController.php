@@ -70,7 +70,7 @@ class FaqController extends Controller
     public function edit(Faq $faq)
     {
         $categories = (new Category())->getList(false);
-        
+
         return view('back.settings.faq.edit', compact('faq', 'categories'));
     }
 
