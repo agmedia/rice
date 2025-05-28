@@ -45,7 +45,7 @@ class RouteResolver
     /**
      * @var array
      */
-    private array $breadcrumbs;
+    private array $breadcrumbs = [];
 
 
     /**
