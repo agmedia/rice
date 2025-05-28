@@ -2,18 +2,11 @@
 @section ('title', $seo['title'])
 @section ('description', $seo['description'])
 @push('meta_tags')
-
     @if (isset($cat) && $cat && ! $subcat)
-
         <link rel="canonical" href="{{ route('catalog.route', ['group' => $group ?? '', 'cat' => $prod->category()->slug, 'subcat' => $prod->translation(current_locale())->slug]) }}"  />
-
     @else
-
         <link rel="canonical" href="{{ route('catalog.route', ['group' => $group ?? '', 'cat' => $prod->category()->slug, 'subcat' => $prod->subcategory()->slug, 'prod' => $prod->translation(current_locale())->slug]) }}"  />
-
     @endif
-
-
     <meta property="fb:app_id" content="1201186234921048" />
     <meta property="og:locale" content="{{ current_locale() == 'hr' ? 'hr_HR' : 'en_HR' }}" />
     <meta property="og:type" content="product" />
