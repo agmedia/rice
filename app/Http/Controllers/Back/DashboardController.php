@@ -48,6 +48,9 @@ class DashboardController extends Controller
         $data['this_month_total'] = Order::whereYear('created_at', '=', Carbon::now()->year)->whereMonth('created_at', '=', Carbon::now()->month)->whereIn('order_status_id', [4, 1, 2, 3])->sum('total');
 
 
+        $data['this_month_total'] = number_format($data['this_month_total'], 2);
+
+
 
         $data['this_month'] = Order::whereYear('created_at', '=', Carbon::now()->year)->whereMonth('created_at', '=', Carbon::now()->month)->count();
 
