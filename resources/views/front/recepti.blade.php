@@ -4,7 +4,7 @@
     @section ( 'description', 'Gastronomske poslastice vas očekuju: Uživajte u primamljivom mochiju, bubble tea-u, kimchiju, proizvodima bez glutena i ukusnim umacima.' )
     @push('meta_tags')
         <link rel="alternate" href="https://www.ricekakis.com/recepti/" hreflang="hr-HR" />
-        <link rel="alternate" href="https://www.ricekakis.com/en/recepti/" hreflang="en-HR" />
+        <link rel="alternate" href="https://www.ricekakis.com/en/recipes/" hreflang="en-HR" />
     @endpush
 @else
     @section ( 'title', $recepti->title. ' - Rice Kakis | Asian Store' )
@@ -15,7 +15,7 @@
         <meta property="og:type" content="product" />
         <meta property="og:title" content="{{ $recepti->title }}" />
         <meta property="og:description" content="{{ $recepti->translation->meta_description  }}" />
-        <meta property="og:url" content="{{ route('catalog.route.recepti', ['cat' => $recepti]) }}" />
+        <meta property="og:url" content="{{ route('catalog.route.recepti', ['cat' => $recepti]) }}"  />
         <meta property="og:site_name" content="Rice Kakis | Asian Store" />
         <meta property="og:updated_time" content="{{ $recepti->updated_at  }}" />
         <meta property="og:image" content="{{ asset($recepti->image) }}" />

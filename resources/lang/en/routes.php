@@ -13,5 +13,5 @@ return [
     |
     */
 
-    'recepti' => 'recipes/{cat?}/{subcat?}/{recepti?}',
+    'recepti' => 'recipes/{cat?}/{subcat?}/{recipes?}',
 ];
