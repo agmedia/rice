@@ -2,24 +2,24 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Back\Catalog\Publisher;
+use App\Models\Back\Marketing\Email;
 use Illuminate\Console\Command;
 
-class CleanPublishers extends Command
+class SendReviewRequestEmail extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'clean:publishers';
+    protected $signature = 'send:review_request_email';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Check & set publishers status based on product availability.';
+    protected $description = 'Send emails to users 7 days after order.';
 
     /**
      * Create a new command instance.
@@ -38,6 +38,6 @@ class CleanPublishers extends Command
      */
     public function handle()
     {
-        return Publisher::checkStatuses_CRON();
+        return Email::sendReviewRequestEmails();
     }
 }

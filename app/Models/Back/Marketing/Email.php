@@ -3,9 +3,11 @@
 namespace App\Models\Back\Marketing;
 
 use App\Helpers\Helper;
+use App\Mail\ReviewRequestEmail;
 use App\Models\Back\Catalog\Brand;
 use App\Models\Back\Catalog\Product\Product;
 use App\Models\Back\Catalog\Product\ProductCategory;
+use App\Models\Back\Orders\Order;
 use App\Models\Cart;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class Email extends Model
@@ -149,5 +152,47 @@ class Email extends Model
 
         dd($unsent_emails->toArray());
     }
+
+
+    /**
+     * Send review request emails to orders
+     *
+     * @return int Number of emails sent successfully
+     */
+    public static function sendReviewRequestEmails(): int
+    {
+        $sent = 0;
+
+        $log_start = microtime(true);
+
+        $orders = Order::query()->where('created_at', now()->subDays(7))->get();
+
+        foreach ($orders as $order) {
+            try {
+                // Skip if no email or already sent
+                if (empty($order->shipping_email)) {
+                    continue;
+                }
+
+                Mail::to($order->shipping_email)
+                    ->send(new ReviewRequestEmail($order));
+
+                $sent++;
+
+            } catch (\Exception $e) {
+                Log::error('Failed to send review request', [
+                    'order_id' => $order->id,
+                    'email' => $order->shipping_email,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        $log_end = microtime(true);
+        Log::info('__CRON Send review request emails - Total Execution Time: ' . number_format(($log_end - $log_start), 2, ',', '.') . ' sec.');
+
+        return $sent;
+    }
+
 
 }
