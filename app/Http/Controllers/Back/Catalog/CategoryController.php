@@ -111,7 +111,7 @@ class CategoryController extends Controller
     {
         ProductCategory::query()->where('category_id', $category->id)->delete();
         PageCategory::query()->where('category_id', $category->id)->delete();
-        
+
         $destroyed = Category::destroy($category->id);
 
         if ($destroyed) {

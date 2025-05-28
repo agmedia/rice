@@ -23,7 +23,7 @@
 
 
                             @if (isset($blog) && !$frontblogs )
-                                <a class=" @if (current_locale() == $lang->code) active @endif" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.blog', ['blog' => $blog->translation($lang->code)->slug]),[], true) }}">
+                                <a class=" @if (current_locale() == $lang->code) active @endif" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.blog', ['cat' => $blog->translation($lang->code)->slug]),[], true) }}">
                                     <img class="lang" style="width:16px;margin-left:5px" src="{{ asset('media/flags/'.Str::lower($lang->code).'.png') }}" alt="">
                                     {{ $lang->title->{current_locale()} }}
                                 </a>
@@ -38,7 +38,7 @@
 
 
                             @if (isset($recepti) && !$receptin )
-                                <a class=" @if (current_locale() == $lang->code) active @endif" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.recepti', ['recepti' => $recepti->translation($lang->code)->slug]),[], true) }}">
+                                <a class=" @if (current_locale() == $lang->code) active @endif" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.recepti', ['cat' => $recepti->translation($lang->code)->slug])) }}">
                                     <img class="lang" style="width:16px;margin-left:5px" src="{{ asset('media/flags/'.Str::lower($lang->code).'.png') }}" alt="">
                                     {{ $lang->title->{current_locale()} }}
                                 </a>

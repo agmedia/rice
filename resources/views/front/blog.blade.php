@@ -63,14 +63,15 @@
                 @foreach ($frontblogs as $blog)
                     <article class="masonry-grid-item">
                         <div class="card">
-                            <a class="blog-entry-thumb" href="{{ route('catalog.route.blog', ['cat' => $blog]) }}/{{ $blog->translation->slug }}"><img class="card-img-top" src="{{ $blog->image }}" alt="{{ $blog->translation->title }}"></a>
+                            <a class="blog-entry-thumb" href="{{ route('catalog.route.blog', ['cat' => $blog]) }}"><img class="card-img-top" src="{{ $blog->image }}" alt="{{ $blog->translation->title }}"></a>
                             <div class="card-body">
-                                <h2 class="h6 blog-entry-title"><a href="{{ route('catalog.route.blog', ['cat' => $blog]) }}/{{ $blog->translation->slug }}">{{ $blog->translation->title }}</a></h2>
+                                <h2 class="h6 blog-entry-title"><a href="{{ route('catalog.route.blog', ['cat' => $blog]) }}">{{ $blog->translation->title }}</a></h2>
                                 <p class="fs-sm">{{ $blog->translation->short_description }}</p>
                             </div>
                             <div class="card-footer d-flex align-items-left fs-xs">
-                                <div class="me-auto text-nowrap"><a class="blog-entry-meta-link text-nowrap"
-                                                                    href="{{ route('catalog.route.blog', ['cat' => $blog]) }}/{{ $blog->translation->slug }}">{{ \Carbon\Carbon::make($blog->created_at)->locale('hr')->format('d.m.Y.') }}</a></div>
+                                <div class="me-auto text-nowrap">
+                                    <a class="blog-entry-meta-link text-nowrap" href="{{ route('catalog.route.blog', ['cat' => $blog]) }}">{{ \Carbon\Carbon::make($blog->created_at)->locale('hr')->format('d.m.Y.') }}</a>
+                                </div>
                             </div>
                         </div>
                     </article>

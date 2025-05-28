@@ -6,27 +6,46 @@ use App\Models\Front\Blog;
 use App\Models\Front\Catalog\Category;
 use App\Models\Front\Recepti;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  *
  */
 class RouteResolver
 {
+    /**
+     * Constant representing the blog group type
+     */
+    private const GROUP_BLOG = 'blog';
+
+    /**
+     * Constant representing the recipe group type
+     */
+    private const GROUP_RECEPTI = 'recepti';
+
+    /**
+     * Maps group types to their corresponding route names
+     * This mapping centralizes the route configuration and makes it easier to maintain
+     */
+    private const ROUTE_MAPPING = [
+        self::GROUP_BLOG => 'catalog.route.blog',
+        self::GROUP_RECEPTI => 'catalog.route.recepti'
+    ];
 
     /**
      * @var string
      */
-    private $group = '';
+    private string $group;
 
     /**
-     * @var string
+     * @var ?Model
      */
-    private $model = '';
+    private ?Model $model;
 
     /**
      * @var array
      */
-    private $breadcrumbs = [];
+    private array $breadcrumbs;
 
 
     /**
@@ -62,7 +81,7 @@ class RouteResolver
      *
      * @return string|Blog
      */
-    public function getModel(string $slug): string|Blog
+    public function getModel(string $slug): string|Blog|Recepti
     {
         return $this->setModel($slug)->model;
     }
@@ -81,54 +100,76 @@ class RouteResolver
         });
     }
 
+    /**
+     * Creates a standardized breadcrumb item
+     *
+     * @param string $title The display title for the breadcrumb
+     * @param array $params Route parameters including category, subcategory, and group-specific parameters
+     * @param bool $isActive Whether this breadcrumb represents the current page
+     * @return array The formatted breadcrumb item
+     * @throws \InvalidArgumentException If an invalid group type is specified
+     */
+    private function createBreadcrumbItem(string $title, array $params, bool $isActive): array
+    {
+        $routeName = self::ROUTE_MAPPING[$this->group]
+            ?? throw new \InvalidArgumentException("Invalid group: {$this->group}");
+
+        return [
+            'title'  => $title,
+            'url'    => route($routeName, $params),
+            'active' => $isActive
+        ];
+    }
 
     /**
-     * @param Category|null $category
-     * @param Category|null $subcategory
-     * @param               $model
+     * Builds the complete breadcrumb trail based on the current category, subcategory, and model
      *
-     * @return array
+     * @param Category|null $category The main category
+     * @param Category|null $subcategory The subcategory, if any
+     * @param mixed $model The content model (blog post or recipe)
+     * @return array The complete breadcrumb trail
      */
-    public function attachBreadcrumbs(Category $category = null, Category $subcategory = null, $model = null): array
+    public function attachBreadcrumbs(Category $category = null, Category $subcategory = null, ?Model $model = null): array
     {
+        // Add main category breadcrumb if present
         if ($category) {
-            $this->breadcrumbs[] = [
-                'title'  => $category->title,
-                'url'    => route('catalog.route.blog', ['cat' => $category->slug, 'subcat' => null, 'blog' => null]),
-                'active' => $subcategory ? true : false
-            ];
+            $this->breadcrumbs[] = $this->createBreadcrumbItem(
+                $category->title,
+                ['cat' => $category->slug, 'subcat' => null, $this->group => null],
+                (bool)$subcategory
+            );
         }
 
         if ($subcategory && $category) {
-            $this->breadcrumbs[] = [
-                'title'  => $subcategory->title,
-                'url'    => route('catalog.route.blog', ['cat' => $category->slug, 'subcat' => $subcategory->slug, 'blog' => null]),
-                'active' => $model ? true : false
-            ];
+            $this->breadcrumbs[] = $this->createBreadcrumbItem(
+                $subcategory->title,
+                ['cat' => $category->slug, 'subcat' => $subcategory->slug, $this->group => null],
+                (bool)$model
+            );
         }
 
         if ($model) {
             if ($model->category()) {
-                $this->breadcrumbs[] = [
-                    'title'  => $model->category()->title,
-                    'url'    => route('catalog.route.blog', ['cat' => $model->category()->slug, 'subcat' => null, 'blog' => null]),
-                    'active' => true
-                ];
+                $this->breadcrumbs[] = $this->createBreadcrumbItem(
+                    $model->category()->title,
+                    ['cat' => $model->category()->slug, 'subcat' => null, $this->group => null],
+                    true
+                );
             }
 
             if ($model->subcategory()) {
-                $this->breadcrumbs[] = [
-                    'title'  => $model->subcategory()->title,
-                    'url'    => route('catalog.route.blog', ['cat' => $model->category()->slug, 'subcat' => $model->subcategory()->slug, 'blog' => null]),
-                    'active' => true
-                ];
+                $this->breadcrumbs[] = $this->createBreadcrumbItem(
+                    $model->subcategory()->title,
+                    ['cat' => $model->category()->slug, 'subcat' => $model->subcategory()->slug, $this->group => null],
+                    true
+                );
             }
 
-            $this->breadcrumbs[] = [
-                'title'  => $model->title,
-                'url'    => route('catalog.route.blog', ['cat' => $model->slug]),
-                'active' => false
-            ];
+            $this->breadcrumbs[] = $this->createBreadcrumbItem(
+                $model->title,
+                ['cat' => $model->slug],
+                false
+            );
         }
 
         return $this->breadcrumbs;

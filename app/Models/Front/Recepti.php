@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class Recepti extends Model
+class Recepti extends Model implements \Mcamara\LaravelLocalization\Interfaces\LocalizedUrlRoutable
 {
 
     /**
@@ -187,7 +187,7 @@ class Recepti extends Model
      */
     protected static function booted()
     {
-        static::addGlobalScope('receptis', function (Builder $builder) {
+        static::addGlobalScope('recepti', function (Builder $builder) {
             $builder->where('group', 'recepti');
         });
     }

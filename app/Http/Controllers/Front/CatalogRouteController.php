@@ -437,6 +437,8 @@ class CatalogRouteController extends FrontBaseController
         $subcategory = null;
         $route       = new RouteResolver('blog', $blog);
 
+        //dd($cat, $subcat, $blog);
+
         if ( ! $blog || ! $blog->exists) {
             $frontblogs = Blog::query()->where('status', 1);
 
@@ -491,6 +493,8 @@ class CatalogRouteController extends FrontBaseController
         $category    = null;
         $subcategory = null;
         $route       = new RouteResolver('recepti', $recepti);
+
+        //dd($cat, $subcat, $recepti);
 
         if ( ! $recepti || ! $recepti->exists) {
             $receptin = Recepti::query()->where('status', 1);

@@ -371,7 +371,7 @@ Route::prefix('api/v2')->group(function () {
 Route::group(
     [
         'prefix' => LaravelLocalization::setLocale(),
-        'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]
+        'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'localize' ]
     ], function() {
 
     /**
@@ -428,9 +428,7 @@ Route::group(
     Route::get('blog/{cat?}/{subcat?}/{blog?}', [CatalogRouteController::class, 'blog'])->name('catalog.route.blog');
     Route::get('blogs', [CatalogRouteController::class, 'blog'])->name('frontblogs');
 
-    Route::get('recepti/{cat?}/{subcat?}/{recepti?}', [CatalogRouteController::class, 'recepti'])->name('catalog.route.recepti');
-    Route::get('recepti', [CatalogRouteController::class, 'recepti'])->name('receptin');
-
+    Route::get(LaravelLocalization::transRoute('routes.recepti'), [CatalogRouteController::class, 'recepti'])->name('catalog.route.recepti');
 
 
 //
