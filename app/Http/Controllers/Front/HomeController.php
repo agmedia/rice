@@ -215,7 +215,7 @@ class HomeController extends FrontBaseController
 
         $sm = new Sitemap($sitemap);
 
-        return response()->view('front.layouts.partials.sitexmap', [
+        return response()->view('front.layouts.partials.sitemap', [
             'items' => $sm->getSitemap()
         ])->header('Content-Type', 'text/xml');
     }
