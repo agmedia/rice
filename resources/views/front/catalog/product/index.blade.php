@@ -2,13 +2,28 @@
 @section ('title', $seo['title'])
 @section ('description', $seo['description'])
 @push('meta_tags')
-    <link rel="canonical" href="{{ url($prod->url) }}" />
+
+    @if (isset($cat) && $cat && ! $subcat)
+
+        <link rel="canonical" href="{{ route('catalog.route', ['group' => $group ?? '', 'cat' => $prod->category()->slug, 'subcat' => $prod->translation(current_locale())->slug]) }}"  />
+
+    @else
+
+        <link rel="canonical" href="{{ route('catalog.route', ['group' => $group ?? '', 'cat' => $prod->category()->slug, 'subcat' => $prod->subcategory()->slug, 'prod' => $prod->translation(current_locale())->slug]) }}"  />
+
+    @endif
+
+
     <meta property="fb:app_id" content="1201186234921048" />
     <meta property="og:locale" content="{{ current_locale() == 'hr' ? 'hr_HR' : 'en_HR' }}" />
     <meta property="og:type" content="product" />
     <meta property="og:title" content="{{ $seo['title'] }}" />
     <meta property="og:description" content="{{ $seo['description']  }}" />
-    <meta property="og:url" content="{{ url($prod->url) }}"  />
+    @if (isset($cat) && $cat && ! $subcat)
+        <meta property="og:url" content="{{ route('catalog.route', ['group' => $group ?? '', 'cat' => $prod->category()->slug, 'subcat' => $prod->translation(current_locale())->slug]) }}"  />
+        @else
+        <meta property="og:url" content="{{ route('catalog.route', ['group' => $group ?? '', 'cat' => $prod->category()->slug, 'subcat' => $prod->subcategory()->slug, 'prod' => $prod->translation(current_locale())->slug]) }}"  />
+    @endif
     <meta property="og:site_name" content="Rice Kakis | Asian Store" />
     <meta property="og:updated_time" content="{{ $prod->updated_at  }}" />
     <meta property="og:image" content="{{ asset($prod->image) }}" />
