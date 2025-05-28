@@ -44,9 +44,12 @@ class DashboardController extends Controller
         $data['today']      = Order::whereDate('created_at', Carbon::today())->count();
         $data['proccess']   = Order::whereIn('order_status_id', [1, 2, 3])->count();
         $data['finished']   = Order::whereIn('order_status_id', [4, 5, 6, 7])->count();
-        $data['this_month'] = Order::whereMonth('created_at', '=', Carbon::now()->month)->count();
-        $data['this_month_total'] = Order::whereMonth('created_at', '=', Carbon::now()->month)->whereIn('order_status_id', [4, 1, 2, 3])->sum('total');
-        $data['this_month_total'] =  number_format($data['this_month_total'], 2,'.','');
+        $data['this_month'] = Order::whereYear('created_at', '=', Carbon::now()->year)->whereMonth('created_at', '=', Carbon::now()->month)->count();
+        $data['this_month_total'] = Order::whereYear('created_at', '=', Carbon::now()->year)->whereMonth('created_at', '=', Carbon::now()->month)->whereIn('order_status_id', [4, 1, 2, 3])->sum('total');
+
+
+
+        $data['this_month'] = Order::whereYear('created_at', '=', Carbon::now()->year)->whereMonth('created_at', '=', Carbon::now()->month)->count();
 
         $data['users']   = UserDetail::whereIn('role', ['customer'])->count();
 
