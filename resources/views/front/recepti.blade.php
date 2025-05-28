@@ -10,12 +10,12 @@
     @section ( 'title', $recepti->title. ' - Rice Kakis | Asian Store' )
     @section ( 'description', $recepti->translation->meta_description )
     @push('meta_tags')
-        <link rel="canonical" href="{{ route('catalog.route.recepti', ['recepti' => $recepti]) }}/{{ $recepti->translation->slug }}" />
+        <link rel="canonical" href="{{ route('catalog.route.recepti', ['cat' => $recepti]) }}" />
         <meta property="og:locale" content="hr_HR" />
         <meta property="og:type" content="product" />
         <meta property="og:title" content="{{ $recepti->title }}" />
         <meta property="og:description" content="{{ $recepti->translation->meta_description  }}" />
-        <meta property="og:url" content="{{ route('catalog.route.recepti', ['recepti' => $recepti]) }}/{{ $recepti->translation->slug }}"  />
+        <meta property="og:url" content="{{ route('catalog.route.recepti', ['cat' => $recepti]) }}" />
         <meta property="og:site_name" content="Rice Kakis | Asian Store" />
         <meta property="og:updated_time" content="{{ $recepti->updated_at  }}" />
         <meta property="og:image" content="{{ asset($recepti->image) }}" />
