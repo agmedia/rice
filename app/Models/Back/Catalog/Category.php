@@ -311,6 +311,9 @@ class Category extends Model
     }
 
 
+    /**
+     * @return array
+     */
     public static function getParents(): array
     {
         $response = [];
@@ -324,6 +327,28 @@ class Category extends Model
         }
 
         return $response;
+    }
+
+
+    /**
+     * @return array[]
+     */
+    public static function getDefaultGroupsArray(): array
+    {
+        return [
+            [
+                'title' => 'Kategorija proizvoda',
+                'value' => 'kategorija-proizvoda'
+            ],
+            [
+                'title' => 'Blogs',
+                'value' => 'blog'
+            ],
+            [
+                'title' => 'Recepti',
+                'value' => 'recepti'
+            ],
+        ];
     }
 
 }

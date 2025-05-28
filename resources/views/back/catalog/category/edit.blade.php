@@ -70,7 +70,7 @@
                                 <label for="group-select">{{ __('back/categories.grupa') }}</label>
                                 <select class="js-select2 form-control" id="group-select" name="group" style="width: 100%;">
                                     @foreach ($groups as $group)
-                                        <option value="{{ $group }}" {{ (isset($category) && ($category->group == $group)) ? 'selected' : '' }}>{{ $group }}</option>
+                                        <option value="{{ $group['value'] }}" {{ (isset($category) && ($category->group == $group['value'])) ? 'selected' : '' }}>{{ $group['title'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -268,7 +268,7 @@
         $(() => {
             $('#group-select').select2({
                 placeholder: '{{ __('back/categories.odaberite_ili_upisite_novu_grupu') }}',
-                tags: true
+                minimumResultsForSearch: Infinity
             });
 
             // $('#group-select').on('select2:select', function (e) {
