@@ -14,7 +14,7 @@
             <link rel="alternate" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.blog'), [], true) }}" hreflang="{{ Str::lower($lang->code) }}-HR" />
         @endif
         @if (isset($recepti) && !$receptin )
-            <link rel="alternate" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.recepti', ['recepti' => $recepti->translation($lang->code)->slug]),[], true) }}" hreflang="{{ Str::lower($lang->code) }}-HR" />
+            <link rel="alternate" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.recepti', ['cat' => $recepti->translation($lang->code)->slug]),[], true) }}" hreflang="{{ Str::lower($lang->code) }}-HR" />
         @endif
         @if (isset($recepti) && $receptin )
             <link rel="alternate" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.recepti'), [], true) }}"hreflang="{{ Str::lower($lang->code) }}-HR" />

@@ -190,14 +190,14 @@ class Sitemap
 
         foreach ($blogs as $blog) {
             $this->response[] = [
-                'url' => route('catalog.route.blog', ['blog' => $blog->translation->slug]),
+                'url' => route('catalog.route.blog', ['cat' => $blog]),
                 'lastmod' => $blog->updated_at->tz('UTC')->toAtomString()
             ];
         }
 
         foreach ($recepti as $recept) {
             $this->response[] = [
-                'url' => route('catalog.route.blog', ['blog' => $recept->translation->slug]),
+                'url' => route('catalog.route.recepti', ['cat' => $recept]),
                 'lastmod' => $recept->updated_at->tz('UTC')->toAtomString()
             ];
         }
