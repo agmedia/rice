@@ -1,5 +1,9 @@
 @extends('back.layouts.backend')
 
+@push('css_before')
+    <link rel="stylesheet" href="{{ asset('js/plugins/select2/css/select2.min.css') }}">
+@endpush
+
 @section('content')
 
     <div class="bg-body-light">
@@ -30,10 +34,11 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="block-content">
                     <div class="row justify-content-center push">
-                        <div class="col-md-10">
 
+                        <div class="col-md-10">
                             <div class="form-group">
                                 <label for="title-input">{{ __('back/faq.pitanje') }}</label>
                                 <ul class="nav nav-pills float-right">
@@ -45,8 +50,6 @@
                                         </li>
                                     @endforeach
                                 </ul>
-
-
                                 <div class="tab-content">
                                     @foreach(ag_lang() as $lang)
                                         <div id="title-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
@@ -54,15 +57,10 @@
                                         </div>
                                     @endforeach
                                 </div>
-
-
-
                             </div>
-
                             <div class="form-group row  mb-4">
                                 <div class="col-md-12">
                                     <label for="description-editor">{{ __('back/faq.odgovor') }}</label>
-
                                     <ul class="nav nav-pills float-right">
                                         @foreach(ag_lang() as $lang)
                                             <li @if ($lang->code == current_locale()) class="active" @endif>
@@ -72,8 +70,6 @@
                                             </li>
                                         @endforeach
                                     </ul>
-
-
                                     <div class="tab-content">
                                         @foreach(ag_lang() as $lang)
                                             <div id="description-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
@@ -81,30 +77,50 @@
                                             </div>
                                         @endforeach
                                     </div>
-
-
                                 </div>
                             </div>
-
                         </div>
+
+                        <div class="col-md-10">
+                            <label for="categories">{{ __('back/products.odaberi_kategorije') }} @include('back.layouts.partials.required-star')</label>
+                            <select class="form-control" id="category-select" name="category" style="width: 100%;">
+                                <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
+                                @foreach ($categories as $group => $cats)
+                                    @foreach ($cats as $id => $category)
+                                        <option value="{{ $id }}" class="font-weight-bold small" {{ (isset($faq) && $faq->category_id == $id) ? 'selected' : '' }}>{{ $category['title'] }}</option>
+                                        @if ( ! empty($category['subs']))
+                                            @foreach ($category['subs'] as $sub_id => $subcategory)
+                                                <option value="{{ $sub_id }}" class="pl-3 text-sm" {{ (isset($faq) && $faq->category_id == $sub_id) ? 'selected' : '' }}>{{ $category['title'] . ' >> ' . $subcategory['title'] }}</option>
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                @endforeach
+                            </select>
+                            @error('category')
+                            <span class="text-danger font-italic">{{ __('back/products.kategorija_je_obavezna') }}</span>
+                            @enderror
+                        </div>
+
                     </div>
                 </div>
+
                 <div class="block-content bg-body-light">
                     <div class="row justify-content-center push">
+
                         <div class="col-md-5">
                             <button type="submit" class="btn btn-hero-success my-2">
                                 <i class="fas fa-save mr-1"></i> {{ __('back/faq.snimi') }}
                             </button>
                         </div>
-                        <div class="col-md-5 text-right">
-                        @if (isset($faq))
 
+                        <div class="col-md-5 text-right">
+                            @if (isset($faq))
                                 <a href="{{ route('faqs.destroy', ['faq' => $faq]) }}" type="submit" class="btn btn-hero-danger my-2 js-tooltip-enabled" data-toggle="tooltip" title="" data-original-title="{{ __('back/faq.obrisi') }}" onclick="event.preventDefault(); document.getElementById('delete-faq-form{{ $faq->id }}').submit();">
                                     <i class="fa fa-trash-alt"></i> {{ __('back/faq.obrisi') }}
                                 </a>
-
-                        @endif
+                            @endif
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -120,26 +136,26 @@
 @endsection
 
 @push('js_after')
+    <script src="{{ asset('js/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('js/plugins/ckeditor5-classic/build/ckeditor.js') }}"></script>
-
 
     <script>
         $(() => {
 
             {!! ag_lang() !!}.forEach(function(item) {
                 ClassicEditor
-                    .create(document.querySelector('#description-editor-' + item.code ))
+                .create(document.querySelector('#description-editor-' + item.code ))
 
-                    .then(editor => {
-                        console.log(editor);
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+                .then(editor => {
+                    console.log(editor);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
 
             });
 
-
+            $('#category-select').select2({});
 
         })
     </script>

@@ -1,0 +1,2 @@
+ALTER TABLE faq
+    ADD COLUMN category_id BIGINT(20) NOT NULL AFTER group;

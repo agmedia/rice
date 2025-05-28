@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Back\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\Back\Catalog\Category;
 use App\Models\Back\Settings\Faq;
 use Illuminate\Http\Request;
 
@@ -32,7 +33,9 @@ class FaqController extends Controller
      */
     public function create()
     {
-        return view('back.settings.faq.edit');
+        $categories = (new Category())->getList(false);
+
+        return view('back.settings.faq.edit', compact('categories'));
     }
 
 
@@ -66,7 +69,9 @@ class FaqController extends Controller
      */
     public function edit(Faq $faq)
     {
-        return view('back.settings.faq.edit', compact('faq'));
+        $categories = (new Category())->getList(false);
+        
+        return view('back.settings.faq.edit', compact('faq', 'categories'));
     }
 
 
@@ -80,7 +85,7 @@ class FaqController extends Controller
      */
     public function update(Request $request, Faq $faq)
     {
-        $updated = $faq->validateRequest($request)->create();
+        $updated = $faq->validateRequest($request)->edit();
 
         if ($updated) {
             return redirect()->route('faqs.edit', ['faq' => $updated])->with(['success' => 'Faq was succesfully saved!']);

@@ -128,6 +128,7 @@ class Faq extends Model
     {
         $response = [
             'group'       => null,
+            'category_id' => isset($this->request->category) ? $this->request->category : 0,
             'sort_order'  => 0,
             'status'      => (isset($this->request->status) and $this->request->status == 'on') ? 1 : 0,
             'updated_at'  => Carbon::now()
