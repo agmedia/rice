@@ -38,6 +38,6 @@ class SendReviewRequestEmail extends Command
      */
     public function handle()
     {
-        return Email::sendReviewRequestEmails();
+        return 1;//Email::sendReviewRequestEmails();
     }
 }
