@@ -1,5 +1,5 @@
 @extends('front.layouts.app')
-@section ('title', $seo['title'])
+@section ('title', $seo['main_title'])
 @section ('description', $seo['description'])
 @push('meta_tags')
     @if (isset($cat) && $cat && ! $subcat)
