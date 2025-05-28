@@ -15,6 +15,7 @@
 
     <div class="mt-5 mb-5" style="max-width:1240px">
         <!-- Flush accordion. Use this when you need to render accordions edge-to-edge with their parent container -->
+        <div class="rounded-3 p-4 mt-3" style="border: 1px solid rgb(218, 225, 231); background-color: rgb(255, 255, 255) !important;">
         <div class="accordion accordion-flush" id="accordionFlushExample">
             @foreach ($faq as $fa)
                 <!-- Item -->
@@ -28,6 +29,7 @@
                 </div>
             @endforeach
         </div>
+    </div>
     </div>
 
 @endsection
