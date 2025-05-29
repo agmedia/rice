@@ -22,7 +22,7 @@
         @if (isset($brand)  )
 
 
-<link rel="alternate" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.brand', ['brand' => $brand->translation->slug]), true) }}" hreflang="{{ Str::lower($lang->code) }}-HR" />
+<link rel="alternate" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.brand', ['brand' => $brand->translation->slug]), [], true) }}" hreflang="{{ Str::lower($lang->code) }}-HR" />
 
 
         @endif
