@@ -36,7 +36,7 @@ class ReviewRequestEmail extends Mailable
      */
     public function build()
     {
-        return $this->subject(__('front/cart.hvala_narudzba'))
+        return $this->subject(__('front/cart.review_request_subject'). $this->order->id)
             ->view('emails.review-request');
     }
 }

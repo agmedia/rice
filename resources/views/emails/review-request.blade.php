@@ -1,45 +1,27 @@
 @extends('emails.layouts.base')
-
 @section('content')
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-        <tr><td class="ag-mail-tableset"><h3>Narudžba je otkazana</h3></td></tr>
+        <tr><td class="ag-mail-tableset">
+                <h3>Bok {{ $order->payment_fname }}</h3>
+                <p>Vaše mišljenje nam puno znači.<br>
+                Svaki komentar i ocjena pomažu nam da budemo još bolji i da zajedno s vama gradimo Rice Kakis.</p>
+                <p>Zato vas molimo – odvojite samo 30 sekundi i recite nam kako vam se svidjela ova narudžba:</
+            </td>
+        </tr>
+        <tr>
+            <td class="ag-mail-tableset">
+                @include('emails.layouts.partials.review-products', ['order' => $order])
+            </td>
+        </tr>
+        <tr>
+            <td class="ag-mail-tableset">
+                <h3>Zahvala za vaš trud:</h3>
+                <p>Za svaku recenziju dodjeljujemo vam <strong>1 loyalty bod.</strong><br><br>
+                    🔸 100 bodova = 5 € popusta<br>
+                    🔸 200 bodova = 12 € popusta<br><br>
 
-        <tr>
-            <td class="ag-mail-tableset">
-                Broj narudžbe: <strong>{{ $order->id }}</strong><br>
-                Datum: <strong>{{ now()->format('d.m.Y') }}</strong><br>
-            </td>
-        </tr>
-
-        <tr>
-            <td class="ag-mail-tableset">
-                @include('emails.layouts.partials.order-details', ['order' => $order])
-            </td>
-        </tr>
-        <tr>
-            <td class="ag-mail-tableset">
-                @include('emails.layouts.partials.order-price-table', ['order' => $order])
-            </td>
-        </tr>
-        <tr>
-            <td class="ag-mail-tableset">
-                {{ __('Način plaćanja') }}:
-                @if ($order->payment_code == 'bank')
-                    <b>{{ __('Općom uplatnicom / Virmanom / Internet bankarstvom') }}</b>
-                @elseif ($order->payment_code == 'cod')
-                    <b>{{ __('Gotovinom prilikom pouzeća') }}</b>
-                @elseif ($order->payment_code == 'corvus')
-                    <b>{{ __('CorvusPay') }}</b>
-                @elseif ($order->payment_code == 'wspay')
-                    <b>{{ __('WSPay') }}</b>
-                @elseif ($order->payment_code == 'borgun')
-                    <b>{{ __('Teya Payment') }}</b>
-                @elseif ($order->payment_code == 'keks')
-                    <b>{{ __('KeksPay') }}</b>
-                @else
-                    <b>{{ __('Plaćanje prilikom preuzimanja') }}</b>
-                @endif
-                <br><br>Lijep pozdrav,<br>Rice Kakis | Asian Store
+                    Detalje možete vidjeti ovdje:<br>
+                   <a style="color:#EF4D48" href="https://www.ricekakis.com/info/loyalty-club">🔗 www.ricekakis.com/loyalty-program </a>
             </td>
         </tr>
 

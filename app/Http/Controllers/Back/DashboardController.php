@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Imports\ProductImport;
 use App\Mail\OrderReceived;
 use App\Mail\OrderSent;
+use App\Mail\ReviewRequestEmail;
 use App\Models\Back\Catalog\Brand;
 use App\Models\Back\Catalog\Category;
 use App\Models\Back\Catalog\Mjerilo;
@@ -390,11 +391,13 @@ class DashboardController extends Controller
      */
     public function mailing(Request $request)
     {
-        $order = Order::where('id', 1)->first();
+        $order = Order::where('id', 15)->first();
 
         dispatch(function () use ($order) {
-            Mail::to(config('mail.admin'))->send(new OrderReceived($order));
-            Mail::to($order->payment_email)->send(new OrderSent($order));
+          //  Mail::to(config('mail.admin'))->send(new OrderReceived($order));
+           // Mail::to($order->payment_email)->send(new OrderSent($order));
+
+            Mail::to($order->payment_email)->send(new ReviewRequestEmail($order));
         });
 
         return redirect()->route('dashboard');
