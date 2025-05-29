@@ -35,7 +35,7 @@
 <table id="products">
     @foreach ($order->products()->get() as $product)
         <tr>
-            <td><img src="{{$product->real->thumb}}" alt="{{ $product->name }}"/></td>
+            <td style="width:150px"><img width="150" src="{{$product->real->thumb}}" alt="{{ $product->name }}"/></td>
             <td>
                 <strong>{{ $product->name }}</strong>
                 @if ($product->combo())
