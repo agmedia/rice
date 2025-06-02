@@ -129,10 +129,15 @@ class CatalogRouteController extends FrontBaseController
         }
 
         $meta_tags = Seo::getMetaTags($request, 'filter');
-
         $crumbs = (new Breadcrumb())->category($group, $cat, $subcat)->resolve();
+        $faqs = Faq::getCategoryList($cat, $subcat);
+        $faqs_crumbs = [];
 
-        return view('front.catalog.category.index', compact('group', 'list', 'cat', 'subcat', 'prod', 'crumbs', 'meta_tags'));
+        if ($faqs && $faqs->count()) {
+            $faqs_crumbs = (new Breadcrumb())->faqs($faqs)->resolve('mainEntity');
+        }
+
+        return view('front.catalog.category.index', compact('group', 'list', 'cat', 'subcat', 'prod', 'crumbs', 'meta_tags', 'faqs', 'faqs_crumbs'));
     }
 
 

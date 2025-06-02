@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\Front\Catalog\Category;
 use App\Models\Front\Catalog\Product;
+use App\Models\Front\Faq;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -94,11 +95,43 @@ class Breadcrumb
 
 
     /**
+     * @param Collection $faqs
+     *
+     * @return $this
+     */
+    public function faqs(Collection $faqs)
+    {
+        if ($faqs->count() > 0) {
+            $this->breadcrumbs = [];
+            $this->schema = [
+                '@context' => 'https://schema.org/',
+                '@type' => 'FAQPage'
+            ];
+
+            foreach ($faqs as $faq) {
+                array_push($this->breadcrumbs, [
+                    '@type' => 'Question',
+                    'name' => $faq->title,
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text' => strip_tags($faq->description)
+                    ]
+                ]);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @param string $tag
+     *
      * @return array
      */
-    public function resolve()
+    public function resolve(string $tag = 'itemListElement')
     {
-        $this->schema['itemListElement'] = $this->breadcrumbs;
+        $this->schema[$tag] = $this->breadcrumbs;
 
         return $this->schema;
     }

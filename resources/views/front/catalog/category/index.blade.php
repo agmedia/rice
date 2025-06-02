@@ -74,16 +74,14 @@
 
 @section('content')
 
-
-
     @if (Route::currentRouteName() == 'pretrazi')
         <section class="d-md-flex justify-content-between align-items-center mb-2 pb-2">
             <h1 class="h2 mb-2 mb-md-0 me-3"><span class="small fw-light me-2">{{ __('front/ricekakis.rezultati') }}:</span> {{ request()->input('pojam') }}</h1>
         </section>
     @endif
 
-    @if (isset($brand) && $brand)
 
+    @if (isset($brand) && $brand)
         <nav class="mb-4" aria-label="breadcrumb">
             <ol class="breadcrumb flex-lg-nowrap">
                 <li class="breadcrumb-item"><a class="text-nowrap" href="{{ route('index') }}"><i class="ci-home"></i>{{ __('front/ricekakis.homepage') }}</a></li>
@@ -101,12 +99,10 @@
                 @endif
             </ol>
         </nav>
-
         <section class="d-md-flex justify-content-between align-items-center mb-2 pb-2">
             <h1 class="h2 mb-2 mb-md-0 me-3">{{ $brand->title }}</h1>
         </section>
     @endif
-
 
 
     @if (isset($group) && $group)
@@ -128,18 +124,11 @@
             </ol>
         </nav>
 
-
         <section class="py-2 mb-1">
-
             @if ($group && ! $cat && ! $subcat)
-
-
-                <h1 class="h2 mb-4  me-3">{{ __('front/ricekakis.web_shop') }}</h1>
+                <h1 class="h2 mb-4 me-3">{{ __('front/ricekakis.web_shop') }}</h1>
                 <div class="row">
-
                     @foreach ($list as $item)
-
-
                         <!-- Product-->
                         <div class="article col-md-3 mb-grid-gutter">
                             <a class="card border-0 shadow" href="{{ route('catalog.route', ['group' => $group]) }}/{{ $item['slug'] }}">
@@ -151,12 +140,8 @@
                         </div>
                     @endforeach
                 </div>
-
-
-
-
-
             @endif
+
             @if ($cat && ! $subcat)
                 <h1 class="h2 mb-2 mb-md-0 me-3">{{ $cat->translation->title }}</h1>
                 @if($cat->translation->short_description)
@@ -168,17 +153,11 @@
                       <p class="mb-0 mt-2"> {{ $subcat->translation->short_description }}</p>
                    @endif
             @endif
-
-
-
-
         </section>
 
         @if ($cat && ! $subcat)
-
             @if ($cat->subcategories()->count())
                 <section class="py-2 mb-1">
-
                     <div class="tns-carousel">
                         <div class="tns-carousel-inner" data-carousel-options='{"items": 2, "controls": true, "autoHeight": false, "responsive": {"0":{"items":2, "gutter": 10},"480":{"items":2, "gutter": 10},"800":{"items":4, "gutter": 20}, "1300":{"items":5, "gutter": 30}, "1800":{"items":6, "gutter": 30}}}'>
                             @foreach ($cat->subcategories as $item)
@@ -194,16 +173,9 @@
                             @endforeach
                         </div>
                     </div>
-
-
-
-
                 </section>
-
             @endif
-
         @endif
-
     @endif
 
 
@@ -217,12 +189,6 @@
     </products-view>
 
 
-
-
-
-
-
-
     @if (isset($author) && $author && ! empty($author->description))
         <section class="col">
             <div class="card p2-5 border-0 mt-5 shadow mb-5" >
@@ -231,24 +197,17 @@
                 </div>
             </div>
         </section>
-
     @endif
-
 
     @if (isset($brand) && $brand && ! empty($brand->description))
         <section class="col">
             <div class="card p2-5 border-0 mt-5 shadow mb-5" >
                 <div class="card-body py-md-4 py-3 px-4 ">
-
-
                     {!!$brand->translation->description !!}
                 </div>
             </div>
         </section>
-
     @endif
-
-
 
     @if ($cat && !$subcat)
         <section class="col">
@@ -270,17 +229,14 @@
         </section>
     @endif
 
-
-
-
-
-
-
 @endsection
 
 @push('js_after')
     <script type="application/ld+json">
         {!! collect($crumbs)->toJson() !!}
+    </script>
+    <script type="application/ld+json">
+        {!! collect($faqs_crumbs)->toJson() !!}
     </script>
 @endpush
 

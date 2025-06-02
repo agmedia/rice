@@ -3,7 +3,9 @@
 namespace App\Models\Front;
 
 use App\Models\Back\Settings\FaqTranslation;
+use App\Models\Front\Catalog\Category;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Faq extends Model
 {
@@ -70,6 +72,46 @@ class Faq extends Model
     public function getDescriptionAttribute()
     {
         return $this->translation->description;
+    }
+
+
+    /**
+     * Get FAQ items by category and subcategory
+     *
+     * @param Category|null $category    Main category
+     * @param mixed|null    $subcategory Subcategory object
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getCategoryList(Category $category = null, $subcategory = null)
+    {
+        $ids      = [];
+        $response = collect();
+
+        if ($category) {
+            $ids[] = $category->id;
+
+            foreach ($category->subcategories()->get() as $subcat) {
+                $ids[] = $subcat->id;
+            }
+        }
+
+        if ($subcategory) {
+            if (isset($subcategory->id)) {
+                $ids[] = $subcategory->id;
+            }
+        }
+
+        if ( ! empty($ids)) {
+            try {
+                $response = self::query()->whereIn('category_id', $ids)->get();
+
+            } catch (\Exception $e) {
+                Log::info($e->getMessage());
+            }
+        }
+
+        return $response;
     }
 
 }
