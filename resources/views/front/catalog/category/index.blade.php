@@ -22,7 +22,7 @@
         @section ( 'description',  $subcat->translation->meta_description )
 
         @push('meta_tags')
-            <link rel="canonical" href="{{ env('APP_URL')}}kategorija-proizvoda/{{ $subcat->translation['slug'] }}" />
+            <link rel="canonical" href="{{ env('APP_URL')}}kategorija-proizvoda/{{ $cat->translation['slug'] }}/{{ $subcat->translation['slug'] }}" />
         @endpush
 
     @endif
