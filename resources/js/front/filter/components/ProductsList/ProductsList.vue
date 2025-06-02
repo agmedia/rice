@@ -120,6 +120,7 @@
             <hr class="d-sm-none">
         </div>
 
+        <script type="application/ld+json" v-if="products.data && products.data.length" v-html="renderItemListSchema()"></script>
     </section>
 </template>
 
@@ -171,6 +172,48 @@ export default {
         },
         $route(params) {
             this.checkQuery(params);
+        }
+    },
+    //
+    computed: {
+        itemListSchema() {
+            if (!this.products.data || !this.products.data.length) {
+                return null;
+            }
+
+            const schema = {
+                '@context': 'https://schema.org',
+                '@type': 'ItemList',
+                'numberOfItems': this.products.data.length,
+                'itemListElement': []
+            };
+
+            this.products.data.forEach((product, index) => {
+                schema.itemListElement.push({
+                    '@type': 'ListItem',
+                    'position': index + 1,
+                    'item': {
+                        '@type': 'Product',
+                        'name': product.name,
+                        'url': this.origin + product.url,
+                        'image': product.image,
+                        'sku': product.sku || '',
+                        'description': product.description || '',
+                        'brand': {
+                            '@type': 'Brand',
+                            'name': product.brand ? product.brand.title : ''
+                        },
+                        'offers': {
+                            '@type': 'Offer',
+                            'priceCurrency': 'EUR',
+                            'price': product.main_special || product.main_price,
+                            'availability': product.quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
+                        }
+                    }
+                });
+            });
+
+            return schema;
         }
     },
     //
@@ -233,6 +276,18 @@ export default {
                 this.checkSpecials();
                 this.checkAvailables();
             });
+        },
+
+        /**
+         *
+         * @returns {string}
+         */
+        renderItemListSchema() {
+            if (!this.itemListSchema) {
+                return '';
+            }
+
+            return JSON.stringify(this.itemListSchema);
         },
 
         /**
