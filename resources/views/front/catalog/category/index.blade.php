@@ -229,7 +229,9 @@
         </section>
     @endif
 
-    @if ($faqs)
+
+
+    @if(!$faqs->isEmpty())
         <section class="col">
             <div class="card p2-5 border-0 mt-5 shadow mb-5" >
                 <div class="card-body py-md-4 py-3 px-4 ">
