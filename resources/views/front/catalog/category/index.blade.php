@@ -231,7 +231,7 @@
 
 
 
-    @if(!$faqs->isEmpty())
+    @if(isset($faqs) and !$faqs->isEmpty())
         <section class="col">
             <div class="card p2-5 border-0 mt-5 shadow mb-5" >
                 <div class="card-body py-md-4 py-3 px-4 ">
@@ -264,9 +264,12 @@
     <script type="application/ld+json">
         {!! collect($crumbs)->toJson() !!}
     </script>
+
+    @if(isset($faqs))
     <script type="application/ld+json">
         {!! collect($faqs_crumbs)->toJson() !!}
     </script>
+    @endif
 @endpush
 
 @push('js_after')
