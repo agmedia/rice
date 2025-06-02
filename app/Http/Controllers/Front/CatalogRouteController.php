@@ -372,8 +372,10 @@ class CatalogRouteController extends FrontBaseController
      */
     public function search(Request $request)
     {
-        if ($request->has(config('settings.search_keyword'))) {
-            if ( ! $request->input(config('settings.search_keyword'))) {
+        $key = config('settings.search_keyword');
+
+        if ($request->has($key)) {
+            if ( ! $request->input($key) || empty($request->input($key))) {
                 return redirect()->back()->with(['error' => 'Oops..! Zaboravili ste upisati pojam za pretraživanje..!']);
             }
 
@@ -381,11 +383,9 @@ class CatalogRouteController extends FrontBaseController
             $cat    = null;
             $subcat = null;
 
-            $ids = Helper::search(
-                $request->input(config('settings.search_keyword'))
-            );
+            $ids = Helper::search($request->input($key));
 
-            $crumbs = null;
+            $crumbs = Metatags::searchSchema($request->getRequestUri(), $request->input($key));
 
             return view('front.catalog.category.index', compact('group', 'cat', 'subcat', 'ids', 'crumbs'));
         }

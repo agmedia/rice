@@ -261,9 +261,11 @@
 @endsection
 
 @push('js_after')
-    <script type="application/ld+json">
-        {!! collect($crumbs)->toJson() !!}
-    </script>
+    @if (isset($crumbs))
+        <script type="application/ld+json">
+            {!! collect($crumbs)->toJson() !!}
+        </script>
+    @endif
 
     @if(isset($faqs))
     <script type="application/ld+json">
