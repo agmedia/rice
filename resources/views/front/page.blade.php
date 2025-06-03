@@ -23,8 +23,8 @@
         <meta name="twitter:image" content="{{ asset('media/rice-kakis.jpg') }}" />
         <meta property="og:updated_time"  content="{{ $page->updated_at }}">
 
-        <link rel="alternate" href="https://www.ricekakis.com/" hreflang="hr-HR" />
-        <link rel="alternate" href="https://www.ricekakis.com/en/" hreflang="en-HR" />
+        <link rel="alternate" href="https://www.ricekakis.com/" hreflang="hr" />
+        <link rel="alternate" href="https://www.ricekakis.com/en/" hreflang="en" />
         <link rel="alternate" href="https://www.ricekakis.com/" hreflang="x-default" />
     @endpush
     @push('js_after')

@@ -5,8 +5,9 @@
 @section ( 'title', 'Contact Us – Rice Kakis' )
 @endif
 @push('meta_tags')
-    <link rel=”alternate” href=”https://www.ricekakis.com/recepti/” hreflang=”hr” />
-    <link rel=”alternate” href=”https://www.ricekakis.com/en/recepti/” hreflang=”en” />
+    <link rel=”alternate” href=”https://www.ricekakis.com/kontakt/” hreflang=”hr” />
+    <link rel=”alternate” href=”https://www.ricekakis.com/en/kontakt/” hreflang=”en” />
+    <link rel="alternate" href="https://www.ricekakis.com/" hreflang="x-default" />
 @endpush
 
 
