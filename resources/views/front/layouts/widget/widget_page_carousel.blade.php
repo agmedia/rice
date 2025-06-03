@@ -30,7 +30,7 @@
                 @foreach ($data['items'] as $item)
 
 
-                    <div class="col-md-3 col-sm-4 col-6"><a class="d-block bg-white shadow-sm rounded-3 py-3 py-sm-4 mb-grid-gutter" href="{{ current_locale() }}/{{ $data['tablename'] }}/{{ $item->translation->slug }}" aria-label="Svi artikli brenda {{ $item->translation->title }}"><img loading="lazy" class="d-block mx-auto" src="{{ $item['image'] }}" style="width: 200px;" alt="{{ $item->translation->title }}"></a></div>
+                    <div class="col-md-3 col-sm-4 col-6"><a class="d-block bg-white shadow-sm rounded-3 py-3 py-sm-4 mb-grid-gutter" href="{{ current_locale() }}/{{ $data['tablename'] }}/{{ $item->translation->slug }}" aria-label="Svi artikli brenda {{ $item->translation->title }}"><img loading="lazy" class="d-block mx-auto" src="{{ $item['image'] }}" style="width: 200px;" alt="Brand {{ $item->translation->title }}"></a></div>
                 @endforeach
             </div>
         </div>
