@@ -244,8 +244,8 @@ class Sitemap
         foreach ($products as $product) {
             $url = url($product->translation->url);
 
-            if (Str::contains($url, 'hr/')) {
-                $url = str_replace('hr/', '', $url);
+            if (Str::contains($url, '/hr/')) {
+                $url = str_replace('/hr/', '/', $url);
             }
 
             $this->response[] = [

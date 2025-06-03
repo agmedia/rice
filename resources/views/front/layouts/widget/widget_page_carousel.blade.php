@@ -1,7 +1,7 @@
 <!-- {"title": "Page Carousel", "description": "Category, Publisher, Reviews."} -->
 <section class=" py-3 " >
     <div class="d-flex flex-wrap justify-content-between align-items-center pt-1  pb-3 mb-3">
-        <h2 class="h3 mb-0 pt-3 font-title me-3"> {{ $data['title'] }}</h2>
+        <h3 class="h3 mb-0 pt-3 font-title me-3"> {{ $data['title'] }}</h3>
     </div>
 
 
@@ -85,7 +85,7 @@
                             <a class="blog-entry-thumb" href="{{ route('catalog.route.recepti', ['cat' => $item]) }}"><span class="blog-entry-meta-label fs-sm"><i class="ci-pot"></i></span><img class="card-img-top" loading="lazy" src="{!! str_replace('.webp', '-thumb.webp', $item['image']) !!}" width="400" height="230" alt="{{ $item['title'] }}"></a>
 
                             <div class="card-body">
-                                <h2 class="h6 blog-entry-title"><a href="{{ route('catalog.route.recepti', ['cat' => $item]) }}">{{ $item['title'] }}</a></h2>
+                                <h3 class="h6 blog-entry-title"><a href="{{ route('catalog.route.recepti', ['cat' => $item]) }}">{{ $item['title'] }}</a></h3>
                                 <p class="fs-sm">{{ $item['short_description'] }}</p>
 
                             </div>
@@ -103,7 +103,7 @@
                     <div>
                         <div class="card"><a class="blog-entry-thumb" href="{{ route('catalog.route.blog', ['cat' => $item]) }}"><img class="card-img-top" loading="lazy" src="{{ $item['image'] }}" width="400" height="230" alt="{{ $item['title'] }}"></a>
                             <div class="card-body">
-                                <h2 class="h6 blog-entry-title"><a href="{{ route('catalog.route.blog', ['cat' => $item]) }}">{{ $item['title'] }}</a></h2>
+                                <h3 class="h6 blog-entry-title"><a href="{{ route('catalog.route.blog', ['cat' => $item]) }}">{{ $item['title'] }}</a></h3>
                                 <p class="fs-sm">{{ $item->translation['short_description'] }}</p>
                                 <div class="fs-xs text-nowrap"><a class="blog-entry-meta-link text-nowrap" href="#">{{ \Carbon\Carbon::make($item['created_at'])->locale('hr')->format('d.m.Y.') }}</a></div>
                             </div>
