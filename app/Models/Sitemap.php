@@ -242,8 +242,14 @@ class Sitemap
         $products = Product::query()->active()->hasStock()->get();
 
         foreach ($products as $product) {
+            $url = url($product->translation->url);
+
+            if (Str::contains($url, 'hr/')) {
+                $url = str_replace('hr/', '', $url);
+            }
+
             $this->response[] = [
-                'url' => url($product->translation->url),
+                'url' => $url,
                 'lastmod' => $product->updated_at->tz('UTC')->toAtomString()
             ];
         }
