@@ -205,6 +205,7 @@ export default {
                         },
                         'offers': {
                             '@type': 'Offer',
+                            'priceValidUntil': new Date(new Date().getFullYear(), 11, 31),
                             'priceCurrency': 'EUR',
                             'price': product.main_special || product.main_price,
                             'availability': product.quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
