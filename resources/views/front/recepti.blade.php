@@ -3,12 +3,12 @@
     @section ( 'title', 'Recepti - Rice Kakis | Asian Store' )
     @section ( 'description', 'Gastronomske poslastice vas očekuju: Uživajte u primamljivom mochiju, bubble tea-u, kimchiju, proizvodima bez glutena i ukusnim umacima.' )
     @push('meta_tags')
-        <link rel="alternate" href="https://www.ricekakis.com/recepti/" hreflang="hr-HR" />
-        <link rel="alternate" href="https://www.ricekakis.com/en/recipes/" hreflang="en-HR" />
+        <link rel="alternate" href="https://www.ricekakis.com/recepti/" hreflang="hr" />
+        <link rel="alternate" href="https://www.ricekakis.com/en/recipes/" hreflang="en" />
         <link rel="alternate" href="https://www.ricekakis.com/recepti/" hreflang="x-default"/>
     @endpush
 @else
-    @section ( 'title', $recepti->title. ' - Rice Kakis | Asian Store' )
+    @section ( 'title', $recepti->title )
     @section ( 'description', $recepti->translation->meta_description )
     @push('meta_tags')
         <link rel="canonical" href="{{ route('catalog.route.recepti', ['cat' => $recepti]) }}" />

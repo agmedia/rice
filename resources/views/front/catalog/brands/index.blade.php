@@ -7,7 +7,7 @@
             <meta name={{ $tag['name'] }} content={{ $tag['content'] }}>
         @endforeach
         <link rel="alternate" href="https://www.ricekakis.com/brand/" hreflang="hr" />
-        <link rel="alternate" href="https://www.ricekakis.com/en/brand/" hreflang="en-HR" />
+        <link rel="alternate" href="https://www.ricekakis.com/en/brand/" hreflang="en" />
         <link rel="alternate" href="https://www.ricekakis.com/brand/" hreflang="x-default"/>
     @endpush
 @endif
