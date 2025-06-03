@@ -1,15 +1,14 @@
 @extends('front.layouts.app')
-
 @section ( 'title', 'Brandovi - Rice Kakis | Asian Store' )
 @section ( 'description', 'Naši brandovi azijskih namirnica' )
-
 @if (isset($meta_tags))
     @push('meta_tags')
         @foreach ($meta_tags as $tag)
             <meta name={{ $tag['name'] }} content={{ $tag['content'] }}>
         @endforeach
         <link rel="alternate" href="https://www.ricekakis.com/brand/" hreflang="hr" />
-        <link rel="alternate" href="https://www.ricekakis.com/en/brand/" hreflang="en" />
+        <link rel="alternate" href="https://www.ricekakis.com/en/brand/" hreflang="en-HR" />
+        <link rel="alternate" href="https://www.ricekakis.com/brand/" hreflang="x-default"/>
     @endpush
 @endif
 @section('content')
