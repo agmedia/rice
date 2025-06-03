@@ -271,8 +271,16 @@ class Sitemap
         ];
 
         foreach ($brands as $brand) {
+
+            $url = url($brand->translation->url);
+
+            if (Str::contains($url, '/hr/')) {
+                $url = str_replace('/hr/', '/', $url);
+            }
+
+
             $this->response[] = [
-                'url' => url($brand->translation->url),
+                'url' => $url,
                 'lastmod' => $brand->updated_at->tz('UTC')->toAtomString()
             ];
 
