@@ -267,7 +267,7 @@
         </script>
     @endif
 
-    @if(isset($faqs))
+    @if(isset($faqs) and !$faqs->isEmpty())
     <script type="application/ld+json">
         {!! collect($faqs_crumbs)->toJson() !!}
     </script>

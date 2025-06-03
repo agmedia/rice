@@ -5,6 +5,7 @@
     @push('meta_tags')
         <link rel="alternate" href="https://www.ricekakis.com/recepti/" hreflang="hr-HR" />
         <link rel="alternate" href="https://www.ricekakis.com/en/recipes/" hreflang="en-HR" />
+        <link rel="alternate" href="https://www.ricekakis.com/recepti/" hreflang="x-default"/>
     @endpush
 @else
     @section ( 'title', $recepti->title. ' - Rice Kakis | Asian Store' )
