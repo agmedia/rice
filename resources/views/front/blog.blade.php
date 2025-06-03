@@ -12,7 +12,7 @@
     @section ( 'description',  $blog->translation->meta_description )
     @push('meta_tags')
         <link rel="canonical" href="{{ route('catalog.route.blog', ['cat' => $blog]) }}"/>
-        <meta property="og:locale" content="hr_HR"/>
+        <meta property="og:locale" content="{{ current_locale() == 'hr' ? 'hr_HR' : 'en_HR' }}"/>
         <meta property="og:type" content="product"/>
         <meta property="og:title" content="{{ $blog->title }}"/>
         <meta property="og:description" content="{{ $blog->translation->meta_description  }}"/>
