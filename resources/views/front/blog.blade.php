@@ -23,7 +23,7 @@
         <meta property="og:image:secure_url" content="{{ asset($blog->image) }}"/>
         <meta property="og:image:width" content="640"/>
         <meta property="og:image:height" content="480"/>
-        <meta property="og:image:type" content="image/jpeg"/>
+        <meta property="og:image:type" content="image/webp"/>
         <meta property="og:image:alt" content="{{ asset($blog->image) }}"/>
         <meta name="twitter:card" content="summary_large_image"/>
         <meta name="twitter:title" content="{{ $blog->title }}"/>
