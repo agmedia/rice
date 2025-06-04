@@ -473,7 +473,7 @@ class CatalogRouteController extends FrontBaseController
                 $frontblogs  = $frontblogs->orderBy('id', 'desc')->get();
                 $breadcrumbs = $route->attachBreadcrumbs($category, $subcategory, $blog);
 
-                return view('front.blog', compact('frontblogs', 'breadcrumbs'));
+                return view('front.blog', compact('frontblogs', 'breadcrumbs', 'category','subcategory'));
             }
         }
 

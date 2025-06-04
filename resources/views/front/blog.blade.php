@@ -1,12 +1,36 @@
 @extends('front.layouts.app')
 @if(isset($frontblogs))
-    @section ( 'title', 'Blog - Rice Kakis | Asian Store' )
-    @section ( 'description', 'Gastronomske poslastice vas očekuju: Uživajte u primamljivom mochiju, bubble tea-u, kimchiju, proizvodima bez glutena i ukusnim umacima.' )
-    @push('meta_tags')
-        <link rel="alternate" href="https://www.ricekakis.com/blog/" hreflang="hr"/>
-        <link rel="alternate" href="https://www.ricekakis.com/en/blog/" hreflang="en"/>
-        <link rel="alternate" href="https://www.ricekakis.com/blog/" hreflang="x-default"/>
-    @endpush
+
+    @if($category and !$subcategory)
+        @section ( 'title', $category->title.'- Rice Kakis | Asian Store' )
+        @section ( 'description', $category->translation->meta_description )
+        @push('meta_tags')
+            <link rel="canonical" href="{{ LaravelLocalization::localizeUrl(route('catalog.route.blog', ['cat' => $category->slug])) }}"/>
+
+            @foreach (ag_lang() as $lang )
+
+                <link rel="alternate" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.blog', ['cat' => $category->translation($lang->code)->slug])) }}" hreflang="{{ Str::lower($lang->code) }}"/>
+
+                @if ($lang->code == 'hr')
+                    <link rel="alternate" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.blog', ['cat' => $category->translation($lang->code)->slug])) }}"  hreflang="x-default" />
+                @endif
+
+            @endforeach
+
+            <link rel="alternate" href="https://www.ricekakis.com/blog/" hreflang="x-default"/>
+        @endpush
+    @elseif ($category and $subcategory)
+
+    @else
+        @section ( 'title', 'Blog - Rice Kakis | Asian Store' )
+        @section ( 'description', 'Gastronomske poslastice vas očekuju: Uživajte u primamljivom mochiju, bubble tea-u, kimchiju, proizvodima bez glutena i ukusnim umacima.' )
+        @push('meta_tags')
+            <link rel="canonical" href="{{ LaravelLocalization::localizeUrl(route('catalog.route.blog')) }}"/>
+            <link rel="alternate" href="https://www.ricekakis.com/blog/" hreflang="hr"/>
+            <link rel="alternate" href="https://www.ricekakis.com/en/blog/" hreflang="en"/>
+            <link rel="alternate" href="https://www.ricekakis.com/blog/" hreflang="x-default"/>
+        @endpush
+     @endif
 @else
     @section ( 'title', $blog->title)
     @section ( 'description',  $blog->translation->meta_description )
@@ -51,7 +75,12 @@
     </nav>
     <section class="d-md-flex justify-content-between align-items-center mb-4 pb-2">
         @if(isset($frontblogs))
+
+            @if($category and !$subcategory)
+                <h1 class="h2 mb-3 mb-md-0 me-3">{{ $category->title}}</h1>
+            @else
             <h1 class="h2 mb-3 mb-md-0 me-3">Blog</h1>
+            @endif
         @else
             <h1 class="h2 mb-3 mb-md-0 me-3">{{ $blog->title }}</h1>
         @endif
