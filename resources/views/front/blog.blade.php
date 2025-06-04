@@ -2,7 +2,7 @@
 @if(isset($frontblogs))
 
     @if($category and !$subcategory)
-        @section ( 'title', $category->title.'- Rice Kakis | Asian Store' )
+        @section ( 'title', $category->title.' - Rice Kakis | Asian Store' )
         @section ( 'description', $category->translation->meta_description )
         @push('meta_tags')
             <link rel="canonical" href="{{ LaravelLocalization::localizeUrl(route('catalog.route.blog', ['cat' => $category->slug])) }}"/>
