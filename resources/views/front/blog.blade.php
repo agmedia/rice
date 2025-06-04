@@ -17,7 +17,6 @@
 
             @endforeach
 
-            <link rel="alternate" href="https://www.ricekakis.com/blog/" hreflang="x-default"/>
         @endpush
     @elseif ($category and $subcategory)
 

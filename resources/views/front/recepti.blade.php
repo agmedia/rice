@@ -1,12 +1,35 @@
 @extends('front.layouts.app')
 @if(isset($receptin))
-    @section ( 'title', 'Recepti - Rice Kakis | Asian Store' )
-    @section ( 'description', 'Gastronomske poslastice vas očekuju: Uživajte u primamljivom mochiju, bubble tea-u, kimchiju, proizvodima bez glutena i ukusnim umacima.' )
-    @push('meta_tags')
-        <link rel="alternate" href="https://www.ricekakis.com/recepti/" hreflang="hr" />
-        <link rel="alternate" href="https://www.ricekakis.com/en/recipes/" hreflang="en" />
-        <link rel="alternate" href="https://www.ricekakis.com/recepti/" hreflang="x-default"/>
-    @endpush
+    @if($category and !$subcategory)
+        @section ( 'title', $category->title.' - Rice Kakis | Asian Store' )
+        @section ( 'description', $category->translation->meta_description )
+        @push('meta_tags')
+            <link rel="canonical" href="{{ LaravelLocalization::localizeUrl(route('catalog.route.blog', ['cat' => $category->slug])) }}"/>
+
+            @foreach (ag_lang() as $lang )
+
+                <link rel="alternate" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.blog', ['cat' => $category->translation($lang->code)->slug])) }}" hreflang="{{ Str::lower($lang->code) }}"/>
+
+                @if ($lang->code == 'hr')
+                    <link rel="alternate" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($lang->code, route('catalog.route.blog', ['cat' => $category->translation($lang->code)->slug])) }}"  hreflang="x-default" />
+                @endif
+            @endforeach
+
+        @endpush
+    @elseif ($category and $subcategory)
+
+    @else
+        @section ( 'title', 'Recepti - Rice Kakis | Asian Store' )
+        @section ( 'description', 'Gastronomske poslastice vas očekuju: Uživajte u primamljivom mochiju, bubble tea-u, kimchiju, proizvodima bez glutena i ukusnim umacima.' )
+        @push('meta_tags')
+            <link rel="alternate" href="https://www.ricekakis.com/recepti/" hreflang="hr" />
+            <link rel="alternate" href="https://www.ricekakis.com/en/recipes/" hreflang="en" />
+            <link rel="alternate" href="https://www.ricekakis.com/recepti/" hreflang="x-default"/>
+        @endpush
+    @endif
+
+
+
 @else
     @section ( 'title', $recepti->title )
     @section ( 'description', $recepti->translation->meta_description )
@@ -52,7 +75,11 @@
     </nav>
     <section class="d-md-flex justify-content-between align-items-center mb-4 pb-2">
         @if(isset($receptin))
-            <h1 class="h2 mb-3 mb-md-0 me-3">{{ __('front/ricekakis.recepti') }}</h1>
+            @if($category and !$subcategory)
+                <h1 class="h2 mb-3 mb-md-0 me-3">{{ $category->title}}</h1>
+            @else
+                <h1 class="h2 mb-3 mb-md-0 me-3">{{ __('front/ricekakis.recepti') }}</h1>
+            @endif
         @else
             <h1 class="h2 mb-3 mb-md-0 me-3">{{ $recepti->title }}</h1>
         @endif

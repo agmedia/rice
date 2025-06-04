@@ -530,7 +530,7 @@ class CatalogRouteController extends FrontBaseController
                 $receptin    = $receptin->orderBy('id', 'desc')->get();
                 $breadcrumbs = $route->attachBreadcrumbs($category, $subcategory, $recepti);
 
-                return view('front.recepti', compact('receptin', 'breadcrumbs'));
+                return view('front.recepti', compact('receptin', 'breadcrumbs','category','subcategory'));
             }
         }
 
