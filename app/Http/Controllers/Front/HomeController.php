@@ -5,24 +5,18 @@ namespace App\Http\Controllers\Front;
 use App\Helpers\Helper;
 use App\Helpers\Metatags;
 use App\Helpers\Recaptcha;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\FrontBaseController;
 use App\Mail\ContactFormMessage;
 use App\Models\Back\Marketing\Review;
 use App\Models\Front\Loyalty;
 use App\Models\Front\Page;
-
 use App\Models\Front\Newsletter;
 use App\Models\Sitemap;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Carbon;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class HomeController extends FrontBaseController
 {
@@ -43,11 +37,9 @@ class HomeController extends FrontBaseController
         );
 
         $og_schema = Metatags::indexSchema();
+        $index_search_schema = Metatags::homepageSearchActionShema();
 
-       // return view('front.page', compact('page', 'og_schema'));
-
-
-        $view = view('front.page', compact('page', 'og_schema'));
+        $view = view('front.page', compact('page', 'og_schema', 'index_search_schema'));
 
         return response($view)->header('Last-Modified', Carbon::make($page->updated_at)->toRfc7231String());
     }

@@ -73,6 +73,11 @@
                   }
               }
           </style>
+          @if (isset($index_search_schema) && ! empty($index_search_schema))
+              <script type="application/ld+json">
+                  {!! collect($index_search_schema)->toJson() !!}
+              </script>
+          @endif
       @endpush
     @else
         <nav class="mb-4" aria-label="breadcrumb">

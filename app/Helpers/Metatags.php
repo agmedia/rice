@@ -167,4 +167,24 @@ class Metatags
 
         return [];
     }
+
+
+    /**
+     * @return array
+     */
+    public static function homepageSearchActionShema(): array
+    {
+        return [
+            '@context'        => 'https://schema.org/',
+            '@type'           => 'WebSite',
+            '@id'             => url() . '#webSite',
+            'url'             => url(),
+            'name'            => config('app.name'),
+            'potentialAction' => [
+                '@type'       => 'SearchAction',
+                'target'      => url() . 'pretrazi?pojam={search_term_string}',
+                'query-input' => 'required name=search_term_string',
+            ],
+        ];
+    }
 }
