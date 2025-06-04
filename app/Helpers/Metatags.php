@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Models\Front\Catalog\Product;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class Metatags
 {
@@ -71,6 +72,12 @@ class Metatags
         if ($prod) {
             $price = ($prod->special()) ? $prod->special() : number_format($prod->price, 2, '.', '');
 
+            $url = url($prod->translation->url);
+
+            if (Str::contains($url, '/hr/')) {
+                $url = str_replace('/hr/', '/', $url);
+            }
+
             $response = [
                 '@context'      => 'https://schema.org/',
                 '@type'         => 'Product',
@@ -95,7 +102,7 @@ class Metatags
                     'price'           => (string) $price,
                     'priceValidUntil' => now()->endOfYear()->format('Y-m-d'),
                     'sku'             => $prod->sku,
-                    'url'             => url($prod->url),
+                    'url'             => $url,
                     'availability'    => ($prod->quantity) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
                 ],
             ];
