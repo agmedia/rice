@@ -209,7 +209,7 @@
         </section>
     @endif
 
-    @if ($cat && !$subcat)
+    @if ($cat && !$subcat && $cat->translation->description)
         <section class="col">
             <div class="card p2-5 border-0 mt-5 shadow mb-5" >
                 <div class="card-body py-md-4 py-3 px-4 ">
@@ -218,7 +218,7 @@
                 </div>
             </div>
         </section>
-    @elseif ($subcat)
+    @elseif ($subcat && $subcat->translation->description)
         <section class="col">
             <div class="card p2-5 border-0 mt-5 shadow mb-5" >
                 <div class="card-body py-md-4 py-3 px-4 ">
