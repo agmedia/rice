@@ -111,6 +111,14 @@
             <!-- Post content-->
             {!! $recepti->description !!}
         </div>
+
+        @push('js_after')
+            @if (isset($recepti->schema) && ! empty($recepti->schema))
+                <script type="application/ld+json">
+                    {!! collect($recepti->schema)->toJson() !!}
+                </script>
+            @endif
+        @endpush
     @endif
 
 @endsection

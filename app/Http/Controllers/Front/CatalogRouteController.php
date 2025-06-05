@@ -481,6 +481,7 @@ class CatalogRouteController extends FrontBaseController
         $frontblogs  = null;
 
         $blog->description = Helper::setDescription($blog->description, $blog->id);
+        $blog->schema = Metatags::blogSchema($blog);
 
         $view = view('front.blog', compact('blog', 'frontblogs', 'breadcrumbs'));
 
@@ -498,8 +499,6 @@ class CatalogRouteController extends FrontBaseController
         $category    = null;
         $subcategory = null;
         $route       = new RouteResolver('recepti', $recepti);
-
-        //dd($cat, $subcat, $recepti);
 
         if ( ! $recepti || ! $recepti->exists) {
             $receptin = Recepti::query()->where('status', 1);
@@ -538,6 +537,7 @@ class CatalogRouteController extends FrontBaseController
         $receptin    = null;
 
         $recepti->description = Helper::setDescription($recepti->description, $recepti->id);
+        $recepti->schema = Metatags::recipeSchema($recepti);
 
         $view = view('front.recepti', compact('recepti', 'receptin', 'breadcrumbs'));
 

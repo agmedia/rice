@@ -2,10 +2,13 @@
 
 namespace App\Helpers;
 
+use App\Models\Front\Blog;
 use App\Models\Front\Catalog\Product;
+use App\Models\Front\Recepti;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class Metatags
 {
@@ -136,6 +139,86 @@ class Metatags
                 $response['review'] = $res_review;
             }
         }
+
+        return $response;
+    }
+
+
+    /**
+     * @param Blog $blog
+     *
+     * @return array
+     */
+    public static function blogSchema(Blog $blog): array
+    {
+        $url = LaravelLocalization::getLocalizedUrl(current_locale(), route('catalog.route.blog', ['cat' => $blog->slug]));
+
+        $response = [
+            '@context'         => 'https://schema.org/',
+            '@type'            => 'BlogPosting',
+            '@id'              => $url . '/#richSnippet',
+            'headline'         => $blog->title,
+            'description'      => strip_tags($blog->description),
+            'keywords'         => $blog->translation->keywords,
+            'image'            => $blog->image,
+            'datePublished'    => Carbon::make($blog->created_at)->format('Y-m-d'),
+            'dateModified'     => Carbon::make($blog->updated_at)->format('Y-m-d'),
+            'inLanguage'       => current_locale(),
+            'author'           => [
+                '@type' => 'Organization',
+                'name'  => config('app.name'),
+            ],
+            'publisher'        => [
+                '@type' => 'Organization',
+                'name'  => config('app.name'),
+                'logo'  => [
+                    '@type' => 'ImageObject',
+                    'url'   => 'https://www.ricekakis.com/wp-content/uploads/2024/12/logo.png'
+                ]
+            ],
+            'mainEntityOfPage' => [
+                '@type' => 'ImageObject',
+                '@id'   => $url
+            ]
+        ];
+
+        return $response;
+    }
+
+
+    /**
+     * @param Recepti $recepti
+     *
+     * @return array
+     */
+    public static function recipeSchema(Recepti $recepti): array
+    {
+        $url = LaravelLocalization::getLocalizedUrl(current_locale(), route('catalog.route.recepti', ['cat' => $recepti->slug]));
+
+        $response = [
+            '@context'       => 'https://schema.org/',
+            '@type'          => 'Recipe',
+            '@id'            => $url . '/#schema',
+            'name'           => $recepti->title,
+            'image'          => $recepti->image,
+            'description'    => strip_tags($recepti->description),
+            'recipeCategory' => $recepti->category() ? $recepti->category()->title : '',
+            'keywords'       => $recepti->translation->keywords,
+            'datePublished'  => Carbon::make($recepti->created_at)->format('Y-m-d'),
+            'inLanguage'     => current_locale(),
+            'author'         => [
+                '@type' => 'Organization',
+                'name'  => config('app.name'),
+            ],
+            'publisher'      => [
+                '@type' => 'Organization',
+                'name'  => config('app.name'),
+                'logo'  => [
+                    '@type' => 'ImageObject',
+                    'url'   => 'https://www.ricekakis.com/wp-content/uploads/2024/12/logo.png'
+                ]
+            ]
+        ];
 
         return $response;
     }

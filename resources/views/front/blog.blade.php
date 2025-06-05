@@ -115,6 +115,14 @@
             <!-- Post content-->
             {!! $blog->description !!}
         </div>
+
+        @push('js_after')
+            @if (isset($blog->schema) && ! empty($blog->schema))
+                <script type="application/ld+json">
+                    {!! collect($blog->schema)->toJson() !!}
+                </script>
+            @endif
+        @endpush
     @endif
 
 @endsection
