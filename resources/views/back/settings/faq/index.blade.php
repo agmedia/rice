@@ -45,7 +45,7 @@
                                     @if(isset($faq) && $faq->category_id == $id) {{ $category['title'] }}@endif
                                         @if ( ! empty($category['subs']))
                                             @foreach ($category['subs'] as $sub_id => $subcategory)
-                                                @if(isset($faq) && $faq->category_id == $sub_id)     {{ $category['title'] . ' >> ' . $subcategory['title'] }}}@endif
+                                                @if(isset($faq) && $faq->category_id == $sub_id)     {{ $category['title'] . ' >> ' . $subcategory['title'] }}@endif
                                             @endforeach
                                         @endif
                                     @endforeach
