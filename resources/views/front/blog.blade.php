@@ -21,8 +21,8 @@
     @elseif ($category and $subcategory)
 
     @else
-        @section ( 'title', 'Blog - Rice Kakis | Asian Store' )
-        @section ( 'description', 'Gastronomske poslastice vas očekuju: Uživajte u primamljivom mochiju, bubble tea-u, kimchiju, proizvodima bez glutena i ukusnim umacima.' )
+        @section ( 'title', __('front/ricekakis.blog_title')  )
+        @section ( 'description', __('front/ricekakis.blog_text') )
         @push('meta_tags')
             <link rel="canonical" href="{{ LaravelLocalization::localizeUrl(route('catalog.route.blog')) }}"/>
             <link rel="alternate" href="https://www.ricekakis.com/blog/" hreflang="hr"/>

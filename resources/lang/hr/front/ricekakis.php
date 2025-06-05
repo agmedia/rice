@@ -86,9 +86,10 @@ return [
     'combo' => 'Odaberite combo opcije',
     'lista_brandova' =>'Lista brandova',
 
-
-
-
+    'blog_title' => 'Azijska hrana i savjeti za kupnju | Rice Kakis',
+    'blog_text' => 'Saznaj gdje kupiti japanske slastice, korejske umake i autentične azijske grickalice. Prati trendove i korisne savjete za odabir.',
+   'recepti_title' => 'Autentični recepti s azijskim sastojcima | Rice Kakis',
+    'recepti_text' => 'Saznaj kako kuhati ramen kod kuće, pripremiti gyozu, wok ili kimchi uz originalne sastojke. Azijska jela iz Japana, Koreje i Tajlanda – jednostavno!'
 
 
 ];
