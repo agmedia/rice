@@ -103,6 +103,40 @@
             </div>
         </div>
 
+        @if(isset($faqs) and !$faqs->isEmpty())
+            <section class="col">
+                <div class="card p2-5 border-0 mt-5 shadow mb-5" >
+                    <div class="card-body py-md-4 py-3 px-4 ">
+
+                        <h3> {{ __('front/cart.faq') }}</h3>
+
+                        <div class="rounded-3 p-2 mt-3" style="border: 1px solid rgb(218, 225, 231); background-color: rgb(255, 255, 255) !important;">
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
+                                @foreach ($faqs as $fa)
+                                    <!-- Item -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="flush-heading{{ $fa->id }}">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ $fa->id }}" aria-expanded="false" aria-controls="flush-collapse{{ $fa->id }}">{{ $fa->title }}</button>
+                                        </h2>
+                                        <div class="accordion-collapse collapse" id="flush-collapse{{ $fa->id }}" aria-labelledby="flush-heading{{ $fa->id }}" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body">  {!! $fa->description !!}</div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        @endif
+        @push('js_after')
+            @if (isset($faqs_crumbs) && ! empty($faqs_crumbs))
+                <script type="application/ld+json">
+                    {!! collect($faqs_crumbs)->toJson() !!}
+                </script>
+            @endif
+        @endpush
+
     @else
         <div class="mt-2 mb-5 fs-md" style="max-width:1240px">
             <div class=" row pb-2">

@@ -472,8 +472,14 @@ class CatalogRouteController extends FrontBaseController
             if ( ! $blog) {
                 $frontblogs  = $frontblogs->orderBy('id', 'desc')->get();
                 $breadcrumbs = $route->attachBreadcrumbs($category, $subcategory, $blog);
+                $faqs = Faq::getCategoryList($cat, $subcat);
+                $faqs_crumbs = [];
 
-                return view('front.blog', compact('frontblogs', 'breadcrumbs', 'category','subcategory'));
+                if ($faqs && $faqs->count()) {
+                    $faqs_crumbs = (new Breadcrumb())->faqs($faqs)->resolve('mainEntity');
+                }
+
+                return view('front.blog', compact('frontblogs', 'breadcrumbs', 'category','subcategory', 'faqs', 'faqs_crumbs'));
             }
         }
 
@@ -528,8 +534,14 @@ class CatalogRouteController extends FrontBaseController
             if ( ! $recepti) {
                 $receptin    = $receptin->orderBy('id', 'desc')->get();
                 $breadcrumbs = $route->attachBreadcrumbs($category, $subcategory, $recepti);
+                $faqs = Faq::getCategoryList($cat, $subcat);
+                $faqs_crumbs = [];
 
-                return view('front.recepti', compact('receptin', 'breadcrumbs','category','subcategory'));
+                if ($faqs && $faqs->count()) {
+                    $faqs_crumbs = (new Breadcrumb())->faqs($faqs)->resolve('mainEntity');
+                }
+
+                return view('front.recepti', compact('receptin', 'breadcrumbs','category','subcategory', 'faqs', 'faqs_crumbs'));
             }
         }
 

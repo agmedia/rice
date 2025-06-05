@@ -83,25 +83,49 @@ class Faq extends Model
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public static function getCategoryList(Category $category = null, $subcategory = null)
+    public static function getCategoryList(Category|string $category = null, Category|string $subcategory = null)
     {
         //dd($category, $subcategory);
         $ids      = [];
         $response = collect();
 
         if ($category) {
-            $ids[] = $category->id;
+            if (is_string($category)) {
+                $category = Category::query()->whereHas('translation', function ($query) use ($category) {
+                    $query->where('slug', $category);
+                })->first();
 
-            foreach ($category->subcategories()->get() as $subcat) {
-                $ids[] = $subcat->id;
+                if ($category) {
+                    $ids[] = $category->id;
+                }
+
+            } else {
+                $ids[] = $category->id;
+            }
+
+            if (isset($category->id)) {
+                foreach ($category->subcategories()->get() as $subcat) {
+                    $ids[] = $subcat->id;
+                }
             }
         }
 
         if ($subcategory) {
             $ids = [];
 
-            if (isset($subcategory->id)) {
-                $ids[] = $subcategory->id;
+            if (is_string($subcategory)) {
+                $subcategory = Category::query()->whereHas('translation', function ($query) use ($subcategory) {
+                    $query->where('slug', $subcategory);
+                })->first();
+
+                if ($subcategory) {
+                    $ids[] = $subcategory->id;
+                }
+
+            } else {
+                if (isset($subcategory->id)) {
+                    $ids[] = $subcategory->id;
+                }
             }
         }
 
