@@ -18,6 +18,7 @@
         <div class="rounded-3 p-4 mt-3" style="border: 1px solid rgb(218, 225, 231); background-color: rgb(255, 255, 255) !important;">
         <div class="accordion accordion-flush" id="accordionFlushExample">
             @foreach ($faq as $fa)
+                @if($fa->category_id == 0)
                 <!-- Item -->
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-heading{{ $fa->id }}">
@@ -27,6 +28,7 @@
                         <div class="accordion-body">  {!! $fa->description !!}</div>
                     </div>
                 </div>
+                @endif
             @endforeach
         </div>
     </div>
