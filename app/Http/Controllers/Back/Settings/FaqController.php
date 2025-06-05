@@ -19,7 +19,7 @@ class FaqController extends Controller
         if ($request->has('search') && ! empty($request->search)) {
             $faqs = Faq::where('title', 'like', '%' . $request->search . '%')->paginate(12);
         } else {
-            $faqs = Faq::paginate(12);
+            $faqs = Faq::paginate(25);
         }
 
         $categories = (new Category())->getList(false);
