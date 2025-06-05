@@ -22,7 +22,9 @@ class FaqController extends Controller
             $faqs = Faq::paginate(12);
         }
 
-        return view('back.settings.faq.index', compact('faqs'));
+        $categories = (new Category())->getList(false);
+
+        return view('back.settings.faq.index', compact('faqs', 'categories'));
     }
 
 

@@ -24,15 +24,32 @@
                 <table class="table table-striped table-borderless table-vcenter">
                     <thead class="thead-light">
                     <tr>
-                        <th style="width: 80%;">{{ __('back/faq.pitanje') }}</th>
+                        <th style="width: 70%;">{{ __('back/faq.pitanje') }}</th>
+
+                        <th style="width: 20%;">{{ __('back/categories.kategorije') }}</th>
                         <th class="text-right"  class="text-center">{{ __('back/faq.uredi') }}</th>
                     </tr>
                     </thead>
                     <tbody>
+
                     @forelse ($faqs as $faq)
                         <tr>
                             <td>
                                 <a href="{{ route('faqs.edit', ['faq' => $faq]) }}">{{ $faq->translation->title }}</a>
+                            </td>
+
+                            <td>
+
+                                @foreach ($categories as $group => $cats)
+                                    @foreach ($cats as $id => $category)
+                                    @if(isset($faq) && $faq->category_id == $id) {{ $category['title'] }}@endif
+                                        @if ( ! empty($category['subs']))
+                                            @foreach ($category['subs'] as $sub_id => $subcategory)
+                                                @if(isset($faq) && $faq->category_id == $sub_id)     {{ $category['title'] . ' >> ' . $subcategory['title'] }}}@endif
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                @endforeach
                             </td>
                             <td class="text-right font-size-sm">
                                 <a class="btn btn-sm btn-alt-secondary" href="{{ route('faqs.edit', ['faq' => $faq]) }}">
