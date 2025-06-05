@@ -126,6 +126,11 @@
                             @endforeach
                         @endif
 
+                        <div class="accordion-item border-bottom">
+                            <h3 class="accordion-header px-grid-gutter"><a class="nav-link-style d-block fs-md fw-normal py-3" href="{{ route('faq') }}"><span class="d-flex align-items-center">{{ __('front/common.faq') }}</span></a></h3>
+                        </div>
+
+
                         @if(auth()->user())
                             <div class="accordion-item border-bottom">
 
