@@ -85,6 +85,7 @@ class Faq extends Model
      */
     public static function getCategoryList(Category $category = null, $subcategory = null)
     {
+        //dd($category, $subcategory);
         $ids      = [];
         $response = collect();
 
@@ -97,6 +98,8 @@ class Faq extends Model
         }
 
         if ($subcategory) {
+            $ids = [];
+
             if (isset($subcategory->id)) {
                 $ids[] = $subcategory->id;
             }
