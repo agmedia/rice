@@ -38,7 +38,7 @@ class ReceptiController extends Controller
      */
     public function create()
     {
-        $cats = (new Category())->getList(false, 'recepti');
+        $cats = (new Category())->getList(false, 'recepti')->get('recepti');
 
         return view('back.marketing.recepti.edit', compact('cats'));
     }

@@ -94,7 +94,7 @@
                                     <select class="form-control" id="category-select" name="category[]" style="width: 100%;" multiple>
                                         <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
                                         @if ($cats)
-                                            @foreach ($cats['blog'] as $id => $category)
+                                            @foreach ($cats as $id => $category)
                                                 <option value="{{ $id }}" class="font-weight-bold small" {{ ((isset($blog)) and (in_array($id, $blog->categories()->pluck('id')->toArray()))) ? 'selected' : '' }}>{{ $category['title'] }}</option>
                                                 @if ( ! empty($category['subs']))
                                                     @foreach ($category['subs'] as $sub_id => $subcategory)

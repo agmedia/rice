@@ -38,7 +38,7 @@ class BlogController extends Controller
      */
     public function create()
     {
-        $cats = (new Category())->getList(false, 'blog');
+        $cats = (new Category())->getList(false, 'blog')->get('blog');
 
         return view('back.marketing.blog.edit', compact('cats'));
     }
