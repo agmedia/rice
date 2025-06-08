@@ -85,6 +85,7 @@
                                 <label for="parent-select">{{ __('back/categories.glavna_kategorija') }}</label>
                                 <select class="js-select2 form-control" id="parent-select" name="parent" style="width: 100%;">
                                     <option></option>
+                                    <option value="0">...</option>
                                     @foreach ($parents as $id => $name)
                                         <option value="{{ $id }}" {{ (isset($category->parent_id) and $id == $category->parent_id) ? 'selected="selected"' : '' }}>{{ $name }}</option>
                                     @endforeach
