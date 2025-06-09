@@ -71,7 +71,7 @@
                             </span>
                         </div>
                     </div>
-                    <div v-if="(product.url).includes('smrznuti-proizvodi')">
+                    <div v-if="(product.url).includes('smrznuti-proizvodi') || (product.url).includes('frozen-products')">
 <!--                        <div class="product-floating-btn">
                             <a href="#" class="btn btn-primary btn-shadow btn-sm" ></a>
                         </div>-->
