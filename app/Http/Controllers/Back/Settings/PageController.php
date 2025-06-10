@@ -7,6 +7,8 @@ use App\Models\Back\Settings\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PageController extends Controller
 {
@@ -101,6 +103,29 @@ class PageController extends Controller
         }
 
         return redirect()->back()->with(['error' => 'Whoops..! There was an error saving the page.']);
+    }
+
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uploadDescriptionImage(Request $request)
+    {
+        if ( ! $request->hasFile('upload')) {
+            return response()->json(['uploaded' => false]);
+        }
+
+        $img = $request->file('upload');
+        $page_id = $request->get('page_id');
+        $name = $img->getClientOriginalName() . '_' . $page_id . '_' . Str::random(9) . '.' . $img->getClientOriginalExtension();
+
+        $path = 'info-pages/';
+
+        Storage::disk('page')->putFileAs($path, $img, $name);
+
+        return response()->json(['fileName' => $name, 'uploaded' => true, 'url' => url(config('filesystems.disks.page.url') . $path . $name)]);
     }
 
 

@@ -298,8 +298,17 @@
 
             {!! ag_lang() !!}.forEach(function(item) {
                 ClassicEditor
-                    .create(document.querySelector('#description-editor-' + item.code ))
-
+                    .create(document.querySelector('#description-editor-' + item.code ), {
+                        image: {
+                            styles: ['alignLeft', 'alignRight', 'alignCenter', 'block', 'side'],
+                            toolbar: [
+                                'imageTextAlternative', 'imageStyle:full', 'imageStyle:side', "imageStyle:alignLeft", "imageStyle:alignCenter", 'imageStyle:alignRight'
+                            ]
+                        },
+                        ckfinder: {
+                            uploadUrl: '{{ route('page.description.image.upload') }}?_token=' + document.querySelector('meta[name="csrf-token"]').getAttribute('content') + '&page_id={{ (isset($page->id) && $page->id) ?: 0 }}',
+                        }
+                    })
                     .then(editor => {
                         console.log(editor);
                     })
