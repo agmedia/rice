@@ -1,5 +1,13 @@
 @extends('front.layouts.app')
 
+@if(current_locale() == 'hr')
+    @section ( 'title', 'Česta pitanja – Dostava, plaćanje i narudžbe | Rice Kakis' )
+    @section ( 'description', 'Ovdje saznajte sve o narudžbama, dostavi, plaćanju, loyalty klubu i rješavanju problema s paketom. Odgovori na najčešća pitanja na jednom mjestu.' )
+@else
+    @section ( 'title', 'FAQ – Delivery, Payment & Orders | Rice Kakis' )
+    @section ( 'description', 'Get answers about ordering, delivery options, payment methods, loyalty points, and what to do if your package is delayed, damaged or missing.   ' )
+@endif
+
 @section('content')
 
     <nav class="mb-4" aria-label="breadcrumb">
