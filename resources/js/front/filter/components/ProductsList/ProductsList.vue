@@ -53,7 +53,7 @@
                             <span class="fs-sm text-muted"  v-if="product.main_price > product.main_special && product.action && !product.action.min_cart"><small>NC 30 dana: {{ product.main_price_text }} </small> <small v-if="product.secondary_price_text">{{ product.secondary_price_text }} </small></span>
                         </div>
                         <div class="product-price">
-                            <span class="text-red fs-md" v-if="product.main_price > product.main_special && product.action && !product.action.min_cart">{{ product.main_special_text }} <small v-if="product.secondary_special_text">{{ product.secondary_special_text }} </small></span>
+                            <span class="text-red fs-md" v-if="product.main_price > product.main_special && product.action && !product.action.min_cart">{{ product.main_special_text }} <span class="text-muted"><strike>{{ product.main_price_text }}</strike></span> <small v-if="product.secondary_special_text">{{ product.secondary_special_text }} </small></span>
                         </div>
                         <div class="product-price">
                             <span class="text-dark fs-md" v-if="!product.special">{{ product.main_price_text }} <small v-if="product.secondary_price_text ">{{ product.secondary_price_text }} </small></span>

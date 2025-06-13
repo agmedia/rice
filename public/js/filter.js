@@ -3448,7 +3448,9 @@ var render = function render() {
       staticClass: "product-price"
     }, [product.main_price > product.main_special && product.action && !product.action.min_cart ? _c("span", {
       staticClass: "text-red fs-md"
-    }, [_vm._v(_vm._s(product.main_special_text) + " "), product.secondary_special_text ? _c("small", [_vm._v(_vm._s(product.secondary_special_text) + " ")]) : _vm._e()]) : _vm._e()]), _vm._v(" "), _c("div", {
+    }, [_vm._v(_vm._s(product.main_special_text) + " "), _c("span", {
+      staticClass: "text-muted"
+    }, [_c("strike", [_vm._v(_vm._s(product.main_price_text))])], 1), _vm._v(" "), product.secondary_special_text ? _c("small", [_vm._v(_vm._s(product.secondary_special_text) + " ")]) : _vm._e()]) : _vm._e()]), _vm._v(" "), _c("div", {
       staticClass: "product-price"
     }, [!product.special ? _c("span", {
       staticClass: "text-dark fs-md"

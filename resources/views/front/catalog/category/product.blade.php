@@ -24,7 +24,9 @@
             {!! $product->category_string !!}
             @if ($product->main_price > $product->main_special  and $product->action and !$product->action->min_cart)
                 <div class="product-price"><small><span class="text-muted">{{ __('front/ricekakis.nc_30') }}: {{ $product->main_price_text }}  @if($product->secondary_price_text){{ $product->secondary_price_text }} @endif</span></small></div>
-                <div class="product-price text-red"><span class="text-red fs-md">{{ $product->main_special_text }} @if($product->secondary_special_text) <small class="text-muted">{{ $product->secondary_special_text }}</small> @endif</span></div>
+                <div class="product-price text-red"><span class="text-red fs-md">{{ $product->main_special_text }}
+                        <span class="text-muted"><strike>{{ $product->main_price_text }}</strike></span>
+                        @if($product->secondary_special_text) <small class="text-muted">{{ $product->secondary_special_text }}</small> @endif</span></div>
             @else
                 <div class="product-price"><span class="text-dark fs-md">{{ $product->main_price_text }}  @if($product->secondary_price_text) <small class="fs-sm text-muted">{{ $product->secondary_price_text }} </small>@endif</span></div>
             @endif
