@@ -273,6 +273,7 @@ Route::prefix('api/v2')->group(function () {
     Route::post('/products/destroy/api', [ProductController::class, 'destroyApi'])->name('products.destroy.api');
     Route::post('/blogs/destroy/api', [BlogController::class, 'destroyApi'])->name('blogs.destroy.api');
     Route::post('/blogs/upload/image', [BlogController::class, 'uploadBlogImage'])->name('blogs.upload.image');
+    Route::post('page/description/image/upload', [PageController::class, 'uploadDescriptionImage'])->name('page.description.image.upload');
 
     Route::post('/receptis/destroy/api', [ReceptiController::class, 'destroyApi'])->name('receptis.destroy.api');
     Route::post('/receptis/upload/image', [ReceptiController::class, 'uploadReceptiImage'])->name('receptis.upload.image');
