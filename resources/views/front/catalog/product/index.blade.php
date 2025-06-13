@@ -179,7 +179,12 @@
                     @else
                         <span class="h3 fw-normal text-accent me-1">{{ $prod->main_price_text }}</span>
                     @endif
+
+
                 </div>
+                    <div class="mb-0  mt-1 text-start">
+                        <span class=" fs-sm text-muted me-1">  {{ __('front/ricekakis.cijena_fix') }}{{ $prod->main_price_text }}</span>
+                    </div>
 
                 @if($prod->secondary_price_text)
                     <div class="mb-1 mt-1 text-start">
