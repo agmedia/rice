@@ -18450,6 +18450,7 @@ html:not([dir=rtl]) .range-slider-ui.noUi-horizontal .noUi-handle {
     white-space: nowrap;
     line-height: 1;
     vertical-align: middle;
+    font-size: 0;
 }
 .star-rating .star-rating-icon {
     display: inline-block;

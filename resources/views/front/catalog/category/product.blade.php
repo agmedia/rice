@@ -32,11 +32,11 @@
                 <div class="star-rating">
                     @for ($i = 0; $i < 5; $i++)
                         @if (floor($product->reviews->avg('stars')) - $i >= 1)
-                            <i class="star-rating-icon ci-star-filled active"></i>
+                            <span><i class="star-rating-icon ci-star-filled active"></i></span>
                         @elseif ($product->reviews->avg('stars') - $i > 0)
-                            <i class="star-rating-icon ci-star-half active"></i>
+                            <span><i class="star-rating-icon ci-star-half active"></i></span>
                         @else
-                            <i class="star-rating-icon ci-star"></i>
+                            <span><i class="star-rating-icon ci-star"></i></span>
                         @endif
                     @endfor
                 </div>
