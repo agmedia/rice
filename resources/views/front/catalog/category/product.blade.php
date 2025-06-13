@@ -32,13 +32,10 @@
                 <div class="star-rating">
                     @for ($i = 0; $i < 5; $i++)
                         @if (floor($product->reviews->avg('stars')) - $i >= 1)
-                            {{--Full Start--}}
                             <i class="star-rating-icon ci-star-filled active"></i>
                         @elseif ($product->reviews->avg('stars') - $i > 0)
-                            {{--Half Start--}}
                             <i class="star-rating-icon ci-star-half active"></i>
                         @else
-                            {{--Empty Start--}}
                             <i class="star-rating-icon ci-star"></i>
                         @endif
                     @endfor
