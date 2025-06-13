@@ -81,7 +81,7 @@
                                 <div class="row justify-content-center push">
                                     <div class="col-md-12">
                                         <div class="form-group row items-push mb-3">
-                                            <div class="col-md-9">
+                                            <div class="col-md-8">
                                                 <label for="dm-post-edit-title">{{ __('back/products.naziv') }} <span class="text-danger">*</span></label>
                                                 <ul class="nav nav-pills float-right">
                                                     @foreach(ag_lang() as $lang)
@@ -103,9 +103,22 @@
                                                     @endforeach
                                                 </div>
                                             </div>
-                                            <div class="col-md-3">
-                                                <label for="polica-input">EAN </label>
-                                                <input type="text" class="form-control" id="polica-input" name="isbn" placeholder="{{ __('back/products.upisite_ean') }}" value="{{ isset($product) ? $product->isbn : old('isbn') }}" >
+                                            <div class="col-md-2">
+                                                <label for="size_value-input">Pack g/ml </label>
+                                                <input type="text" maxlength="3" class="form-control" id="size_value-input" name="size_value" placeholder="" value="{{ isset($product) ? $product->size_value : old('size_value') }}" >
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="size_value-input">g || ml </label>
+
+                                                <select class=" form-control" id="size_type" name="size_type" style="width: 100%;" data-placeholder="g || ml">
+                                                    <option> </option>
+
+                                                        <option value="g" @if($product->size_type == 'g') selected="selected" @endif > g </option>
+                                                    <option value="ml"  @if($product->size_type == 'ml') selected="selected" @endif> ml </option>
+
+                                                </select>
+
+
                                             </div>
                                         </div>
                                         <div class="form-group row items-push mb-3">

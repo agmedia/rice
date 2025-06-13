@@ -407,6 +407,8 @@ class Product extends Model
             'ean'          => $this->request->ean ?? '',
             'price'        => isset($this->request->price) ? $this->request->price : 0,
             'quantity'     => $this->request->quantity ?: 0,
+            'size_value'     => $this->request->size_value  ? : 0,
+            'size_type'     => $this->request->size_type  ? : '',
             'decrease'     => 1,
             'tax_id'       => $this->request->tax_id ?: 1,
             'special'      => $this->request->special,
