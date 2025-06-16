@@ -3,7 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Back\Catalog\Category;
-use App\Models\Back\Catalog\Product\Product;
+use App\Models\Front\Catalog\Product;
 use Illuminate\Support\Facades\Log;
 use App\Models\Front\Catalog\Brand;
 
@@ -26,32 +26,23 @@ class Xmlexport
     {
 
         $products = Product::query()
-            ->with('images',   'translation' )
-            ->take(1000)
-            ->get();
-
-
-
+                           ->with('images', 'translation')
+                           ->take(1000)
+                           ->get();
 
         foreach ($products as $product) {
-
-           $brand = Brand::query()->with('translation' )->where('id', '=', $product->brand_id)->get();
-
-
-
             $this->response[] = [
-                'id' => $product->id,
-                'name' => $product->translation->name,
+                'id'          => $product->id,
+                'name'        => $product->translation->name,
                 'description' => strip_tags($product->translation->description),
-
-                'brand' => $brand->title,
-               'brand_id' =>  $product->brand_id,
-                'price' => number_format($product->price, 2),
-                'sku' => $product->sku,
-                'quantity' => $product->quantity,
-                'status' => $product->status,
-                'slug' => 'https://www.ricekakis.com/'.$product->translation->url,
-                'image' => asset($product->image),
+                'brand'       => $product->brand ? $product->brand->title : '',
+                'brand_id'    => $product->brand_id,
+                'price'       => number_format($product->price, 2),
+                'sku'         => $product->sku,
+                'quantity'    => $product->quantity,
+                'status'      => $product->status,
+                'slug'        => 'https://www.ricekakis.com/' . $product->translation->url,
+                'image'       => asset($product->image),
             ];
         }
 
@@ -69,11 +60,10 @@ class Xmlexport
         $str = '';
 
         if ($product->description != '') {
-            $str .=  preg_replace('/[[:cntrl:]]/', '', $product->description) . '<br><br>';
+            $str .= preg_replace('/[[:cntrl:]]/', '', $product->description) . '<br><br>';
 
 
         }
-
 
         return $str;
     }
