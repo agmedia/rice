@@ -113,8 +113,8 @@
                                                 <select class=" form-control" id="size_type" name="size_type" style="width: 100%;" data-placeholder="g || ml">
                                                     <option> </option>
 
-                                                        <option value="g" @if($product->size_type == 'g') selected="selected" @endif > g </option>
-                                                    <option value="ml"  @if($product->size_type == 'ml') selected="selected" @endif> ml </option>
+                                                        <option value="g" @if(isset($product) and $product->size_type == 'g') selected="selected" @endif > g </option>
+                                                    <option value="ml"  @if(isset($product) and $product->size_type == 'ml') selected="selected" @endif> ml </option>
 
                                                 </select>
 
