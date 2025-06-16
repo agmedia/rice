@@ -182,9 +182,11 @@
 
 
                 </div>
+                    @if($price_per_kg)
                     <div class="mb-0  mt-1 text-start">
-                        <span class=" fs-sm text-muted me-1">  {{ __('front/ricekakis.cijena_fix') }}{{ $prod->size_value }}</span>
+                        <span class=" fs-sm text-muted me-1"> {{ $price_per_kg }} </span>
                     </div>
+                    @endif
 
                     <div class="mb-0  mt-1 text-start">
                         <span class=" fs-sm text-muted me-1">  {{ __('front/ricekakis.cijena_fix') }}{{ $prod->main_price_text }}</span>

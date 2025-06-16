@@ -84,6 +84,26 @@ class CatalogRouteController extends FrontBaseController
                 abort(404);
             }
 
+            if (  $prod->size_value && $prod->size_type) {
+
+
+                $pricePerKg = (1000 / $prod->size_value) * $prod->price;
+
+                if($prod->size_type = 'g'){
+
+                    $price_per_kg = number_format($pricePerKg, 2). ' €/kg';
+
+                } else{
+                    $price_per_kg = number_format($pricePerKg, 2). ' €/l';
+                }
+
+
+            } else{
+
+                $price_per_kg = '';
+
+            }
+
             $seo     = Seo::getProductData($prod);
             $gdl     = TagManager::getGoogleProductDataLayer($prod);
             $reviews = $prod->reviews()->get();
@@ -102,7 +122,7 @@ class CatalogRouteController extends FrontBaseController
                 $has_combo_session = ProductHelper::checkComboProductSession($prod->id);
             }
 
-            $view = view('front.catalog.product.index', compact('prod', 'group', 'cat', 'subcat', 'related', 'seo', 'shipping_methods', 'payment_methods', 'crumbs', 'bookscheme', 'gdl', 'reviews', 'has_combo_session'));
+            $view = view('front.catalog.product.index', compact('prod', 'group', 'cat', 'subcat', 'related', 'seo', 'shipping_methods', 'payment_methods', 'crumbs', 'bookscheme', 'gdl', 'reviews', 'has_combo_session', 'price_per_kg'));
 
             return response($view)->header('Last-Modified', Carbon::make($prod->updated_at)->toRfc7231String());
         }
