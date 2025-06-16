@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Helpers\Helper;
 use App\Helpers\Metatags;
 use App\Helpers\Recaptcha;
+use App\Helpers\Xmlexport;
 use App\Http\Controllers\FrontBaseController;
 use App\Mail\ContactFormMessage;
 use App\Models\Back\Marketing\Review;
@@ -222,6 +223,21 @@ class HomeController extends FrontBaseController
 
         return response()->view('front.layouts.partials.sitemap-image', [
             'items' => $sm->getResponse()
+        ])->header('Content-Type', 'text/xml');
+    }
+
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function xmlexport(Request $request)
+    {
+        $xmlexport = new Xmlexport();
+
+        return response()->view('front.layouts.partials.xmlexport', [
+            'items' => $xmlexport->getItems()
         ])->header('Content-Type', 'text/xml');
     }
 
