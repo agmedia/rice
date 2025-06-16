@@ -127,7 +127,7 @@
                                         <ul class="nav nav-pills float-right">
                                             @foreach(ag_lang() as $lang)
                                                 <li @if ($lang->code == current_locale()) class="active" @endif>
-                                                    <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif " data-toggle="pill" href="#title-{{ $recepti->id . $lang->code }}">
+                                                    <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif " data-toggle="pill" href="#image-title-{{ $lang->code }}">
                                                         <img src="{{ asset('media/flags/' . $lang->code . '.png') }}" />
                                                     </a>
                                                 </li>
@@ -136,8 +136,8 @@
                                     </label>
                                     <div class="tab-content">
                                         @foreach(ag_lang() as $lang)
-                                            <div id="title-{{ $recepti->id . $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-                                                <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="image_title[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ $recepti->translation($lang->code)->image_title }}">
+                                            <div id="image-title-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
+                                                <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="image_title[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ isset($recepti) ? $recepti->translation($lang->code)->image_title : old('image_title.*') }}">
                                             </div>
                                         @endforeach
                                     </div>
@@ -148,7 +148,7 @@
                                         <ul class="nav nav-pills float-right">
                                             @foreach(ag_lang() as $lang)
                                                 <li @if ($lang->code == current_locale()) class="active" @endif>
-                                                    <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif " data-toggle="pill" href="#alt-{{ $recepti->id . $lang->code }}">
+                                                    <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif " data-toggle="pill" href="#alt-{{ $lang->code }}">
                                                         <img src="{{ asset('media/flags/' . $lang->code . '.png') }}" />
                                                     </a>
                                                 </li>
@@ -157,8 +157,8 @@
                                     </label>
                                     <div class="tab-content">
                                         @foreach(ag_lang() as $lang)
-                                            <div id="alt-{{ $recepti->id . $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
-                                                <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="image_alt[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ $recepti->translation($lang->code)->image_alt }}">
+                                            <div id="alt-{{ $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
+                                                <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="image_alt[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ isset($recepti) ? $recepti->translation($lang->code)->image_alt : old('image_alt.*') }}">
                                             </div>
                                         @endforeach
                                     </div>
