@@ -6,6 +6,7 @@ use App\Models\Back\Catalog\Category;
 use App\Models\Front\Catalog\Product;
 use Illuminate\Support\Facades\Log;
 use App\Models\Front\Catalog\Brand;
+use Illuminate\Support\Str;
 
 /**
  *
@@ -31,6 +32,11 @@ class Xmlexport
                            ->get();
 
         foreach ($products as $product) {
+
+            if (Str::contains($product->translation->url, 'hr/')) {
+                $product->translation->url = str_replace('hr/', '', $product->translation->url);
+            }
+
             $this->response[] = [
                 'id'          => $product->id,
                 'name'        => $product->translation->name,
@@ -39,6 +45,7 @@ class Xmlexport
                 'brand_id'    => $product->brand_id,
                 'price'       => number_format($product->price, 2),
                 'sku'         => $product->sku,
+                'special'       => $product->special ? number_format($product->special, 2) : '',
                 'quantity'    => $product->quantity,
                 'status'      => $product->status,
                 'slug'        => 'https://www.ricekakis.com/' . $product->translation->url,

@@ -23,7 +23,9 @@
             <g:condition>new</g:condition>
             <g:availability>in stock</g:availability>
             <g:price>{{ $item['price'] }} EUR</g:price>
-
+            @if($item['special'])
+            <g:sale_price>{{ $item['special'] }} EUR</g:sale_price>
+            @endif
             <g:google_product_category><![CDATA[Food & Drink > Food > Asian Food]]></g:google_product_category>
 
         </item>

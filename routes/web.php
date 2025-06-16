@@ -443,7 +443,7 @@ Route::group(
     Route::get('image-sitemap', [HomeController::class, 'sitemapImageXML'])->name('sitemap-image');
 
 
-    Route::get('xmlexport', [HomeController::class, 'xmlexport'])->name('xmlexport');
+    Route::get('google-merchant-feed', [HomeController::class, 'xmlexport'])->name('xmlexport');
 
     /**
      * Forgot password & login routes.
