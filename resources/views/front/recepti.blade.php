@@ -47,7 +47,7 @@
         <meta property="og:image:width" content="640" />
         <meta property="og:image:height" content="480" />
         <meta property="og:image:type" content="image/webp" />
-        <meta property="og:image:alt" content="{{ asset($recepti->translation->image_alt) }}" />
+        <meta property="og:image:alt" content="{{ $recepti->translation->image_alt }}" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="{{ $recepti->title }}" />
         <meta name="twitter:description" content="{{ $recepti->translation->meta_description }}" />
