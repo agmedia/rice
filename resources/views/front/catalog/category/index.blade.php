@@ -164,7 +164,7 @@
                                 <!-- Product-->
                                 <div class="article mb-grid-gutter">
                                     <a class="card border-0 shadow" href="{{ route('catalog.route', ['group' => $group, 'cat' => $cat->translation->slug, 'subcat' => $item->translation->slug]) }}">
-                                        <img class="card-img-top p-3" loading="lazy" width="200" height="200" src="{{ $item['image'] }}" alt="Kategorija {{ $item->translation->title }}">
+                                        <img class="card-img-top p-3" loading="lazy" width="200" height="200" src="{{ $item['image'] }}" alt="{{ $item->translation->image_alt }}">
                                         <div class="card-body py-2 text-center px-0">
                                             <h3 class="h4 mt-1 font-title text-primary">{{ $item->translation->title }}</h3>
                                         </div>

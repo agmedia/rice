@@ -14,7 +14,7 @@
                     <!-- Product-->
                     <div class="article mb-grid-gutter">
                         <a class="card border-0 shadow" href="{{ current_locale() }}/{{ $item['group'] }}/{{ $item->translation->slug }}">
-                            <img class="card-img-top p-3" loading="lazy" width="400" height="400" src="{{ $item['image'] }}" alt="Kategorija {{ $item->translation->title }}">
+                            <img class="card-img-top p-3" loading="lazy" width="400" height="400" src="{{ $item['image'] }}" alt="{{ $item->translation->image_alt }}">
                             <div class="card-body py-2 text-center px-0">
                                 <h3 class="h4 mt-1 font-title text-primary">{{ $item->translation->title }}</h3>
                             </div>
@@ -82,7 +82,7 @@
                     <div>
                         <div class="card">
 
-                            <a class="blog-entry-thumb" href="{{ route('catalog.route.recepti', ['cat' => $item]) }}"><span class="blog-entry-meta-label fs-sm"><i class="ci-pot"></i></span><img class="card-img-top" loading="lazy" src="{!! str_replace('.webp', '-thumb.webp', $item['image']) !!}" width="400" height="230" alt="{{ $item['title'] }}"></a>
+                            <a class="blog-entry-thumb" href="{{ route('catalog.route.recepti', ['cat' => $item]) }}"><span class="blog-entry-meta-label fs-sm"><i class="ci-pot"></i></span><img class="card-img-top" loading="lazy" src="{!! str_replace('.webp', '-thumb.webp', $item['image']) !!}" width="400" height="230" alt="{{ $item->translation->image_alt }}"></a>
 
                             <div class="card-body">
                                 <h3 class="h6 blog-entry-title"><a href="{{ route('catalog.route.recepti', ['cat' => $item]) }}">{{ $item['title'] }}</a></h3>
@@ -101,7 +101,7 @@
                 @foreach ($data['items'] as $item)
                     <!-- Product-->
                     <div>
-                        <div class="card"><a class="blog-entry-thumb" href="{{ route('catalog.route.blog', ['cat' => $item]) }}"><img class="card-img-top" loading="lazy" src="{{ $item['image'] }}" width="400" height="230" alt="{{ $item['title'] }}"></a>
+                        <div class="card"><a class="blog-entry-thumb" href="{{ route('catalog.route.blog', ['cat' => $item]) }}"><img class="card-img-top" loading="lazy" src="{{ $item['image'] }}" width="400" height="230" alt="{{ $item->translation->image_alt }}"></a>
                             <div class="card-body">
                                 <h3 class="h6 blog-entry-title"><a href="{{ route('catalog.route.blog', ['cat' => $item]) }}">{{ $item['title'] }}</a></h3>
                                 <p class="fs-sm">{{ $item->translation['short_description'] }}</p>
