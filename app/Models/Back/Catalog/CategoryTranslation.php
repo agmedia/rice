@@ -45,6 +45,8 @@ class CategoryTranslation extends Model
                 'short_description' => $request->short_description[$lang->code],
                 'meta_title'        => $request->meta_title[$lang->code],
                 'meta_description'  => $request->meta_description[$lang->code],
+                'image_title'       => $request->image_title[$lang->code] ?? null,
+                'image_alt'         => $request->image_alt[$lang->code] ?? null,
                 'slug'              => Str::slug($request->title[$lang->code]),
                 'created_at'        => Carbon::now(),
                 'updated_at'        => Carbon::now()
@@ -73,6 +75,8 @@ class CategoryTranslation extends Model
                 'short_description' => $request->short_description[$lang->code],
                 'meta_title'        => $request->meta_title[$lang->code],
                 'meta_description'  => $request->meta_description[$lang->code],
+                'image_title'       => $request->image_title[$lang->code] ?? null,
+                'image_alt'         => $request->image_alt[$lang->code] ?? null,
                 'slug'              => Str::slug($request->title[$lang->code]),
                 'updated_at'        => Carbon::now()
             ]);

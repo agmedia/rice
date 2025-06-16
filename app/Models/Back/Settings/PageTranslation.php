@@ -43,6 +43,8 @@ class PageTranslation extends Model
                 'description'       => $request->description[$lang->code],
                 'meta_title'        => $request->meta_title[$lang->code],
                 'meta_description'  => $request->meta_description[$lang->code],
+                'image_title'       => $request->image_title[$lang->code] ?? null,
+                'image_alt'         => $request->image_alt[$lang->code] ?? null,
                 'slug'              => $slug,
                 'keywords'          => null,
                 'created_at'        => Carbon::now(),
@@ -75,6 +77,8 @@ class PageTranslation extends Model
                 'description'       => $request->description[$lang->code],
                 'meta_title'        => $request->meta_title[$lang->code],
                 'meta_description'  => $request->meta_description[$lang->code],
+                'image_title'       => $request->image_title[$lang->code] ?? null,
+                'image_alt'         => $request->image_alt[$lang->code] ?? null,
                 'slug'              => $slug,
                 'keywords'          => null,
                 'updated_at'        => Carbon::now()

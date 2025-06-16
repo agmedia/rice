@@ -122,6 +122,52 @@
                                         <img class="img-fluid" id="image-view" src="{{ isset($blog) ? asset($blog->image) : asset('media/img/lightslider.webp') }}" alt="">
                                     </div>
                                 </div>
+
+                                <div class="col-xl-6">
+                                    <label for="title-input" class="w-100">Naziv fotografije
+                                        <ul class="nav nav-pills float-right">
+                                            @foreach(ag_lang() as $lang)
+                                                <li @if ($lang->code == current_locale()) class="active" @endif>
+                                                    <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif " data-toggle="pill" href="#title-{{ $blog->id . $lang->code }}">
+                                                        <img src="{{ asset('media/flags/' . $lang->code . '.png') }}" />
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </label>
+
+                                    <div class="tab-content">
+                                        @foreach(ag_lang() as $lang)
+                                            <div id="title-{{ $blog->id . $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
+                                                <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="image_title[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ $blog->translation($lang->code)->image_title }}">
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                    <br>
+
+                                    <label for="title-input" class="w-100">Alternativni tekst fotografije
+                                        <ul class="nav nav-pills float-right">
+                                            @foreach(ag_lang() as $lang)
+                                                <li @if ($lang->code == current_locale()) class="active" @endif>
+                                                    <a class="btn btn-sm btn-outline-secondary ml-2 @if ($lang->code == current_locale()) active @endif " data-toggle="pill" href="#alt-{{ $blog->id . $lang->code }}">
+                                                        <img src="{{ asset('media/flags/' . $lang->code . '.png') }}" />
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </label>
+
+                                    <div class="tab-content">
+                                        @foreach(ag_lang() as $lang)
+                                            <div id="alt-{{ $blog->id . $lang->code }}" class="tab-pane @if ($lang->code == current_locale()) active @endif">
+                                                <input type="text" class="form-control" id="title-input-{{ $lang->code }}" name="image_alt[{{ $lang->code }}]" placeholder="{{ $lang->code }}" value="{{ $blog->translation($lang->code)->image_alt }}">
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                </div>
+
                             </div>
 
                             <div class="form-group row  mb-4">
