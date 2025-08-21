@@ -170,6 +170,17 @@
 
 @push('js_after')
     <script>
+        // Translations from resources/lang/{locale}/front/ricekakis.php
+        const T = {
+            found:        @json(__('front/ricekakis.found')),        // "Pronađeno: :total rezultata (proizvodi :products, brandovi :brands, kategorije :categories)"
+            brands:       @json(__('front/ricekakis.brands')),       // "Brandovi"
+            categories:   @json(__('front/ricekakis.categories')),   // "Kategorije"
+            products:     @json(__('front/ricekakis.products')),     // "Artikli"
+            view_all:     @json(__('front/ricekakis.view_all')),     // "Pogledaj sve rezultate"
+            no_results:   @json(__('front/ricekakis.no_results')),   // "Nema pronađenih rezultata"
+            error:        @json(__('front/ricekakis.error')),        // "Greška pri pretrazi"
+        };
+
         const DEBOUNCE_MS = 200;
         let t = null;
 
@@ -185,6 +196,7 @@
             $('#search_box').attr('aria-expanded', 'false');
         }
 
+        // Close UX
         $(document).on('click', '#search_overlay', closeSearch);
         $(document).on('keydown', function(e){ if(e.key === 'Escape') closeSearch(); });
         $(document).on('click', function(e){
@@ -192,7 +204,7 @@
             if(!$form.is(e.target) && $form.has(e.target).length === 0){ closeSearch(); }
         });
 
-        // Fallbacke možeš mijenjati po potrebi
+        // Fallback group/prefix (promijeni po potrebi)
         const CAT_GROUP   = '{{ $group ?? "kategorija-proizvoda" }}';
         const BRAND_PREFX = '{{ request("brand_prefix","brand") }}';
 
@@ -215,14 +227,18 @@
                             const c = json.counts || {products:0, brands:0, categories:0};
                             const total = headerTotal > 0 ? headerTotal : ((c.products|0) + (c.brands|0) + (c.categories|0));
 
+                            // Header counts (with placeholders)
                             html += '<div class="px-3 py-2 border-bottom fs-md text-dark">'
-                                + 'Pronađeno: <strong>' + total + '</strong> rezultata '
-                                + '(proizvodi ' + (c.products||0) + ', brandovi ' + (c.brands||0) + ', kategorije ' + (c.categories||0) + ')'
+                                +  T.found
+                                    .replace(':total', total)
+                                    .replace(':products', (c.products||0))
+                                    .replace(':brands', (c.brands||0))
+                                    .replace(':categories', (c.categories||0))
                                 + '</div>';
 
-                            // BRANDOVI
+                            // Brands
                             if (json.brands && json.brands.length > 0) {
-                                html += '<div class="px-3  pt-2 pb-2 fw-medium  fs-md bg-secondary text-dark">Brandovi</div>';
+                                html += '<div class="px-3 pt-2 pb-2 fw-medium fs-md bg-secondary text-dark">' + T.brands + '</div>';
                                 html += '<ul class="list-group list-group-flush">';
                                 json.brands.forEach(function(b){
                                     html += '<li class="list-group-item py-2"><a class="text-dark fs-md" href="'+b.url+'">'+escapeHtml(b.name)+'</a></li>';
@@ -230,9 +246,9 @@
                                 html += '</ul>';
                             }
 
-                            // KATEGORIJE
+                            // Categories
                             if (json.categories && json.categories.length > 0) {
-                                html += '<div class="px-3  pt-2 pb-2 fw-medium  fs-md bg-secondary text-dark">Kategorije</div>';
+                                html += '<div class="px-3 pt-2 pb-2 fw-medium fs-md bg-secondary text-dark">' + T.categories + '</div>';
                                 html += '<ul class="list-group list-group-flush cat">';
                                 json.categories.forEach(function(cg){
                                     html += '<li class="list-group-item py-2"><a class="text-dark fs-md" href="'+cg.url+'">'+escapeHtml(cg.name)+'</a></li>';
@@ -240,9 +256,9 @@
                                 html += '</ul>';
                             }
 
-                            // PROIZVODI
+                            // Products
                             if (json.products && json.products.length > 0) {
-                                html += '<div class="px-3  pt-2 pb-2 fw-medium  fs-md bg-secondary  text-dark">Artikli</div>';
+                                html += '<div class="px-3 pt-2 pb-2 fw-medium fs-md bg-secondary text-dark">' + T.products + '</div>';
                                 html += '<table class="px-3 table products"><tbody>';
                                 json.products.forEach(function (item) {
                                     html += '<tr>'
@@ -254,10 +270,11 @@
                                 html += '</tbody></table>';
                             }
 
-                            html += '<div class="result-text"><a href="'+('{{ route('pretrazi') }}' + '?pojam=' + encodeURIComponent(query))+'" class="btn btn-sm btn-primary w-100">Pogledaj sve rezultate</a></div>';
+                            // Footer CTA
+                            html += '<div class="result-text"><a href="'+('{{ route('pretrazi') }}' + '?pojam=' + encodeURIComponent(query))+'" class="btn btn-sm btn-primary w-100">'+T.view_all+'</a></div>';
 
                             if (total === 0) {
-                                html = '<div class="result-text text-muted p-3">Nema pronađenih rezultata</div>';
+                                html = '<div class="result-text text-muted p-3">'+T.no_results+'</div>';
                             }
 
                         } else {
@@ -265,7 +282,14 @@
                             const total = headerTotal > 0 ? headerTotal : (Array.isArray(json) ? json.length : 0);
 
                             if (Array.isArray(json) && json.length > 0) {
-                                html += '<div class="px-3 py-2 border-bottom small text-muted">Pronađeno: <strong>'+ total +'</strong> rezultata</div>';
+                                html += '<div class="px-3 py-2 border-bottom small text-muted">'
+                                    +  T.found
+                                        .replace(':total', total)
+                                        .replace(':products', total)     // legacy nema odvojene countove; prikažemo total
+                                        .replace(':brands', 0)
+                                        .replace(':categories', 0)
+                                    + '</div>';
+
                                 html += '<table class="table products"><tbody>';
                                 json.slice(0, 15).forEach(function (item) {
                                     html += '<tr>'
@@ -275,9 +299,9 @@
                                         + '</tr>';
                                 });
                                 html += '</tbody></table>';
-                                html += '<div class="result-text"><a href="'+('{{ route('pretrazi') }}' + '?pojam=' + encodeURIComponent(query))+'" class="btn btn-sm btn-primary w-100">Pogledaj sve rezultate</a></div>';
+                                html += '<div class="result-text"><a href="'+('{{ route('pretrazi') }}' + '?pojam=' + encodeURIComponent(query))+'" class="btn btn-sm btn-primary w-100">'+T.view_all+'</a></div>';
                             } else {
-                                html += '<div class="result-text text-muted">Nema pronađenih rezultata</div>';
+                                html += '<div class="result-text text-muted">'+T.no_results+'</div>';
                             }
                         }
 
@@ -285,10 +309,9 @@
                         $('#search_overlay').removeClass('d-none');
                         $('#search_box').attr('aria-expanded', 'true');
                     },
-
                     error: function(xhr, ajaxOptions, thrownError) {
                         console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-                        $('#search_result').html('<div class="result-text text-danger">Greška pri pretrazi</div>').addClass('show');
+                        $('#search_result').html('<div class="result-text text-danger">'+T.error+'</div>').addClass('show');
                         $('#search_overlay').removeClass('d-none');
                         $('#search_box').attr('aria-expanded', 'true');
                     }
@@ -298,10 +321,12 @@
             }
         }
 
+        // Debounce input
         document.getElementById('search_box')?.addEventListener('input', function(e){
             debouncedLoad(e.target.value);
         });
     </script>
 @endpush
+
 
 

@@ -90,5 +90,13 @@ return [
     'blog_text' => 'Discover where to buy Japanese sweets, Korean sauces and authentic Asian snacks. Follow food trends and get tips for smart shopping.',
     'recepti_title' => 'Authentic Recipes with Asian Ingredients | Rice Kakis',
     'recepti_text' => 'Learn how to cook ramen, gyoza, kimchi or stir-fry at home using real Asian ingredients. Explore dishes from Japan, Korea, Thailand and beyond.',
-    'cijena_fix' => '*Price on 02.05.2025.: '
+    'cijena_fix' => '*Price on 02.05.2025.: ',
+
+     'found'       => 'Found: :total results (products :products, brands :brands, categories :categories)',
+    'brands'      => 'Brands',
+
+    'products'    => 'Products',
+
+    'no_results'  => 'No results found',
+    'error'       => 'Search error',
 ];
