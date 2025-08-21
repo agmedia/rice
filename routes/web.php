@@ -37,6 +37,7 @@ use App\Http\Controllers\Front\HomeController;
 use App\Models\Front\Checkout\Payment\Keks;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use App\Http\Controllers\Front\GoogleAdsFeedController;
 
 /*Route::domain('https://images.antikvarijatbibl.lin73.host25.com/')->group(function () {
     Route::get('media/img/products/{id}/{image}', function ($id, $image) {
@@ -425,6 +426,7 @@ Route::group(
     Route::get('info/{page}', [CatalogRouteController::class, 'page'])->name('catalog.route.page');
 
 
+    Route::get('/googleCSV', GoogleAdsFeedController::class)->name('google.ads.csv');
 
     Route::get('blog/{cat?}/{subcat?}/{blog?}', [CatalogRouteController::class, 'blog'])->name('catalog.route.blog');
     Route::get('blogs', [CatalogRouteController::class, 'blog'])->name('frontblogs');

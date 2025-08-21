@@ -48,8 +48,10 @@
                                         <td class="py-3"></td>
                                     @endif
                                     <td class="py-3">{{ \Illuminate\Support\Carbon::make($row->created_at)->format('d.m.Y') }}</td>
-                                    <td class="py-3"> + {{ $row->earned }} </td>
-                                        <td class="py-3">   @if($row->spend == 100)   -  {{ __('front/cart.loyalty_100') }} @endif @if($row->spend == 200)  -  {{ __('front/cart.loyalty_200') }} @endif </td>
+                                    <td class="py-3">  {{ $row->earned }} </td>
+                                        <td class="py-3"> @if(is_numeric($row->earned) && $row->earned < 0)
+                                                <p>Narudžba otkazana.</p>
+                                            @endif  @if($row->spend == 100)   -  {{ __('front/cart.loyalty_100') }} @endif @if($row->spend == 200)  -  {{ __('front/cart.loyalty_200') }} @endif </td>
                                 </tr>
                             @empty
                                 <tr>

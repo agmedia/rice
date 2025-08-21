@@ -207,14 +207,14 @@ class Loyalty extends Model
     public static function cancelPoints(int $order_id): bool
     {
         if (auth()->user() && $order_id) {
-            $loyalty = Loyalty::query()->where('order_id', $order_id)->first();
+            $loyalty = Loyalty::query()->where('reference_id', $order_id)->first();
 
             if ($loyalty) {
                 return Loyalty::query()->insert([
                     'user_id'      => $loyalty->user_id,
                     'reference_id' => $loyalty->reference_id,
                     'target'       => $loyalty->target,
-                    'earned'       => -$loyalty->earned,
+                    'earned'       => $loyalty->spend - $loyalty->earned,
                     'spend'        => 0,
                     'created_at'   => now(),
                     'updated_at'   => now()
