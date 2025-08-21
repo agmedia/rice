@@ -12,7 +12,7 @@
     <base href="{{ config('settings.images_domain') }}">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" media="screen" href="{{ asset('vendor/simplebar/dist/simplebar.min.css') }}"/>
-    <link rel="stylesheet" media="screen" href="{{ asset('css/theme.css?v=2.53') }}">
+    <link rel="stylesheet" media="screen" href="{{ asset('css/theme.css?v=2.545') }}">
 
     <!-- Favicon and Touch Icons-->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ config('settings.images_domain') . 'apple-touch-icon.png' }}">
@@ -36,15 +36,6 @@
             })(window,document,'script','dataLayer','GTM-NCC7F9XC');</script>
         <!-- End Google Tag Manager -->
 
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-3KWGQKLWE8"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'G-3KWGQKLWE8');
-        </script>
 
     @endif
 
@@ -59,6 +50,7 @@
 
 <!-- Body-->
 <body class="bg-secondary">
+<div id="gdpr-overlay" ></div>
 @if (config('app.env') == 'production')
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NCC7F9XC"
@@ -107,28 +99,73 @@
 <script src="{{ asset('js/imagesloaded/imagesloaded.pkgd.min.js') }}"></script>
 <script src="{{ asset('js/shufflejs/dist/shuffle.min.js') }}"></script>
 <!-- Main theme script-->
-<script src="{{ asset('js/cart.js?v=2.1.8') }}"></script>
-
-
-
-
-
+<script src="{{ asset('js/cart.js?v=2.1.9') }}"></script>
 
 <script src="{{ asset('js/theme.min.js') }}"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
+<script>
+    $(function () {
         $('body').ihavecookies({
+            title: 'Kolačići i privatnost',
+            message: 'www.ricekakis.com koristi kolačiće kako bi osigurala punu funkcionalnost ovih Internet stranica i omogućila bolje korisničko iskustvo.',
+            link: '/privatnost-i-kolacici',
+            moreInfoLabel: 'Više informacija',
+            acceptBtnLabel: 'Prihvaćam',
+            advancedBtnLabel: 'Uredi kolačiće',
+            delay: 0,
+            expires: 365,
+            uncheckBoxes: true,
+            cookieTypes: [
+                { type: 'Obavezni', value: 'necessary', recommendedState: true, readOnly: true },
+                { type: 'Postavke', value: 'preferences', recommendedState: false },
+                { type: 'Analitika', value: 'analytics', recommendedState: false },
+                { type: 'Marketing', value: 'marketing', recommendedState: false },
+            ],
 
-            delay: 600,
-            expires: 90,
-
-            onAccept: function(){
-                var myPreferences = $.fn.ihavecookies.cookie();
-
+            onInit: function () {
+                // upali overlay ako cookie nije postavljen
+                if (document.cookie.indexOf('cookieControl=true') === -1) {
+                    window.addCookieOverlay();
+                }
+                // sigurnosni check: ako se modal pojavi s malim delayem
+                setTimeout(function(){
+                    if ($('.ihavecookies:visible, #gdpr-cookie-message:visible').length) {
+                        window.addCookieOverlay();
+                    }
+                }, 150);
             },
-            uncheckBoxes: false
+
+            onAccept: function () {
+                window.removeCookieOverlay();
+                // npr. pokreni analytics samo ako je dozvoljen
+                // if ($.fn.ihavecookies.preference('analytics')) initAnalytics();
+            },
+
+            onPreferenceChange: function() {
+                // ovdje po potrebi pali/gasi skripte po kategorijama
+            }
         });
 
+        /* === HELPERI: stavimo ih na window da su globalno dostupni === */
+        window.addCookieOverlay = function(){
+            $('#gdpr-overlay').show();
+            $('body').addClass('cookie-lock');
+        };
+        window.removeCookieOverlay = function(){
+            $('#gdpr-overlay').hide();
+            $('body').removeClass('cookie-lock');
+        };
+    });
+</script>
+<script>
+    $(function(){
+        // Čekaj da se cookie banner rendera u DOM
+        var overlayCheck = setInterval(function(){
+            if ($('.ihavecookies:visible, #gdpr-cookie-message:visible').length) {
+                $('#gdpr-overlay').show();
+                $('body').addClass('cookie-lock');
+                clearInterval(overlayCheck);
+            }
+        }, 200);
     });
 </script>
 

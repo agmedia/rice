@@ -267,47 +267,69 @@ h3.bg-default:hover a span, h3.bg-default:hover span{
     color: #D90700!important;
 }
 
-#gdpr-cookie-message {
+/* === OVERLAY: zamrači i blokira pozadinu === */
+#gdpr-overlay {
     position: fixed;
-    left: 30px;
-    bottom: 30px;
-    max-width: 375px;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 9999;        /* ispod modala */
+    display: none;        /* pali se iz JS-a */
+}
+
+/* Zaključaj skrol dok je cookie modal aktivan */
+body.cookie-lock {
+    overflow: hidden;
+}
+
+/* === COOKIE MODAL — CENTAR EKRANA === */
+.ihavecookies, /* ako koristiš plugin */
+#gdpr-cookie-message { /* ako koristiš vlastiti ID */
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 92vw;
+    max-width: 520px;
     background: #f6f9fc;
     padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 20px rgba(0,0,0,.2);
-    margin-left: 0px;
-    z-index:10000;
-
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,.2);
+    margin-left: 0;
+    z-index: 10000 !important;   /* MODAL IZNAD OVERLAYA */
 }
+
 #gdpr-cookie-message h4 {
     color: #373f50;
-
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 10px;
 }
+
 #gdpr-cookie-message h5 {
     color: #373f50;
-
     font-size: 15px;
     font-weight: 500;
     margin-bottom: 10px;
 }
-#gdpr-cookie-message p, #gdpr-cookie-message ul {
+
+#gdpr-cookie-message p,
+#gdpr-cookie-message ul {
     color: #373f50;
     font-size: 13px;
     line-height: 1.5em;
     margin-bottom: 20px;
 }
+
 #gdpr-cookie-message p:last-child {
     margin-bottom: 0;
     text-align: right;
 }
+
 #gdpr-cookie-message li {
     width: 49%;
     display: inline-block;
 }
+
 #gdpr-cookie-message a {
     color: #D90700;
     text-decoration: none;
@@ -316,55 +338,68 @@ h3.bg-default:hover a span, h3.bg-default:hover span{
     border-bottom: 1px dotted rgba(255,255,255,0.75);
     transition: all 0.3s ease-in;
 }
+
 #gdpr-cookie-message a:hover {
     color: #D90700;
     border-bottom-color: #D90700;
     transition: all 0.3s ease-in;
 }
+
 #gdpr-cookie-message button {
     border: none;
     background: #D90700;
     color: white;
-
     font-size: 14px;
-    padding: 7px;
-    border-radius: 3px;
+    padding: 7px 10px;   /* malo udobnije */
+    border-radius: 6px;  /* zaobljenije za modal */
     margin-left: 15px;
     cursor: pointer;
     transition: all 0.3s ease-in;
 }
+
 #gdpr-cookie-message button:hover {
     background: white;
     color: #D90700;
     transition: all 0.3s ease-in;
 }
+
 button#gdpr-cookie-advanced {
     background: white;
-    color:#D90700;
+    color: #D90700;
 }
+
 #gdpr-cookie-message button:disabled {
     opacity: 0.3;
 }
+
 #gdpr-cookie-message input[type="checkbox"] {
     float: none;
     margin-top: 0;
     margin-right: 5px;
 }
 
-@media(max-width:400px) {
+/* === Responsive: ostaje centrirano, samo prilagodba širine === */
+@media (max-width: 400px) {
     #gdpr-cookie-message {
-        position: fixed;
-        left: 10px;
-        bottom: 10px;
-        max-width: 95vw;
-        background: #f6f9fc;
-        padding: 20px;
-        border-radius: 5px;
-        margin-left: 0px;
-        z-index: 10000;
-        box-shadow: 0px 0px 20px rgba(0,0,0,.2);
+        width: 94vw;
+        max-width: none;
+        padding: 18px;
+        border-radius: 8px;
+        /* transform ostaje, pa je i dalje točno u centru */
     }
 }
+/* Overlay koji blokira pozadinu */
+#gdpr-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 9999;              /* ISPOD modala */
+    display: none;              /* pali se iz JS-a */
+}
+
+/* blokiraj skrol */
+body.cookie-lock { overflow: hidden; }
+
 
 @media(max-width:850px) {
     .wave-container-blue::before {
