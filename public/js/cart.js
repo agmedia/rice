@@ -2067,82 +2067,110 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
-    id: String,
-    available: String,
-    min_cart: String,
+    id: [String, Number],
+    available: {
+      type: [String, Number],
+      "default": 0
+    },
+    min_cart: {
+      type: [String, Number],
+      "default": 1
+    },
     fullprice: String
   },
   data: function data() {
     return {
+      // DELTA koju želimo dodati ovim klikom
       quantity: 1,
+      // koliko već ima u košarici (postojeće stanje)
       has_in_cart: 0,
       disabled: false,
       trans: window.trans
     };
   },
+  computed: {
+    availableNum: function availableNum() {
+      return Number(this.available) || 0;
+    },
+    remaining: function remaining() {
+      // koliko još smije ući u košaricu
+      var rem = this.availableNum - Number(this.has_in_cart || 0);
+      return rem > 0 ? rem : 0;
+    }
+  },
   mounted: function mounted() {
     var cart = this.$store.state.storage.getCart();
-    if (cart) {
+    if (cart && cart.items) {
       for (var key in cart.items) {
-        if (this.id == cart.items[key].id) {
-          this.has_in_cart = Math.floor(cart.items[key].quantity);
+        if (String(this.id) === String(cart.items[key].id)) {
+          this.has_in_cart = Math.floor(Number(cart.items[key].quantity) || 0);
         }
       }
-    }
-    if (this.available == undefined) {
-      this.available = 0;
     }
     this.checkAvailability();
   },
   methods: {
     add: function add() {
-      this.checkAvailability(true);
-      if (this.has_in_cart) {
-        this.updateCart();
-      } else {
-        this.addToCart();
+      // delta koliko želimo dodati sada
+      var delta = Number(this.quantity) || 1;
+
+      // odreži delta da ne prelazi remaining
+      if (delta > this.remaining) delta = this.remaining;
+
+      // ako nema što dodati, disable i izlaz
+      if (delta <= 0) {
+        this.disabled = true;
+        return;
       }
+      if (this.has_in_cart > 0) {
+        // RELATIVNO povećanje — ovo u store.js (updateCart) šalje GA add_to_cart
+        this.updateCart(delta);
+      } else {
+        // prvi put dodajemo — store.js (addToCart) već šalje GA add_to_cart
+        this.addToCart(delta);
+      }
+
+      // lokalno ažuriraj stanje tek nakon dispatche-a
+      this.has_in_cart = Number(this.has_in_cart) + delta;
+      // reset delta za sljedeći klik
+      this.quantity = 1;
+      this.checkAvailability();
     },
     onChangeProcessed: function onChangeProcessed(e) {
-      if (e.target.checked == true) {
-        this.quantity = Math.floor(this.min_cart);
-      } else {
-        this.quantity = 1;
-      }
+      var base = e.target.checked ? Math.floor(Number(this.min_cart) || 1) : 1;
+      // nemoj dozvoliti da pređe preostalu dostupnost
+      this.quantity = Math.min(base, this.remaining > 0 ? this.remaining : 0);
     },
-    /**
-     *
-     */
-    addToCart: function addToCart() {
+    addToCart: function addToCart(delta) {
       var item = {
         id: this.id,
-        quantity: this.quantity
+        quantity: delta // DELTA koju dodajemo
       };
       this.$store.dispatch('addToCart', item);
     },
-    /**
-     *
-     */
-    updateCart: function updateCart() {
-      /*if (parseFloat(this.quantity) > parseFloat(this.available)) {
-          this.quantity = this.available;
-      }*/
-
+    updateCart: function updateCart(delta) {
       var item = {
         id: this.id,
-        quantity: this.quantity,
-        relative: true
+        quantity: delta,
+        // DELTA koju dodajemo
+        relative: true // signal store-u da tretira kao add_to_cart
       };
       this.$store.dispatch('updateCart', item);
     },
     checkAvailability: function checkAvailability() {
-      var add = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-      if (add) {
-        this.has_in_cart = parseFloat(this.has_in_cart) + parseFloat(this.quantity);
-      }
-      if (this.available <= this.has_in_cart) {
+      // disablaj ako smo dosegli dostupnost
+      if (this.remaining <= 0) {
         this.disabled = true;
-        this.has_in_cart = this.available;
+        this.has_in_cart = this.availableNum;
+      } else {
+        this.disabled = false;
+        // osiguraj da trenutni delta ne prelazi remaining
+        if (Number(this.quantity) > this.remaining) {
+          this.quantity = this.remaining;
+        }
+        if (Number(this.quantity) < 1) {
+          this.quantity = 1;
+        }
       }
     }
   }
@@ -2377,69 +2405,73 @@ __webpack_require__.r(__webpack_exports__);
       show_delete_btn: true,
       coupon: '',
       show_buttons: true,
-      trans: window.trans
+      trans: window.trans,
+      prevQtys: {} // spremamo prethodne količine po item.id
     };
   },
   mounted: function mounted() {
-    if (window.innerWidth < 800) {
-      this.mobile = true;
-    }
-    if (this.buttons == 'false') {
-      this.show_buttons = false;
-    } else {
-      this.show_buttons = true;
-    }
+    if (window.innerWidth < 800) this.mobile = true;
+    this.show_buttons = this.buttons !== 'false';
     this.checkIfEmpty();
     this.setCoupon();
+
+    // inicijaliziraj mapu starih količina iz localStorage košarice
+    var cart = this.$store.state.storage.getCart();
+    if (cart && cart.items) {
+      for (var key in cart.items) {
+        var it = cart.items[key];
+        this.prevQtys[it.id] = Number(it.quantity) || 0;
+      }
+    }
   },
   methods: {
-    /**
-     *
-     * @param item
-     */
-    updateCart: function updateCart(item) {
+    /* (ostavljeno za gumbove koji šalju absolutnu količinu) */updateCart: function updateCart(item) {
       this.$store.dispatch('updateCart', item);
     },
-    /**
-     *
-     * @param item
-     */
     removeFromCart: function removeFromCart(item) {
       this.$store.dispatch('removeFromCart', item);
     },
-    /**
-     *
-     * @param qty
-     * @returns {number|*}
-     * @constructor
-     */
     CheckQuantity: function CheckQuantity(qty) {
-      if (qty < 1) {
-        return 1;
-      }
+      if (qty < 1) return 1;
       return qty;
     },
-    /**
-     *
-     */
     checkIfEmpty: function checkIfEmpty() {
       var cart = this.$store.state.storage.getCart();
       if (cart && !cart.count && window.location.pathname != '/kosarica') {
         window.location.href = '/kosarica';
       }
     },
-    /**
-     *
-     */
     setCoupon: function setCoupon() {
       var cart = this.$store.state.storage.getCart();
       this.coupon = cart.coupon;
     },
-    /**
-     *
-     */
     checkCoupon: function checkCoupon() {
       this.$store.dispatch('checkCoupon', this.coupon);
+    },
+    /* NOVO: delta logika na promjenu quantity */onQtyChange: function onQtyChange(item, e) {
+      var _ref, _e$target$value, _e$target;
+      var max = Number(item.associatedModel.quantity) || 0;
+      var newQty = Number((_ref = (_e$target$value = e === null || e === void 0 ? void 0 : (_e$target = e.target) === null || _e$target === void 0 ? void 0 : _e$target.value) !== null && _e$target$value !== void 0 ? _e$target$value : item.quantity) !== null && _ref !== void 0 ? _ref : 1);
+      if (newQty < 1) newQty = 1;
+      if (max > 0 && newQty > max) newQty = max;
+
+      // uskladi v-model ako smo clampali
+      if (newQty !== Number(item.quantity)) {
+        item.quantity = newQty;
+      }
+      var oldQty = Number(this.prevQtys[item.id] || 0);
+      var delta = newQty - oldQty;
+      if (delta === 0) return;
+
+      // RELATIVE delta (pozitivna → add_to_cart, negativna → remove_from_cart)
+      this.$store.dispatch('updateCart', {
+        id: item.id,
+        quantity: delta,
+        relative: true
+      });
+
+      // zapamti novu količinu
+      this.prevQtys[item.id] = newQty;
     }
   }
 });
@@ -3529,9 +3561,12 @@ var render = function render() {
   }, [_c("input", {
     directives: [{
       name: "model",
-      rawName: "v-model",
+      rawName: "v-model.number",
       value: _vm.quantity,
-      expression: "quantity"
+      expression: "quantity",
+      modifiers: {
+        number: true
+      }
     }],
     staticClass: "form-control me-3 mb-1",
     staticStyle: {
@@ -3541,8 +3576,8 @@ var render = function render() {
       type: "number",
       inputmode: "numeric",
       pattern: "[0-9]*",
-      min: "1",
-      max: _vm.available
+      min: 1,
+      max: _vm.remaining
     },
     domProps: {
       value: _vm.quantity
@@ -3550,23 +3585,24 @@ var render = function render() {
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.quantity = $event.target.value;
+        _vm.quantity = _vm._n($event.target.value);
+      },
+      blur: function blur($event) {
+        return _vm.$forceUpdate();
       }
     }
   }), _vm._v(" "), _c("button", {
     staticClass: "btn btn-primary btn-shadow me-3 mb-1",
     attrs: {
-      disabled: _vm.disabled,
+      disabled: _vm.disabled || _vm.remaining <= 0 || _vm.quantity <= 0,
       "aria-label": "add to cart button"
     },
     on: {
-      click: function click($event) {
-        return _vm.add();
-      }
+      click: _vm.add
     }
   }, [_c("i", {
     staticClass: "ci-cart"
-  }), _vm._v(" " + _vm._s(_vm.trans.add_to_cart))])]), _vm._v(" "), _vm.min_cart > 1 ? _c("div", {
+  }), _vm._v(" " + _vm._s(_vm.trans.add_to_cart) + "\n        ")])]), _vm._v(" "), Number(_vm.min_cart) > 1 ? _c("div", {
     staticClass: "form-check mb-3"
   }, [_c("input", {
     staticClass: "form-check-input",
@@ -3575,16 +3611,14 @@ var render = function render() {
       id: "ex-check-1"
     },
     on: {
-      change: function change($event) {
-        return _vm.onChangeProcessed($event);
-      }
+      change: _vm.onChangeProcessed
     }
   }), _vm._v(" "), _c("label", {
     staticClass: "form-check-label",
     attrs: {
       "for": "ex-check-1"
     }
-  }, [_vm._v(_vm._s(_vm.trans.add_to_cart_combo) + "  " + _vm._s(Math.floor(this.min_cart)) + " =  " + _vm._s(_vm.fullprice) + " ")])]) : _vm._e()]);
+  }, [_vm._v("\n            " + _vm._s(_vm.trans.add_to_cart_combo) + " " + _vm._s(Math.floor(Number(_vm.min_cart))) + " = " + _vm._s(_vm.fullprice) + "\n        ")])]) : _vm._e()]);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -3815,7 +3849,7 @@ var render = function render() {
     attrs: {
       role: "alert"
     }
-  }, [_vm._m(0), _vm._v(" "), _c("div", [_c("small", [_vm._v(_vm._s(_vm.trans.jos) + " " + _vm._s(_vm.$store.state.service.formatMainPrice(_vm.freeship - _vm.$store.state.cart.total)) + " "), _vm.$store.state.cart.secondary_price ? _c("span", [_vm._v("(" + _vm._s(_vm.$store.state.service.formatSecondaryPrice(_vm.freeship - _vm.$store.state.cart.total)) + ")")]) : _vm._e(), _vm._v(" " + _vm._s(_vm.trans.do_besplatne))])])]) : _vm._e(), _vm._v(" "), _vm.$store.state.cart.total > _vm.freeship && _vm.$store.state.cart.count ? _c("div", {
+  }, [_vm._m(0), _vm._v(" "), _c("div", [_c("small", [_vm._v("\n                    " + _vm._s(_vm.trans.jos) + " " + _vm._s(_vm.$store.state.service.formatMainPrice(_vm.freeship - _vm.$store.state.cart.total)) + "\n                    "), _vm.$store.state.cart.secondary_price ? _c("span", [_vm._v("\n          (" + _vm._s(_vm.$store.state.service.formatSecondaryPrice(_vm.freeship - _vm.$store.state.cart.total)) + ")\n        ")]) : _vm._e(), _vm._v("\n                    " + _vm._s(_vm.trans.do_besplatne) + "\n                ")])])]) : _vm._e(), _vm._v(" "), _vm.$store.state.cart.total > _vm.freeship && _vm.$store.state.cart.count ? _c("div", {
     staticClass: "alert alert-success d-flex",
     attrs: {
       role: "alert"
@@ -3828,6 +3862,7 @@ var render = function render() {
     staticClass: "text-dark mb-0"
   }, [_vm._v(_vm._s(_vm.trans.empty_cart_text))])]) : _vm._e(), _vm._v(" "), _vm._l(_vm.$store.state.cart.items, function (item) {
     return _c("div", {
+      key: item.id,
       staticClass: "d-sm-flex justify-content-between align-items-center my-2 pb-3 border-bottom"
     }, [_c("div", {
       staticClass: "d-flex align-items-center text-start"
@@ -3858,7 +3893,7 @@ var render = function render() {
       staticStyle: {
         "margin-left": "20px"
       }
-    }, [_vm._v("\n                        " + _vm._s(item.associatedModel.action.title) + " (" + _vm._s(Math.round(item.associatedModel.action.discount).toFixed(0)) + "\n                        " + _vm._s(item.associatedModel.action.type == "F" ? "kn" : "%") + ")\n                    ")]) : _vm._e()]), _vm._v(" "), item.associatedModel.secondary_price ? _c("div", {
+    }, [_vm._v("\n          " + _vm._s(item.associatedModel.action.title) + " (" + _vm._s(Math.round(item.associatedModel.action.discount).toFixed(0)) + "\n          " + _vm._s(item.associatedModel.action.type == "F" ? "kn" : "%") + ")\n        ")]) : _vm._e()]), _vm._v(" "), item.associatedModel.secondary_price ? _c("div", {
       staticClass: "fs-sm text-dark pt-1"
     }, [_vm._v("\n                    " + _vm._s(Object.keys(item.conditions).length ? item.associatedModel.secondary_special_text : item.associatedModel.secondary_price_text) + "\n                ")]) : _vm._e()])]), _vm._v(" "), _c("div", {
       staticClass: "pt-2 pt-sm-0 ps-sm-3 mx-auto justify-content-between mx-sm-0 text-start",
@@ -3870,9 +3905,12 @@ var render = function render() {
     }, [_vm._v(_vm._s(_vm.trans.kolicina) + ": " + _vm._s(item.quantity))]), _vm._v(" "), _c("input", {
       directives: [{
         name: "model",
-        rawName: "v-model",
+        rawName: "v-model.number",
         value: item.quantity,
-        expression: "item.quantity"
+        expression: "item.quantity",
+        modifiers: {
+          number: true
+        }
       }],
       staticClass: "form-control d-none d-sm-block",
       attrs: {
@@ -3884,13 +3922,15 @@ var render = function render() {
         value: item.quantity
       },
       on: {
-        click: function click($event) {
-          $event.preventDefault();
-          return _vm.updateCart(item);
+        change: function change($event) {
+          return _vm.onQtyChange(item, $event);
         },
         input: function input($event) {
           if ($event.target.composing) return;
-          _vm.$set(item, "quantity", $event.target.value);
+          _vm.$set(item, "quantity", _vm._n($event.target.value));
+        },
+        blur: function blur($event) {
+          return _vm.$forceUpdate();
         }
       }
     }), _vm._v(" "), _c("button", {
@@ -4870,12 +4910,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-/* */
+/* ========= store.js ========= */
+
+/* LocalStorage ključ i poruke */
 var storage_cart = {
   name: 'pk_cart',
   cart: {
@@ -4890,229 +4935,350 @@ var messages = {
   couponSuccess: window.trans.couponsuccess,
   couponError: window.trans.couponerror
 };
+
+/* API base – ne ovisi o axios.defaults.baseURL */
+var API_BASE_REL = (window.API_BASE || '/api/v2').replace(/\/+$/, '');
+var API_BASE = /^https?:\/\//i.test(API_BASE_REL) ? API_BASE_REL : window.location.origin + API_BASE_REL;
 var AgService = /*#__PURE__*/function () {
   function AgService() {
     _classCallCheck(this, AgService);
   }
   _createClass(AgService, [{
     key: "getCart",
-    value:
-    /**
-     *
-     * @returns {*}
-     */
+    value: /* Dohvati košaricu */
     function getCart() {
       var _this = this;
-      return axios.get('cart/get').then(function (response) {
+      return axios.get("".concat(API_BASE, "/cart/get")).then(function (response) {
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this.returnError(messages.error);
       });
     }
 
-    /**
-     *
-     * @param item
-     * @returns {*}
-     */
+    /* Provjeri košaricu */
   }, {
     key: "checkCart",
     value: function checkCart(ids) {
       var _this2 = this;
-      return axios.post('cart/check', {
+      return axios.post("".concat(API_BASE, "/cart/check"), {
         ids: ids
       }).then(function (response) {
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this2.returnError(messages.error);
       });
     }
 
-    /**
-     *
-     * @param item
-     * @returns {*}
-     */
+    /* Dodaj u košaricu */
   }, {
     key: "addToCart",
     value: function addToCart(item) {
       var _this3 = this;
-      return axios.post('cart/add', {
+      return axios.post("".concat(API_BASE, "/cart/add"), {
         item: item
       }).then(function (response) {
-        if (response.data.error) {
+        if (response.data && response.data.error) {
           _this3.returnError(response.data.error);
           return false;
         }
-        var product = response.data.items[item.id].associatedModel;
+
+        // 1) Preferiraj backend GA4 payload
+        var dlFromBackend = response.data && response.data.dl ? response.data.dl : null;
+
+        // 2) Inače pokušaj izvući associatedModel
+        var productModel = null;
+        if (!dlFromBackend) {
+          var itemsObj = response.data && response.data.items ? response.data.items : {};
+          if (itemsObj && itemsObj[item.id] && itemsObj[item.id].associatedModel) {
+            productModel = itemsObj[item.id].associatedModel;
+          }
+          if (!productModel) {
+            var values = Object.values(itemsObj || {});
+            var found = values.find(function (v) {
+              return String(v && v.id) === String(item.id);
+            });
+            productModel = found && found.associatedModel ? found.associatedModel : null;
+          }
+          if (!productModel) {
+            var vals = Object.values(itemsObj || {});
+            productModel = vals.length ? vals[vals.length - 1].associatedModel || null : null;
+          }
+        }
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
           ecommerce: null
         });
-        window.dataLayer.push({
-          'event': 'add_to_cart',
-          'ecommerce': {
-            'items': [product.dataLayer]
-          }
-        });
+        if (dlFromBackend) {
+          window.dataLayer.push(dlFromBackend);
+        } else if (productModel && productModel.dataLayer) {
+          var itemObj = Object.assign({}, productModel.dataLayer, {
+            quantity: Number(item.quantity || 1)
+          });
+          window.dataLayer.push({
+            event: 'add_to_cart',
+            ecommerce: {
+              items: [itemObj]
+            }
+          });
+        } else {
+          window.dataLayer.push({
+            event: 'add_to_cart',
+            ecommerce: {
+              items: [{
+                item_id: item.id || '',
+                quantity: Number(item.quantity || 1)
+              }]
+            }
+          });
+        }
         _this3.returnSuccess(messages.cartAdd);
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this3.returnError(messages.error);
       });
     }
 
-    /**
-     *
-     * @param item
-     * @returns {*}
-     */
+    /* Ažuriraj stavku – podržava relative delta (+ i -) */
   }, {
     key: "updateCart",
     value: function updateCart(item) {
       var _this4 = this;
-      return axios.post('cart/update/' + item.id, {
+      return axios.post("".concat(API_BASE, "/cart/update/").concat(item.id), {
         item: item
       }).then(function (response) {
-        if (response.data.error) {
+        if (response.data && response.data.error) {
           _this4.returnError(response.data.error);
           return false;
         }
+        var isRelative = item && item.relative === true;
+        var qty = Number(item.quantity);
+
+        // RELATIVNO povećanje → add_to_cart
+        if (isRelative && qty > 0) {
+          var _response$data, _productModel;
+          var qtyAdded = qty;
+          var dlFromBackend = (_response$data = response.data) === null || _response$data === void 0 ? void 0 : _response$data.dl_add;
+          var productModel = null;
+          if (!dlFromBackend) {
+            var _itemsObj$item$id;
+            var itemsObj = response.data.items || {};
+            productModel = itemsObj === null || itemsObj === void 0 ? void 0 : (_itemsObj$item$id = itemsObj[item.id]) === null || _itemsObj$item$id === void 0 ? void 0 : _itemsObj$item$id.associatedModel;
+            if (!productModel) {
+              var values = Object.values(itemsObj);
+              var found = values.find(function (v) {
+                return String(v === null || v === void 0 ? void 0 : v.id) === String(item.id);
+              });
+              productModel = found === null || found === void 0 ? void 0 : found.associatedModel;
+            }
+            if (!productModel) {
+              var _values2;
+              var _values = Object.values(itemsObj);
+              productModel = _values.length ? (_values2 = _values[_values.length - 1]) === null || _values2 === void 0 ? void 0 : _values2.associatedModel : null;
+            }
+          }
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            ecommerce: null
+          });
+          if (dlFromBackend) {
+            window.dataLayer.push(dlFromBackend);
+          } else if ((_productModel = productModel) !== null && _productModel !== void 0 && _productModel.dataLayer) {
+            var itemObj = _objectSpread(_objectSpread({}, productModel.dataLayer), {}, {
+              quantity: qtyAdded
+            });
+            window.dataLayer.push({
+              event: 'add_to_cart',
+              ecommerce: {
+                items: [itemObj]
+              }
+            });
+          } else {
+            var _item$id;
+            window.dataLayer.push({
+              event: 'add_to_cart',
+              ecommerce: {
+                items: [{
+                  item_id: (_item$id = item.id) !== null && _item$id !== void 0 ? _item$id : '',
+                  quantity: qtyAdded
+                }]
+              }
+            });
+          }
+        }
+        // RELATIVNO smanjenje → remove_from_cart
+        else if (isRelative && qty < 0) {
+          var _response$data2, _productModel3;
+          var qtyRemoved = Math.abs(qty);
+          var _dlFromBackend = (_response$data2 = response.data) === null || _response$data2 === void 0 ? void 0 : _response$data2.dl_remove;
+          var _productModel2 = null;
+          if (!_dlFromBackend) {
+            var _itemsObj$item$id2;
+            var _itemsObj = response.data.items || {};
+            _productModel2 = _itemsObj === null || _itemsObj === void 0 ? void 0 : (_itemsObj$item$id2 = _itemsObj[item.id]) === null || _itemsObj$item$id2 === void 0 ? void 0 : _itemsObj$item$id2.associatedModel;
+            if (!_productModel2) {
+              var _values3 = Object.values(_itemsObj);
+              var _found = _values3.find(function (v) {
+                return String(v === null || v === void 0 ? void 0 : v.id) === String(item.id);
+              });
+              _productModel2 = _found === null || _found === void 0 ? void 0 : _found.associatedModel;
+            }
+            if (!_productModel2) {
+              var _values5;
+              var _values4 = Object.values(_itemsObj);
+              _productModel2 = _values4.length ? (_values5 = _values4[_values4.length - 1]) === null || _values5 === void 0 ? void 0 : _values5.associatedModel : null;
+            }
+          }
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            ecommerce: null
+          });
+          if (_dlFromBackend) {
+            window.dataLayer.push(_dlFromBackend);
+          } else if ((_productModel3 = _productModel2) !== null && _productModel3 !== void 0 && _productModel3.dataLayer) {
+            var _itemObj = _objectSpread(_objectSpread({}, _productModel2.dataLayer), {}, {
+              quantity: qtyRemoved
+            });
+            window.dataLayer.push({
+              event: 'remove_from_cart',
+              ecommerce: {
+                items: [_itemObj]
+              }
+            });
+          } else {
+            var _item$id2;
+            window.dataLayer.push({
+              event: 'remove_from_cart',
+              ecommerce: {
+                items: [{
+                  item_id: (_item$id2 = item.id) !== null && _item$id2 !== void 0 ? _item$id2 : '',
+                  quantity: qtyRemoved
+                }]
+              }
+            });
+          }
+        }
         _this4.returnSuccess(messages.cartUpdate);
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this4.returnError(messages.error);
       });
     }
 
-    /**
-     *
-     * @param item
-     * @returns {*}
-     */
+    /* Ukloni stavku */
   }, {
     key: "removeItem",
     value: function removeItem(item) {
       var _this5 = this;
-      return axios.get('cart/remove/' + item.id).then(function (response) {
+      return axios.get("".concat(API_BASE, "/cart/remove/").concat(item.id)).then(function (response) {
+        var _response$data3, _itemsObj$item$id3, _productModel4;
+        var itemsObj = ((_response$data3 = response.data) === null || _response$data3 === void 0 ? void 0 : _response$data3.items) || {};
+        var productModel = itemsObj === null || itemsObj === void 0 ? void 0 : (_itemsObj$item$id3 = itemsObj[item.id]) === null || _itemsObj$item$id3 === void 0 ? void 0 : _itemsObj$item$id3.associatedModel;
+        if (!productModel) {
+          var values = Object.values(itemsObj);
+          var found = values.find(function (v) {
+            return String(v === null || v === void 0 ? void 0 : v.id) === String(item.id);
+          });
+          productModel = (found === null || found === void 0 ? void 0 : found.associatedModel) || null;
+        }
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          ecommerce: null
+        });
+        if ((_productModel4 = productModel) !== null && _productModel4 !== void 0 && _productModel4.dataLayer) {
+          window.dataLayer.push({
+            event: 'remove_from_cart',
+            ecommerce: {
+              items: [_objectSpread(_objectSpread({}, productModel.dataLayer), {}, {
+                quantity: Number(item.quantity || 1)
+              })]
+            }
+          });
+        } else {
+          var _item$id3;
+          window.dataLayer.push({
+            event: 'remove_from_cart',
+            ecommerce: {
+              items: [{
+                item_id: (_item$id3 = item.id) !== null && _item$id3 !== void 0 ? _item$id3 : '',
+                quantity: Number(item.quantity || 1)
+              }]
+            }
+          });
+        }
         _this5.returnSuccess(messages.cartRemove);
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this5.returnError(messages.error);
       });
     }
 
-    /**
-     *
-     * @param coupon
-     * @returns {*}
-     */
+    /* Kupon */
   }, {
     key: "checkCoupon",
     value: function checkCoupon(coupon) {
       var _this6 = this;
-      if (!coupon) {
-        coupon = null;
-      }
-      return axios.get('cart/coupon/' + coupon).then(function (response) {
+      if (!coupon) coupon = null;
+      return axios.get("".concat(API_BASE, "/cart/coupon/").concat(coupon)).then(function (response) {
         _this6.returnSuccess(messages.couponSuccess);
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this6.returnError(messages.error);
       });
     }
 
-    /**
-     *
-     * @param coupon
-     * @returns {*}
-     */
+    /* Loyalty */
   }, {
     key: "updateLoyalty",
     value: function updateLoyalty(loyalty) {
       var _this7 = this;
-      if (!loyalty) {
-        loyalty = null;
-      }
-      return axios.get('cart/loyalty/' + loyalty).then(function (response) {
+      if (!loyalty) loyalty = null;
+      return axios.get("".concat(API_BASE, "/cart/loyalty/").concat(loyalty)).then(function (response) {
         _this7.returnSuccess(messages.couponSuccess);
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this7.returnError(messages.error);
       });
     }
 
-    /**
-     *
-     * @returns {*}
-     */
+    /* Settings (ostavi ako ide preko drugog endpointa) */
   }, {
     key: "getSettings",
     value: function getSettings() {
       var _this8 = this;
       return axios.get('settings/get').then(function (response) {
         return response.data;
-      })["catch"](function (error) {
+      })["catch"](function () {
         return _this8.returnError(messages.error);
       });
     }
 
-    /**
-     *
-     * @param msg
-     * @returns {*}
-     */
+    /* Helperi za toast */
   }, {
     key: "returnSettings",
     value: function returnSettings(settings) {
       window.AGSettings = settings;
     }
-
-    /**
-     *
-     * @param msg
-     * @returns {*}
-     */
   }, {
     key: "returnError",
     value: function returnError(msg) {
       window.ToastWarning.fire(msg);
     }
-
-    /**
-     *
-     * @param msg
-     * @returns {*}
-     */
   }, {
     key: "returnSuccess",
     value: function returnSuccess(msg) {
       window.ToastSuccess.fire(msg);
     }
 
-    /**
-     * Returns HR formated price string.
-     *
-     * @param price
-     * @returns {string}
-     */
+    /* Formatiraj cijene */
   }, {
     key: "formatPrice",
     value: function formatPrice(price) {
       return Number(price).toLocaleString('hr-HR', {
         style: 'currency',
-        //currencyDisplay: 'narrowSymbol',
         currencyDisplay: 'symbol',
         currency: 'HRK'
       });
     }
-
-    /**
-     * Returns HR formated price string.
-     *
-     * @param price
-     * @returns {string}
-     */
   }, {
     key: "formatMainPrice",
     value: function formatMainPrice(price) {
@@ -5147,13 +5313,6 @@ var AgService = /*#__PURE__*/function () {
       var right = main_currency.symbol_right ? '' + main_currency.symbol_right : '';
       return left + Number(price * main_currency.value).toFixed(main_currency.decimal_places) + right;
     }
-
-    /**
-     * Returns HR formated price string.
-     *
-     * @param price
-     * @returns {string}
-     */
   }, {
     key: "formatSecondaryPrice",
     value: function formatSecondaryPrice(price) {
@@ -5167,27 +5326,13 @@ var AgService = /*#__PURE__*/function () {
       }
     }
 
-    /**
-     * Calculate tax on items.
-     * Item can be number or object.
-     *
-     * @param items
-     * @return {string}
-     */
+    /* Porez / popust helperi */
   }, {
     key: "getDiscountAmount",
     value: function getDiscountAmount(price, special) {
       var discount = (price - special) / price * 100;
       return Math.round(discount).toFixed(0);
     }
-
-    /**
-     * Calculate tax on items.
-     * Item can be number or object.
-     *
-     * @param items
-     * @return {string}
-     */
   }, {
     key: "calculateItemsTax",
     value: function calculateItemsTax(items) {
@@ -5210,21 +5355,10 @@ var AgStorage = /*#__PURE__*/function () {
   }
   _createClass(AgStorage, [{
     key: "getCart",
-    value:
-    /**
-     *
-     * @returns {JSON}
-     */
-    function getCart() {
+    value: function getCart() {
       var item = localStorage.getItem(storage_cart.name);
-      return item && item != 'undefined' ? JSON.parse(item) : null;
+      return item && item !== 'undefined' ? JSON.parse(item) : null;
     }
-
-    /**
-     *
-     * @param value
-     * @returns localStorage item
-     */
   }, {
     key: "setCart",
     value: function setCart(value) {
@@ -5233,7 +5367,7 @@ var AgStorage = /*#__PURE__*/function () {
   }]);
   return AgStorage;
 }();
-/**/
+/* Vuex-like store objekt */
 var store = {
   state: {
     storage: new AgStorage(),
@@ -5243,19 +5377,9 @@ var store = {
     settings: null
   },
   actions: {
-    /**
-     *
-     * @param context
-     * @returns {*}
-     */
     getCart: function getCart(context) {
       context.commit('setCart');
     },
-    /**
-     *
-     * @param context
-     * @param item
-     */
     addToCart: function addToCart(context, item) {
       var state = context.state;
       state.service.addToCart(item).then(function (cart) {
@@ -5265,11 +5389,6 @@ var store = {
         }
       });
     },
-    /**
-     *
-     * @param context
-     * @param item
-     */
     updateCart: function updateCart(context, item) {
       var state = context.state;
       state.service.updateCart(item).then(function (cart) {
@@ -5279,11 +5398,6 @@ var store = {
         }
       });
     },
-    /**
-     *
-     * @param context
-     * @param item
-     */
     removeFromCart: function removeFromCart(context, item) {
       var state = context.state;
       state.service.removeItem(item).then(function (cart) {
@@ -5291,11 +5405,6 @@ var store = {
         state.cart = cart;
       });
     },
-    /**
-     *
-     * @param context
-     * @param ids
-     */
     checkCart: function checkCart(context, ids) {
       var state = context.state;
       state.service.checkCart(ids).then(function (response) {
@@ -5310,11 +5419,6 @@ var store = {
         }
       });
     },
-    /**
-     *
-     * @param context
-     * @param coupon
-     */
     checkCoupon: function checkCoupon(context, coupon) {
       var state = context.state;
       state.cart.coupon = coupon;
@@ -5328,11 +5432,6 @@ var store = {
         context.commit('setCart');
       });
     },
-    /**
-     *
-     * @param context
-     * @param coupon
-     */
     updateLoyalty: function updateLoyalty(context, loyalty) {
       var state = context.state;
       state.cart.loyalty = loyalty;
@@ -5346,18 +5445,9 @@ var store = {
         context.commit('setCart');
       });
     },
-    /**
-     *
-     * @param context
-     */
     flushCart: function flushCart(context) {
       context.state.cart = context.state.storage.setCart(storage_cart.cart);
     },
-    /**
-     *
-     * @param context
-     * @param item
-     */
     getSettings: function getSettings(context, item) {
       var state = context.state;
       state.service.getSettings(item).then(function (settings) {
@@ -5368,11 +5458,6 @@ var store = {
     }
   },
   mutations: {
-    /**
-     *
-     * @param state
-     * @returns {*}
-     */
     setCart: function setCart(state) {
       return state.cart = state.service.getCart().then(function (cart) {
         state.cart = cart;

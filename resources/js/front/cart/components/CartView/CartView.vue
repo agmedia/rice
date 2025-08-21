@@ -1,42 +1,49 @@
 <template>
     <div>
         <div class="d-block pt-3 pb-2 mt-1 text-start" v-if="$store.state.cart.total > 0">
-            <div class="alert alert-info  d-flex" v-if="$store.state.cart.total < freeship && $store.state.cart.count" role="alert">
+            <div class="alert alert-info d-flex" v-if="$store.state.cart.total < freeship && $store.state.cart.count" role="alert">
                 <div class="alert-icon">
                     <i class="ci-announcement"></i>
                 </div>
-                <div><small>{{ trans.jos }} {{ $store.state.service.formatMainPrice(freeship - $store.state.cart.total) }} <span v-if="$store.state.cart.secondary_price">({{ $store.state.service.formatSecondaryPrice(freeship - $store.state.cart.total) }})</span> {{ trans.do_besplatne }}</small></div>
+                <div>
+                    <small>
+                        {{ trans.jos }} {{ $store.state.service.formatMainPrice(freeship - $store.state.cart.total) }}
+                        <span v-if="$store.state.cart.secondary_price">
+              ({{ $store.state.service.formatSecondaryPrice(freeship - $store.state.cart.total) }})
+            </span>
+                        {{ trans.do_besplatne }}
+                    </small>
+                </div>
             </div>
             <div class="alert alert-success d-flex" v-if="$store.state.cart.total > freeship && $store.state.cart.count" role="alert">
-                <div class="alert-icon">
-                    <i class="ci-check-circle"></i>
-                </div>
+                <div class="alert-icon"><i class="ci-check-circle"></i></div>
                 <div><small>{{ trans.ostvarili }}</small></div>
             </div>
-            <h2 class="h6 text-primary  mb-0">{{ trans.artikli}}</h2>
+            <h2 class="h6 text-primary mb-0">{{ trans.artikli }}</h2>
         </div>
+
         <div class="d-flex pt-3 pb-2 mt-1" v-if="$store.state.cart.total < 1">
             <p class="text-dark mb-0">{{ trans.empty_cart_text }}</p>
         </div>
 
-
-
-        <!-- Item-->
-        <div class="d-sm-flex justify-content-between align-items-center my-2 pb-3 border-bottom" v-for="item in $store.state.cart.items">
+        <!-- Item -->
+        <div class="d-sm-flex justify-content-between align-items-center my-2 pb-3 border-bottom" v-for="item in $store.state.cart.items" :key="item.id">
             <div class="d-flex align-items-center text-start">
                 <a class="d-inline-block flex-shrink-0 me-3" :href="base_path + item.attributes.path">
                     <img :src="item.associatedModel.image" width="120" :alt="item.name" :title="item.name">
                 </a>
                 <div class="py-2">
-                    <h3 class="product-title fs-base mb-2"><a :href="base_path + item.attributes.path">{{ item.name }}</a></h3>
+                    <h3 class="product-title fs-base mb-2">
+                        <a :href="base_path + item.attributes.path">{{ item.name }}</a>
+                    </h3>
 
                     <div class="fs-lg text-primary pt-2">
                         {{ Object.keys(item.conditions).length ? item.associatedModel.main_special_text : item.associatedModel.main_price_text }}
                         <span class="text-primary fs-md fw-light" style="margin-left: 20px;"
                               v-if="Object.keys(item.conditions).length && item.associatedModel.action && item.associatedModel.action.coupon == $store.state.cart.coupon">
-                            {{ item.associatedModel.action.title }} ({{ Math.round(item.associatedModel.action.discount).toFixed(0) }}
-                            {{ item.associatedModel.action.type == 'F' ? 'kn' : '%' }})
-                        </span>
+              {{ item.associatedModel.action.title }} ({{ Math.round(item.associatedModel.action.discount).toFixed(0) }}
+              {{ item.associatedModel.action.type == 'F' ? 'kn' : '%' }})
+            </span>
                     </div>
 
                     <div class="fs-sm text-dark pt-1" v-if="item.associatedModel.secondary_price">
@@ -44,16 +51,25 @@
                     </div>
                 </div>
             </div>
+
             <div class="pt-2 pt-sm-0 ps-sm-3 mx-auto justify-content-between mx-sm-0 text-start" style="max-width: 9rem;">
-                <label class="form-label">{{ trans.kolicina }}: {{item.quantity}}</label>
-                <input class="form-control d-none d-sm-block" type="number" v-model="item.quantity" min="1" :max="item.associatedModel.quantity" @click.prevent="updateCart(item)">
-                <button class="btn btn-link px-0 text-danger" type="button" @click.prevent="removeFromCart(item)"><i class="ci-close-circle me-2"></i><span class="fs-sm">{{ trans.ukloni }}</span></button>
+                <label class="form-label">{{ trans.kolicina }}: {{ item.quantity }}</label>
+
+                <!-- Mijenjaj količinu: na promjenu šalji relativni delta -->
+                <input
+                    class="form-control d-none d-sm-block"
+                    type="number"
+                    v-model.number="item.quantity"
+                    min="1"
+                    :max="item.associatedModel.quantity"
+                    @change="onQtyChange(item, $event)"
+                >
+
+                <button class="btn btn-link px-0 text-danger" type="button" @click.prevent="removeFromCart(item)">
+                    <i class="ci-close-circle me-2"></i><span class="fs-sm">{{ trans.ukloni }}</span>
+                </button>
             </div>
         </div>
-
-       <!-- <div class="d-block pt-3 pb-4 pb-sm-5 mt-1 text-center text-sm-start" v-if="show_buttons">
-            <a class="btn btn-outline-dark btn-sm ps-2" :href="continueurl"><i class="ci-arrow-left me-2"></i>Natrag na trgovinu</a>
-        </div> -->
     </div>
 </template>
 
@@ -63,7 +79,7 @@ export default {
         continueurl: String,
         checkouturl: String,
         freeship: String,
-        buttons: {type: String, default: 'true'},
+        buttons: { type: String, default: 'true' },
     },
     data() {
         return {
@@ -72,86 +88,88 @@ export default {
             show_delete_btn: true,
             coupon: '',
             show_buttons: true,
-           trans: window.trans,
-        }
+            trans: window.trans,
+            prevQtys: {} // spremamo prethodne količine po item.id
+        };
     },
     mounted() {
-        if (window.innerWidth < 800) {
-            this.mobile = true;
-        }
+        if (window.innerWidth < 800) this.mobile = true;
 
-        if (this.buttons == 'false') {
-            this.show_buttons = false;
-        } else {
-            this.show_buttons = true;
-        }
+        this.show_buttons = this.buttons !== 'false';
 
         this.checkIfEmpty();
         this.setCoupon();
+
+        // inicijaliziraj mapu starih količina iz localStorage košarice
+        const cart = this.$store.state.storage.getCart();
+        if (cart && cart.items) {
+            for (const key in cart.items) {
+                const it = cart.items[key];
+                this.prevQtys[it.id] = Number(it.quantity) || 0;
+            }
+        }
     },
-
     methods: {
-
-        /**
-         *
-         * @param item
-         */
+        /* (ostavljeno za gumbove koji šalju absolutnu količinu) */
         updateCart(item) {
             this.$store.dispatch('updateCart', item);
         },
 
-        /**
-         *
-         * @param item
-         */
         removeFromCart(item) {
             this.$store.dispatch('removeFromCart', item);
         },
 
-        /**
-         *
-         * @param qty
-         * @returns {number|*}
-         * @constructor
-         */
         CheckQuantity(qty) {
-            if (qty < 1) {
-                return 1;
-            }
-
+            if (qty < 1) return 1;
             return qty;
         },
 
-        /**
-         *
-         */
         checkIfEmpty() {
             let cart = this.$store.state.storage.getCart();
-
-            if (cart && ! cart.count && window.location.pathname != '/kosarica') {
+            if (cart && !cart.count && window.location.pathname != '/kosarica') {
                 window.location.href = '/kosarica';
             }
         },
 
-        /**
-         *
-         */
         setCoupon() {
             let cart = this.$store.state.storage.getCart();
-
             this.coupon = cart.coupon;
         },
 
-        /**
-         *
-         */
         checkCoupon() {
             this.$store.dispatch('checkCoupon', this.coupon);
-        }
+        },
+
+        /* NOVO: delta logika na promjenu quantity */
+        onQtyChange(item, e) {
+            const max = Number(item.associatedModel.quantity) || 0;
+            let newQty = Number(e?.target?.value ?? item.quantity ?? 1);
+            if (newQty < 1) newQty = 1;
+            if (max > 0 && newQty > max) newQty = max;
+
+            // uskladi v-model ako smo clampali
+            if (newQty !== Number(item.quantity)) {
+                item.quantity = newQty;
+            }
+
+            const oldQty = Number(this.prevQtys[item.id] || 0);
+            const delta = newQty - oldQty;
+
+            if (delta === 0) return;
+
+            // RELATIVE delta (pozitivna → add_to_cart, negativna → remove_from_cart)
+            this.$store.dispatch('updateCart', {
+                id: item.id,
+                quantity: delta,
+                relative: true
+            });
+
+            // zapamti novu količinu
+            this.prevQtys[item.id] = newQty;
+        },
     }
 };
 </script>
-
 
 <style>
 .table th, .table td {

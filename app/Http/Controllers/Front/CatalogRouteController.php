@@ -47,6 +47,11 @@ class CatalogRouteController extends FrontBaseController
      */
     public function resolve(Request $request, $group, Category $cat = null, $subcat = null, Product $prod = null)
     {
+
+        $price_per_kg = '';       // <— da uvijek postoji
+        $listingPayload = null;   // <— da kasnije compact ne puca
+
+
         //dd($request->toArray(), $group, $cat, $subcat, $prod);
         //dd($request->all(), $request->path(), $request->url(), $request->getRequestUri());
         //
@@ -84,28 +89,21 @@ class CatalogRouteController extends FrontBaseController
                 abort(404);
             }
 
-            if (  $prod->size_value && $prod->size_type) {
+            if ($prod->size_value && $prod->size_type) {
+                $pricePerBase = (1000 / $prod->size_value) * $prod->price;
 
-
-                $pricePerKg = (1000 / $prod->size_value) * $prod->price;
-
-                if($prod->size_type = 'g'){
-
-                    $price_per_kg = number_format($pricePerKg, 2). ' €/kg';
-
-                } else{
-                    $price_per_kg = number_format($pricePerKg, 2). ' €/l';
+                if ($prod->size_type === 'g') {
+                    $price_per_kg = number_format($pricePerBase, 2) . ' €/kg';
+                } else {
+                    // pretpostavka: sve osim 'g' tretiramo kao ml/l
+                    $price_per_kg = number_format($pricePerBase, 2) . ' €/l';
                 }
-
-
-            } else{
-
+            } else {
                 $price_per_kg = '';
-
             }
 
             $seo     = Seo::getProductData($prod);
-            $gdl     = TagManager::getGoogleProductDataLayer($prod);
+            $gdl = \App\Models\TagManager::viewItem($prod);
             $reviews = $prod->reviews()->get();
             $related = Helper::getRelated($cat, $subcat);
 
@@ -156,6 +154,8 @@ class CatalogRouteController extends FrontBaseController
         if ($faqs && $faqs->count()) {
             $faqs_crumbs = (new Breadcrumb())->faqs($faqs)->resolve('mainEntity');
         }
+
+
 
         return view('front.catalog.category.index', compact('group', 'list', 'cat', 'subcat', 'prod', 'crumbs', 'meta_tags', 'faqs', 'faqs_crumbs'));
     }

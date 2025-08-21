@@ -109,7 +109,10 @@
 <!-- Main theme script-->
 <script src="{{ asset('js/cart.js?v=2.1.8') }}"></script>
 
-<script src="{{ asset('js/pages-filter.js') }}"></script>
+
+
+
+
 
 <script src="{{ asset('js/theme.min.js') }}"></script>
 <script type="text/javascript">
@@ -175,6 +178,6 @@
 </script>
 
 @stack('js_after')
-
+<script src="{{ asset('js/pages-filter.js') }}" defer></script>
 </body>
 </html>

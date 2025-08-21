@@ -1,52 +1,76 @@
 <template>
-    <div class="cart ">
+    <div class="cart">
         <div class="d-flex flex-wrap align-items-center pt-1 pb-2 mb-1">
-        <input class="form-control me-3 mb-1" type="number" inputmode="numeric" pattern="[0-9]*" v-model="quantity" min="1" :max="available" style="width: 5rem;">
+            <input
+                class="form-control me-3 mb-1"
+                type="number"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                v-model.number="quantity"
+                :min="1"
+                :max="remaining"
+                style="width: 5rem;"
+            />
 
-
-      <button class="btn btn-primary btn-shadow me-3 mb-1 " @click="add()" :disabled="disabled" aria-label="add to cart button"><i class="ci-cart"></i> {{ trans.add_to_cart }}</button>
-     <!-- <p style="width: 100%;" class="fs-md fw-light text-danger" v-if="has_in_cart">{{ trans.imate }} {{ has_in_cart }} {{trans.artikala_u_kosarici }}.</p>
---> </div>
-
-        <div class="form-check mb-3" v-if="min_cart > 1">
-            <input class="form-check-input" type="checkbox"  @change="onChangeProcessed($event)" id="ex-check-1">
-            <label class="form-check-label" for="ex-check-1">{{ trans.add_to_cart_combo }}  {{ Math.floor(this.min_cart) }} =  {{ fullprice }} </label>
+            <button
+                class="btn btn-primary btn-shadow me-3 mb-1"
+                @click="add"
+                :disabled="disabled || remaining <= 0 || quantity <= 0"
+                aria-label="add to cart button"
+            >
+                <i class="ci-cart"></i> {{ trans.add_to_cart }}
+            </button>
         </div>
 
+        <div class="form-check mb-3" v-if="Number(min_cart) > 1">
+            <input class="form-check-input" type="checkbox" @change="onChangeProcessed" id="ex-check-1" />
+            <label class="form-check-label" for="ex-check-1">
+                {{ trans.add_to_cart_combo }} {{ Math.floor(Number(min_cart)) }} = {{ fullprice }}
+            </label>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
     props: {
-        id: String,
-        available: String,
-        min_cart:String,
-      fullprice:String
+        id: [String, Number],
+        available: { type: [String, Number], default: 0 },
+        min_cart: { type: [String, Number], default: 1 },
+        fullprice: String
     },
 
     data() {
         return {
+            // DELTA koju želimo dodati ovim klikom
             quantity: 1,
+            // koliko već ima u košarici (postojeće stanje)
             has_in_cart: 0,
             disabled: false,
-           trans: window.trans,
+            trans: window.trans
+        };
+    },
+
+    computed: {
+        availableNum() {
+            return Number(this.available) || 0;
+        },
+        remaining() {
+            // koliko još smije ući u košaricu
+            const rem = this.availableNum - Number(this.has_in_cart || 0);
+            return rem > 0 ? rem : 0;
         }
     },
 
     mounted() {
-        let cart = this.$store.state.storage.getCart();
+        const cart = this.$store.state.storage.getCart();
 
-        if (cart){
+        if (cart && cart.items) {
             for (const key in cart.items) {
-                if (this.id == cart.items[key].id) {
-                    this.has_in_cart = Math.floor(cart.items[key].quantity);
+                if (String(this.id) === String(cart.items[key].id)) {
+                    this.has_in_cart = Math.floor(Number(cart.items[key].quantity) || 0);
                 }
             }
-        }
-
-        if (this.available == undefined) {
-            this.available = 0;
         }
 
         this.checkAvailability();
@@ -54,60 +78,72 @@ export default {
 
     methods: {
         add() {
-            this.checkAvailability(true);
+            // delta koliko želimo dodati sada
+            let delta = Number(this.quantity) || 1;
 
-            if (this.has_in_cart) {
-                this.updateCart();
-            } else {
-                this.addToCart();
+            // odreži delta da ne prelazi remaining
+            if (delta > this.remaining) delta = this.remaining;
+
+            // ako nema što dodati, disable i izlaz
+            if (delta <= 0) {
+                this.disabled = true;
+                return;
             }
+
+            if (this.has_in_cart > 0) {
+                // RELATIVNO povećanje — ovo u store.js (updateCart) šalje GA add_to_cart
+                this.updateCart(delta);
+            } else {
+                // prvi put dodajemo — store.js (addToCart) već šalje GA add_to_cart
+                this.addToCart(delta);
+            }
+
+            // lokalno ažuriraj stanje tek nakon dispatche-a
+            this.has_in_cart = Number(this.has_in_cart) + delta;
+            // reset delta za sljedeći klik
+            this.quantity = 1;
+            this.checkAvailability();
         },
 
         onChangeProcessed(e) {
-            if (e.target.checked == true) {
-                this.quantity = Math.floor(this.min_cart);
-            } else {
-                this.quantity = 1;
-            }
+            const base = e.target.checked ? Math.floor(Number(this.min_cart) || 1) : 1;
+            // nemoj dozvoliti da pređe preostalu dostupnost
+            this.quantity = Math.min(base, this.remaining > 0 ? this.remaining : 0);
         },
 
-        /**
-         *
-         */
-        addToCart() {
-            let item = {
+        addToCart(delta) {
+            const item = {
                 id: this.id,
-                quantity: this.quantity
-            }
+                quantity: delta // DELTA koju dodajemo
+            };
 
             this.$store.dispatch('addToCart', item);
         },
 
-        /**
-         *
-         */
-        updateCart() {
-            /*if (parseFloat(this.quantity) > parseFloat(this.available)) {
-                this.quantity = this.available;
-            }*/
-
-            let item = {
+        updateCart(delta) {
+            const item = {
                 id: this.id,
-                quantity: this.quantity,
-                relative: true
-            }
+                quantity: delta, // DELTA koju dodajemo
+                relative: true   // signal store-u da tretira kao add_to_cart
+            };
 
             this.$store.dispatch('updateCart', item);
         },
 
-        checkAvailability(add = false) {
-            if (add) {
-                this.has_in_cart = parseFloat(this.has_in_cart) + parseFloat(this.quantity);
-            }
-
-            if (this.available <= this.has_in_cart) {
+        checkAvailability() {
+            // disablaj ako smo dosegli dostupnost
+            if (this.remaining <= 0) {
                 this.disabled = true;
-                this.has_in_cart = this.available;
+                this.has_in_cart = this.availableNum;
+            } else {
+                this.disabled = false;
+                // osiguraj da trenutni delta ne prelazi remaining
+                if (Number(this.quantity) > this.remaining) {
+                    this.quantity = this.remaining;
+                }
+                if (Number(this.quantity) < 1) {
+                    this.quantity = 1;
+                }
             }
         }
     }

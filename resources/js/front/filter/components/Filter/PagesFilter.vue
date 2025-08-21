@@ -66,6 +66,7 @@
 <script>
 
 export default {
+    name: 'PagesFilterView',
     props: {
         ids: String,
         group: String,

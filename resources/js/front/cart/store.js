@@ -1,4 +1,6 @@
-/* */
+/* ========= store.js ========= */
+
+/* LocalStorage ključ i poruke */
 let storage_cart = {
     name: 'pk_cart',
     cart: { count: 0 }
@@ -7,202 +9,269 @@ let messages = {
     error: window.trans.errorr,
     cartAdd: window.trans.cartadd,
     cartUpdate: window.trans.cartppdate,
-    cartRemove:  window.trans.cartremove,
+    cartRemove: window.trans.cartremove,
     couponSuccess: window.trans.couponsuccess,
     couponError: window.trans.couponerror,
-}
+};
+
+/* API base – ne ovisi o axios.defaults.baseURL */
+const API_BASE_REL = (window.API_BASE || '/api/v2').replace(/\/+$/, '');
+const API_BASE = /^https?:\/\//i.test(API_BASE_REL)
+    ? API_BASE_REL
+    : (window.location.origin + API_BASE_REL);
 
 class AgService {
-
-    /**
-     *
-     * @returns {*}
-     */
+    /* Dohvati košaricu */
     getCart() {
-        return axios.get('cart/get')
-        .then(response => { return response.data })
-        .catch(error => { return this.returnError(messages.error) })
+        return axios.get(`${API_BASE}/cart/get`)
+            .then(response => response.data)
+            .catch(() => this.returnError(messages.error));
     }
 
-    /**
-     *
-     * @param item
-     * @returns {*}
-     */
+    /* Provjeri košaricu */
     checkCart(ids) {
-        return axios.post('cart/check', {ids: ids})
-        .then(response => { return response.data })
-        .catch(error => { return this.returnError(messages.error) })
+        return axios.post(`${API_BASE}/cart/check`, { ids: ids })
+            .then(response => response.data)
+            .catch(() => this.returnError(messages.error));
     }
 
-
-    /**
-     *
-     * @param item
-     * @returns {*}
-     */
+    /* Dodaj u košaricu */
     addToCart(item) {
-        return axios.post('cart/add', {item: item})
-        .then(response => {
-            if (response.data.error) {
-                this.returnError(response.data.error);
-                return false;
-            }
-
-            let product = response.data.items[item.id].associatedModel;
-
-            window.dataLayer = window.dataLayer || [];
-            window.dataLayer.push({ ecommerce: null });
-            window.dataLayer.push({
-                'event': 'add_to_cart',
-                'ecommerce': {
-                    'items': [ product.dataLayer ]
+        return axios.post(`${API_BASE}/cart/add`, { item: item })
+            .then(response => {
+                if (response.data && response.data.error) {
+                    this.returnError(response.data.error);
+                    return false;
                 }
-            });
 
-            this.returnSuccess(messages.cartAdd);
-            return response.data
-        })
-        .catch(error => { return this.returnError(messages.error) })
+                // 1) Preferiraj backend GA4 payload
+                var dlFromBackend = (response.data && response.data.dl) ? response.data.dl : null;
+
+                // 2) Inače pokušaj izvući associatedModel
+                var productModel = null;
+                if (!dlFromBackend) {
+                    var itemsObj = (response.data && response.data.items) ? response.data.items : {};
+                    if (itemsObj && itemsObj[item.id] && itemsObj[item.id].associatedModel) {
+                        productModel = itemsObj[item.id].associatedModel;
+                    }
+                    if (!productModel) {
+                        var values = Object.values(itemsObj || {});
+                        var found = values.find(function (v) { return String(v && v.id) === String(item.id); });
+                        productModel = found && found.associatedModel ? found.associatedModel : null;
+                    }
+                    if (!productModel) {
+                        var vals = Object.values(itemsObj || {});
+                        productModel = vals.length ? (vals[vals.length - 1].associatedModel || null) : null;
+                    }
+                }
+
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({ ecommerce: null });
+
+                if (dlFromBackend) {
+                    window.dataLayer.push(dlFromBackend);
+                } else if (productModel && productModel.dataLayer) {
+                    var itemObj = Object.assign({}, productModel.dataLayer, { quantity: Number(item.quantity || 1) });
+                    window.dataLayer.push({
+                        event: 'add_to_cart',
+                        ecommerce: { items: [itemObj] }
+                    });
+                } else {
+                    window.dataLayer.push({
+                        event: 'add_to_cart',
+                        ecommerce: { items: [{ item_id: item.id || '', quantity: Number(item.quantity || 1) }] }
+                    });
+                }
+
+                this.returnSuccess(messages.cartAdd);
+                return response.data;
+            })
+            .catch(() => this.returnError(messages.error));
     }
 
-    /**
-     *
-     * @param item
-     * @returns {*}
-     */
+    /* Ažuriraj stavku – podržava relative delta (+ i -) */
     updateCart(item) {
-        return axios.post('cart/update/' + item.id, {item: item})
-        .then(response => {
-            if (response.data.error) {
-                this.returnError(response.data.error);
-                return false;
-            }
+        return axios.post(`${API_BASE}/cart/update/${item.id}`, { item: item })
+            .then(response => {
+                if (response.data && response.data.error) {
+                    this.returnError(response.data.error);
+                    return false;
+                }
 
-            this.returnSuccess(messages.cartUpdate);
-            return response.data
-        })
-        .catch(error => { return this.returnError(messages.error) })
+                const isRelative = item && item.relative === true;
+                const qty = Number(item.quantity);
+
+                // RELATIVNO povećanje → add_to_cart
+                if (isRelative && qty > 0) {
+                    const qtyAdded = qty;
+                    const dlFromBackend = response.data?.dl_add;
+
+                    let productModel = null;
+                    if (!dlFromBackend) {
+                        const itemsObj = response.data.items || {};
+                        productModel = itemsObj?.[item.id]?.associatedModel;
+
+                        if (!productModel) {
+                            const values = Object.values(itemsObj);
+                            const found = values.find(v => String(v?.id) === String(item.id));
+                            productModel = found?.associatedModel;
+                        }
+                        if (!productModel) {
+                            const values = Object.values(itemsObj);
+                            productModel = values.length ? values[values.length - 1]?.associatedModel : null;
+                        }
+                    }
+
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({ ecommerce: null });
+
+                    if (dlFromBackend) {
+                        window.dataLayer.push(dlFromBackend);
+                    } else if (productModel?.dataLayer) {
+                        const itemObj = { ...productModel.dataLayer, quantity: qtyAdded };
+                        window.dataLayer.push({
+                            event: 'add_to_cart',
+                            ecommerce: { items: [itemObj] }
+                        });
+                    } else {
+                        window.dataLayer.push({
+                            event: 'add_to_cart',
+                            ecommerce: { items: [{ item_id: item.id ?? '', quantity: qtyAdded }] }
+                        });
+                    }
+                }
+                // RELATIVNO smanjenje → remove_from_cart
+                else if (isRelative && qty < 0) {
+                    const qtyRemoved = Math.abs(qty);
+                    const dlFromBackend = response.data?.dl_remove;
+
+                    let productModel = null;
+                    if (!dlFromBackend) {
+                        const itemsObj = response.data.items || {};
+                        productModel = itemsObj?.[item.id]?.associatedModel;
+
+                        if (!productModel) {
+                            const values = Object.values(itemsObj);
+                            const found = values.find(v => String(v?.id) === String(item.id));
+                            productModel = found?.associatedModel;
+                        }
+                        if (!productModel) {
+                            const values = Object.values(itemsObj);
+                            productModel = values.length ? values[values.length - 1]?.associatedModel : null;
+                        }
+                    }
+
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({ ecommerce: null });
+
+                    if (dlFromBackend) {
+                        window.dataLayer.push(dlFromBackend);
+                    } else if (productModel?.dataLayer) {
+                        const itemObj = { ...productModel.dataLayer, quantity: qtyRemoved };
+                        window.dataLayer.push({
+                            event: 'remove_from_cart',
+                            ecommerce: { items: [itemObj] }
+                        });
+                    } else {
+                        window.dataLayer.push({
+                            event: 'remove_from_cart',
+                            ecommerce: { items: [{ item_id: item.id ?? '', quantity: qtyRemoved }] }
+                        });
+                    }
+                }
+
+                this.returnSuccess(messages.cartUpdate);
+                return response.data;
+            })
+            .catch(() => this.returnError(messages.error));
     }
 
-    /**
-     *
-     * @param item
-     * @returns {*}
-     */
+    /* Ukloni stavku */
     removeItem(item) {
-        return axios.get('cart/remove/' + item.id)
-        .then(response => {
-            this.returnSuccess(messages.cartRemove);
-            return response.data
-        })
-        .catch(error => { return this.returnError(messages.error) })
+        return axios.get(`${API_BASE}/cart/remove/${item.id}`)
+            .then(response => {
+                const itemsObj = response.data?.items || {};
+                let productModel = itemsObj?.[item.id]?.associatedModel;
+
+                if (!productModel) {
+                    const values = Object.values(itemsObj);
+                    const found = values.find(v => String(v?.id) === String(item.id));
+                    productModel = found?.associatedModel || null;
+                }
+
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({ ecommerce: null });
+
+                if (productModel?.dataLayer) {
+                    window.dataLayer.push({
+                        event: 'remove_from_cart',
+                        ecommerce: { items: [{ ...productModel.dataLayer, quantity: Number(item.quantity || 1) }] }
+                    });
+                } else {
+                    window.dataLayer.push({
+                        event: 'remove_from_cart',
+                        ecommerce: { items: [{ item_id: item.id ?? '', quantity: Number(item.quantity || 1) }] }
+                    });
+                }
+
+                this.returnSuccess(messages.cartRemove);
+                return response.data;
+            })
+            .catch(() => this.returnError(messages.error));
     }
 
-    /**
-     *
-     * @param coupon
-     * @returns {*}
-     */
+    /* Kupon */
     checkCoupon(coupon) {
-        if ( ! coupon) {
-            coupon = null;
-        }
-        return axios.get('cart/coupon/' + coupon)
-        .then(response => {
-            this.returnSuccess(messages.couponSuccess);
-            return response.data
-        })
-        .catch(error => { return this.returnError(messages.error) })
+        if (!coupon) coupon = null;
+        return axios.get(`${API_BASE}/cart/coupon/${coupon}`)
+            .then(response => {
+                this.returnSuccess(messages.couponSuccess);
+                return response.data;
+            })
+            .catch(() => this.returnError(messages.error));
     }
 
-    /**
-     *
-     * @param coupon
-     * @returns {*}
-     */
+    /* Loyalty */
     updateLoyalty(loyalty) {
-        if ( ! loyalty) {
-            loyalty = null;
-        }
-        return axios.get('cart/loyalty/' + loyalty)
-        .then(response => {
-            this.returnSuccess(messages.couponSuccess);
-            return response.data
-        })
-        .catch(error => { return this.returnError(messages.error) })
+        if (!loyalty) loyalty = null;
+        return axios.get(`${API_BASE}/cart/loyalty/${loyalty}`)
+            .then(response => {
+                this.returnSuccess(messages.couponSuccess);
+                return response.data;
+            })
+            .catch(() => this.returnError(messages.error));
     }
 
-    /**
-     *
-     * @returns {*}
-     */
+    /* Settings (ostavi ako ide preko drugog endpointa) */
     getSettings() {
         return axios.get('settings/get')
-        .then(response => { return response.data })
-        .catch(error => { return this.returnError(messages.error) })
+            .then(response => response.data)
+            .catch(() => this.returnError(messages.error));
     }
 
-    /**
-     *
-     * @param msg
-     * @returns {*}
-     */
-    returnSettings(settings) {
-        window.AGSettings = settings;
-    }
+    /* Helperi za toast */
+    returnSettings(settings) { window.AGSettings = settings; }
+    returnError(msg) { window.ToastWarning.fire(msg); }
+    returnSuccess(msg) { window.ToastSuccess.fire(msg); }
 
-    /**
-     *
-     * @param msg
-     * @returns {*}
-     */
-    returnError(msg) {
-        window.ToastWarning.fire(msg);
-    }
-
-    /**
-     *
-     * @param msg
-     * @returns {*}
-     */
-    returnSuccess(msg) {
-        window.ToastSuccess.fire(msg);
-    }
-
-    /**
-     * Returns HR formated price string.
-     *
-     * @param price
-     * @returns {string}
-     */
+    /* Formatiraj cijene */
     formatPrice(price) {
         return Number(price).toLocaleString('hr-HR', {
             style: 'currency',
-            //currencyDisplay: 'narrowSymbol',
             currencyDisplay: 'symbol',
             currency: 'HRK'
         });
     }
 
-    /**
-     * Returns HR formated price string.
-     *
-     * @param price
-     * @returns {string}
-     */
     formatMainPrice(price) {
-
         if (!store.state.settings) {
             this.getSettings().then((response) => {
                 return this.resolvePrice(response['currency.list'], price);
             });
-
         } else {
             return this.resolvePrice(store.state.settings['currency.list'], price);
         }
     }
-
 
     resolvePrice(currency_list, price, main = true) {
         let list = currency_list;
@@ -214,12 +283,11 @@ class AgService {
                     main_currency = item;
                 }
             } else {
-                if ( ! item.main) {
+                if (!item.main) {
                     main_currency = item;
                     return;
                 }
             }
-
         });
 
         let left = main_currency.symbol_left ? main_currency.symbol_left + '' : '';
@@ -228,46 +296,24 @@ class AgService {
         return left + Number(price * main_currency.value).toFixed(main_currency.decimal_places) + right;
     }
 
-    /**
-     * Returns HR formated price string.
-     *
-     * @param price
-     * @returns {string}
-     */
     formatSecondaryPrice(price) {
         if (!store.state.settings) {
             this.getSettings().then((response) => {
                 return this.resolvePrice(response['currency.list'], price, false);
             });
-
         } else {
             return this.resolvePrice(store.state.settings['currency.list'], price, false);
         }
     }
 
-    /**
-     * Calculate tax on items.
-     * Item can be number or object.
-     *
-     * @param items
-     * @return {string}
-     */
+    /* Porez / popust helperi */
     getDiscountAmount(price, special) {
         let discount = ((price - special) / price) * 100;
-
         return Math.round(discount).toFixed(0);
     }
 
-    /**
-     * Calculate tax on items.
-     * Item can be number or object.
-     *
-     * @param items
-     * @return {string}
-     */
     calculateItemsTax(items) {
         let tax = 0;
-
         if (isNaN(items)) {
             for (const key in items) {
                 tax += items[key].price - (items[key].price / (Number(items[key].attributes.tax.rate) / 100 + 1));
@@ -275,35 +321,21 @@ class AgService {
         } else {
             tax = items - (items / 1.25);
         }
-
         return tax;
     }
 }
 
-
 class AgStorage {
-
-    /**
-     *
-     * @returns {JSON}
-     */
     getCart() {
         let item = localStorage.getItem(storage_cart.name);
-
-        return (item && item != 'undefined') ? JSON.parse(item) : null;
+        return (item && item !== 'undefined') ? JSON.parse(item) : null;
     }
-
-    /**
-     *
-     * @param value
-     * @returns localStorage item
-     */
     setCart(value) {
         return localStorage.setItem(storage_cart.name, JSON.stringify(value));
     }
 }
 
-/**/
+/* Vuex-like store objekt */
 let store = {
     state: {
         storage: new AgStorage(),
@@ -314,23 +346,10 @@ let store = {
     },
 
     actions: {
-        /**
-         *
-         * @param context
-         * @returns {*}
-         */
-        getCart(context) {
-            context.commit('setCart');
-        },
+        getCart(context) { context.commit('setCart'); },
 
-        /**
-         *
-         * @param context
-         * @param item
-         */
         addToCart(context, item) {
             let state = context.state;
-
             state.service.addToCart(item).then(cart => {
                 if (cart) {
                     state.storage.setCart(cart);
@@ -339,14 +358,8 @@ let store = {
             });
         },
 
-        /**
-         *
-         * @param context
-         * @param item
-         */
         updateCart(context, item) {
             let state = context.state;
-
             state.service.updateCart(item).then(cart => {
                 if (cart) {
                     state.storage.setCart(cart);
@@ -355,52 +368,29 @@ let store = {
             });
         },
 
-        /**
-         *
-         * @param context
-         * @param item
-         */
         removeFromCart(context, item) {
             let state = context.state;
-
             state.service.removeItem(item).then(cart => {
                 state.storage.setCart(cart);
                 state.cart = cart;
             });
         },
 
-        /**
-         *
-         * @param context
-         * @param ids
-         */
         checkCart(context, ids) {
             let state = context.state;
-
             state.service.checkCart(ids).then(response => {
                 state.storage.setCart(response.cart);
-
                 if (response.message && window.location.pathname != '/uspjeh') {
-                    window.ToastWarningLong.fire(response.message)
-
+                    window.ToastWarningLong.fire(response.message);
                     if (window.location.pathname != '/kosarica') {
-                        window.setTimeout(() => {
-                            window.location.href = '/kosarica';
-                        }, 5000);
+                        window.setTimeout(() => { window.location.href = '/kosarica'; }, 5000);
                     }
                 }
-
-            })
+            });
         },
 
-        /**
-         *
-         * @param context
-         * @param coupon
-         */
         checkCoupon(context, coupon) {
             let state = context.state;
-
             state.cart.coupon = coupon;
             state.storage.setCart(state.cart);
 
@@ -410,19 +400,12 @@ let store = {
                 } else {
                     state.service.returnError(messages.couponError);
                 }
-
                 context.commit('setCart');
             });
         },
 
-        /**
-         *
-         * @param context
-         * @param coupon
-         */
         updateLoyalty(context, loyalty) {
             let state = context.state;
-
             state.cart.loyalty = loyalty;
             state.storage.setCart(state.cart);
 
@@ -432,27 +415,16 @@ let store = {
                 } else {
                     state.service.returnError(messages.couponError);
                 }
-
                 context.commit('setCart');
             });
         },
 
-        /**
-         *
-         * @param context
-         */
         flushCart(context) {
             context.state.cart = context.state.storage.setCart(storage_cart.cart);
         },
 
-        /**
-         *
-         * @param context
-         * @param item
-         */
         getSettings(context, item) {
             let state = context.state;
-
             state.service.getSettings(item).then(settings => {
                 if (settings) {
                     state.settings = settings;
@@ -462,16 +434,9 @@ let store = {
     },
 
     mutations: {
-
-        /**
-         *
-         * @param state
-         * @returns {*}
-         */
         setCart(state) {
             return state.cart = state.service.getCart().then(cart => {
                 state.cart = cart;
-
                 return state.storage.setCart(cart);
             });
         }

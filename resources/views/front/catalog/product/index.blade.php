@@ -36,21 +36,18 @@
 @endpush
 @push('meta_tags')
 @include('front.layouts.partials.hreflang')
-@endpush
-{{--
+
 @if (isset($gdl))
-@section('google_data_layer')
-     <script>
-         window.dataLayer = window.dataLayer || [];
-         window.dataLayer.push({ ecommerce: null });
-         window.dataLayer.push({
-             'event': 'view_item',
-             'ecommerce': {
-                 'items': [<?php echo json_encode($gdl); ?>]
-             } });
-     </script>
- @endsection
-@endif--}}
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push(@json($gdl));
+    </script>
+
+@endif
+@endpush
+
+
 
 @section('content')
 

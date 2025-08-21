@@ -17,6 +17,7 @@ use Bouncer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use App\Models\TagManager;
 
 /**
  *
@@ -28,6 +29,8 @@ class Product extends Model
      * @var string
      */
     protected $table = 'products';
+
+    public static $snakeAttributes = false;
 
     /**
      * @var array
@@ -53,7 +56,8 @@ class Product extends Model
         'secondary_special_text',
         'stars',
         'combo_set',
-        'alt'
+        'alt',
+        'dataLayer'
     ];
 
     /**
@@ -77,7 +81,11 @@ class Product extends Model
         $this->locale = session('locale');
     }
 
-
+    public function getDataLayerAttribute(): array
+    {
+        // Vraća GA4 per-item mapiranje: item_id, item_name, price, currency, discount, kategorije, quantity...
+        return TagManager::getGoogleProductDataLayer($this);
+    }
     /**
      * @param $locale
      *
