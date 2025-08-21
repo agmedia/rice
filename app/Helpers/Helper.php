@@ -112,79 +112,110 @@ class Helper
      *
      * @return array|false|Collection
      */
-    public static function search(string $target = '', bool $builder = false)
+    public static function search(string $target = '', bool $builder = false, bool $api = false)
     {
-        if ($target != '') {
-            $response = collect();
-
-
-            $products = Product::query()->whereHas('translation', function ($query) use ($target) {
-                $query->where('name', 'like', '%' . $target . '%');
-            })->orwhereHas('translation', function ($query) use ($target) {
-                $query->where('meta_description', 'like', '%' . $target . '%');
-            })->orWhere('sku', 'like', '%' . $target . '%')
-                ->orwhereHas('translation', function ($query) use ($target) {
-                $query->where( 'sastojci', 'like', '%' . $target . '%');
-            })->orwhereHas('translation', function ($query) use ($target) {
-                    $query->where('podaci', 'like', '%' . $target . '%');
-            })->orwhereHas('translation', function ($query) use ($target) {
-                    $query->where('description', 'like', '%' . $target . '%');
-                })->pluck('id');
-
-
-
-           /* $products = Product::query()->where('name', 'like', '%' . $target . '%')
-                               ->orWhere('meta_description', 'like', '%' . $target . '%')
-                               ->orWhere('sku', 'like', '%' . $target . '%')
-                               ->orWhere('isbn', 'like', '%' . $target . '%')
-                                ->orWhere('category_string', 'like', '%' . $target . '%')
-                                 ->orWhere('sastojci', 'like', '%' . $target . '%')
-                                  ->orWhere('podaci', 'like', '%' . $target . '%')
-                              ->orWhere('description', 'like', '%' . $target . '%')
-                               ->pluck('id');
-           */
-
-            if ( ! $products->count()) {
-                $products = collect();
-            }
-
-           // $preg = explode(' ', $target, 3);
-
-           /* if (isset ($preg[1]) && in_array($preg[1], $preg) && ! isset($preg[2])) {
-                $authors = Brand::active()->where('title', 'like', '%' . $preg[0] . '%' . $preg[1] . '%')
-                                 ->orWhere('title', 'like', '%' . $preg[1] . '% ' . $preg[0] . '%')
-                                 ->with('products')->get();
-
-            } elseif (isset ($preg[2]) && in_array($preg[2], $preg)) {
-                $authors = Brand::active()->where('title', 'like', $preg[0] . '%' . $preg[1] . '%' . $preg[2] . '%')
-                                 ->orWhere('title', 'like', $preg[2] . '%' . $preg[1] . '% ' . $preg[0] . '%')
-                                 ->orWhere('title', 'like', $preg[0] . '%' . $preg[2] . '% ' . $preg[1] . '%')
-                                 ->orWhere('title', 'like', $preg[1] . '%' . $preg[0] . '% ' . $preg[2] . '%')
-                                 ->orWhere('title', 'like', $preg[1] . '%' . $preg[2] . '% ' . $preg[0] . '%')
-                                 ->with('products')->get();
-
-            } else {
-                $authors = Brand::active()->where('title', 'like', '%' . $preg[0] . '%')
-                                 ->with('products')->get();
-            }
-
-            foreach ($authors as $author) {
-                $products = $products->merge($author->products->pluck('id'));
-            }
-
-           */
-
-            $response->put('products', $products->unique()->flatten());
-
-            if ($builder) {
-                return $response;
-            }
-
-            return $response['products']->toJson();
+        if ($target === '') {
+            return false;
         }
 
-        return false;
+        $response = collect();
+        $locale   = function_exists('current_locale') ? current_locale() : app()->getLocale();
+
+        // -----------------------------
+        // 1) PROIZVODI – join na product_translations (pt)
+        // -----------------------------
+        $productsBase = Product::query()
+            ->select('products.id')
+            ->join('product_translations as pt', function($j) use ($locale) {
+                $j->on('pt.product_id', '=', 'products.id')
+                    ->where('pt.lang', '=', $locale);
+            })
+            // ako želiš izbaciti neaktivne / 0 qty — ostavi ova dva where-a
+            ->where('products.status', 1)
+            ->where('products.quantity', '>', 0)
+            ->where(function ($w) use ($target) {
+                $like = '%' . $target . '%';
+                $w->where('pt.name', 'like', $like)
+                    ->orWhere('pt.meta_description', 'like', $like)
+                    ->orWhere('pt.description', 'like', $like)
+                    ->orWhere('pt.sastojci', 'like', $like)
+                    ->orWhere('pt.podaci', 'like', $like)
+                    ->orWhere('products.sku', 'like', $like);
+            });
+
+        $productIds = $productsBase->pluck('products.id');
+
+        if (! $productIds->count()) {
+            $productIds = collect();
+        }
+
+        // -----------------------------
+        // 2) BRANDOVI – proširi rezultate artiklima tih brandova (opcionalno)
+        // -----------------------------
+        // Tokeniziraj upit kako bi "svaka riječ" morala biti u nazivu branda
+        $tokens = collect(preg_split('/[\s\.,\-_\|]+/u', trim($target), -1, PREG_SPLIT_NO_EMPTY))
+            ->map(fn($t) => \Illuminate\Support\Str::lower($t))
+            ->unique()
+            ->take(5)
+            ->values();
+
+        if ($tokens->isNotEmpty()) {
+            // brand_translations: title, slug (nema url)
+            $brandIds = \App\Models\Front\Catalog\Brand::query()
+                ->select('brands.id')
+                ->join('brand_translations as bt', function($j) use ($locale) {
+                    $j->on('bt.brand_id', '=', 'brands.id')
+                        ->where('bt.lang', '=', $locale);
+                })
+                ->where('brands.status', 1)
+                ->when(true, function($q) {
+                    // samo brandovi koji imaju barem jedan vidljiv/dostupan artikal
+                    $q->whereHas('products', function($qp){
+                        $qp->where('status', 1)->where('quantity', '>', 0);
+                    });
+                })
+                ->where(function($w) use ($tokens) {
+                    foreach ($tokens as $t) {
+                        $w->where('bt.title', 'like', '%' . $t . '%');
+                    }
+                })
+                ->pluck('brands.id');
+
+            if ($brandIds->isNotEmpty()) {
+                // Uzmi sve proizvode tih brandova (po istim pravilima vidljivosti)
+                $brandProductIds = Product::query()
+                    ->select('products.id')
+                    ->whereIn('brand_id', $brandIds)
+                    ->where('products.status', 1)
+                    ->where('products.quantity', '>', 0)
+                    ->pluck('products.id');
+
+                $productIds = $productIds->merge($brandProductIds);
+            }
+        }
+
+        // -----------------------------
+        // 3) Jedinstveni popis + total + limit 15 (ako je API)
+        // -----------------------------
+        $uniqueIds = $productIds->unique()->values();
+        $totalAll  = $uniqueIds->count();
+
+        $limitedIds = $api ? $uniqueIds->take(15) : $uniqueIds;
+
+        $response->put('products', $limitedIds->flatten());
+        $response->put('total', $totalAll);
+
+        // opcionalno: log za debug
+        // \Log::info('Helper::search payload', ['total' => $totalAll, 'returned' => $limitedIds->count()]);
+
+        if ($builder) {
+            return $response;
+        }
+
+        // Back-compat: kad nije builder, vrati samo niz ID-eva kao JSON (ograničen ako je $api === true)
+        return $response['products']->toJson();
     }
+
 
 
     /**

@@ -390,7 +390,7 @@ class CatalogRouteController extends FrontBaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function search(Request $request)
+   /* public function search(Request $request)
     {
         $key = config('settings.search_keyword');
 
@@ -416,6 +416,168 @@ class CatalogRouteController extends FrontBaseController
             );
 
             return response()->json($search);
+        }
+
+        return response()->json(['error' => 'Greška kod pretrage..! Molimo pokušajte ponovo ili nas kotaktirajte! HVALA...']);
+    }
+
+*/
+    public function search(Request $request)
+    {
+        // 1) WEB stranica s rezultatima (ostaje isto)
+        if ($request->has(config('settings.search_keyword'))) {
+            if (!$request->input(config('settings.search_keyword'))) {
+                return redirect()->back()->with(['error' => 'Oops..! Zaboravili ste upisati pojam za pretraživanje..!']);
+            }
+
+            $group = null; $cat = null; $subcat = null;
+
+            $ids = Helper::search(
+                $request->input(config('settings.search_keyword'))
+            );
+
+            $crumbs = null;
+
+            return view('front.catalog.category.index', compact('group', 'cat', 'subcat', 'ids', 'crumbs'));
+        }
+
+        // 2) API autocomplete – structured JSON
+        if ($request->has(config('settings.search_keyword') . '_api')) {
+
+            $q       = (string) $request->input(config('settings.search_keyword') . '_api', '');
+            $locale  = function_exists('current_locale') ? current_locale() : app()->getLocale();
+            $group   = trim((string) $request->input('group', 'kategorija-proizvoda'), '/'); // za kategorije
+            $bPrefix = trim((string) $request->input('brand_prefix', 'brand'), '/');        // za brand URL-ove
+
+            // --- PROIZVODI ---
+            $search = Helper::search($q, true, true);
+            $totalProducts = (int) ($search['total'] ?? 0);
+            $productIds    = $search['products'] ?? [];
+
+            $items = Product::query()
+                ->with(['brand']) // koristimo brand_title u UI-u
+                ->whereIn('id', $productIds)
+                ->get()
+                ->keyBy('id');
+
+            $productsPayload = [];
+            foreach ($productIds as $id) {
+                $p = $items->get($id);
+                if (!$p) continue;
+
+                $productsPayload[] = [
+                    'id'                 => $p->id,
+                    'sku'                => $p->sku,
+                    'name'               => $p->name,               // iz product_translations
+                    'url'                => url($p->url),
+                    'main_price'         => $p->main_price,
+                    'main_price_text'    => $p->main_price_text,
+                    'main_special'       => $p->main_special,
+                    'main_special_text'  => $p->main_special_text,
+                    'image'              => $p->thumb,
+                    'brand_title'        => optional($p->brand)->title, // 👉 brand umjesto autora
+                ];
+            }
+
+            // --- KATEGORIJE (join na category_translations; koriste slug) ---
+            $catsBase = Category::query()
+                ->select('categories.id')
+                ->join('category_translations as ct', function ($j) use ($locale) {
+                    $j->on('ct.category_id', '=', 'categories.id')->where('ct.lang', $locale);
+                })
+                ->when(method_exists(Category::class, 'scopeActive'), fn ($q2) => $q2->active())
+                ->where(function ($w) use ($q) {
+                    // tvoje translations imaju TITLE (ne name)
+                    $w->where('ct.title', 'like', '%' . $q . '%');
+                    if (\Illuminate\Support\Facades\Schema::hasColumn('category_translations', 'description')) {
+                        $w->orWhere('ct.description', 'like', '%' . $q . '%');
+                    }
+                    if (\Illuminate\Support\Facades\Schema::hasColumn('category_translations', 'meta_description')) {
+                        $w->orWhere('ct.meta_description', 'like', '%' . $q . '%');
+                    }
+                    if (\Illuminate\Support\Facades\Schema::hasColumn('category_translations', 'content')) {
+                        $w->orWhere('ct.content', 'like', '%' . $q . '%');
+                    }
+                });
+
+            $totalCategories = (clone $catsBase)->count();
+
+            $categories = (clone $catsBase)
+                ->addSelect('ct.title as name', 'ct.slug as slug')
+                ->orderBy('ct.title')
+                ->limit(10)
+                ->get();
+
+            $categoriesPayload = $categories->map(function ($c) use ($group) {
+                $url = '/' . $group . '/' . ($c->slug ?: $c->id);
+                return [
+                    'id'   => $c->id,
+                    'name' => $c->name,
+                    'url'  => url($url),
+                ];
+            })->values()->all();
+
+            // --- BRANDOVI (join na brand_translations; koriste slug) ---
+            $rawQ = trim((string)$q);
+
+            $tokens = collect(preg_split('/[\s\.,\-_\|]+/u', $rawQ, -1, PREG_SPLIT_NO_EMPTY))
+                ->map(fn($t) => \Illuminate\Support\Str::lower($t))
+                ->unique()
+                ->take(5)
+                ->values();
+
+            $brandsBase = Brand::query()
+                ->select('brands.id')
+                ->join('brand_translations as bt', function ($j) use ($locale) {
+                    $j->on('bt.brand_id', '=', 'brands.id')->where('bt.lang', $locale);
+                })
+                ->where('brands.status', 1)
+                ->whereHas('products', function ($q2) {
+                    $q2->where('status', 1)->where('quantity', '>', 0);
+                })
+                ->when($tokens->isNotEmpty(), function ($qB) use ($tokens) {
+                    $qB->where(function ($w) use ($tokens) {
+                        foreach ($tokens as $t) {
+                            $w->where('bt.title', 'like', '%' . $t . '%'); // TITLE, ne name
+                        }
+                    });
+                });
+
+            $totalBrands = (clone $brandsBase)->count();
+
+            $brands = (clone $brandsBase)
+                ->addSelect('bt.title as name', 'bt.slug as slug')
+                ->orderBy('bt.title')
+                ->limit(10)
+                ->get();
+
+            $brandsPayload = $brands->map(function ($b) use ($bPrefix) {
+                $url = '/' . $bPrefix . '/' . ($b->slug ?: $b->id);
+                return [
+                    'id'   => $b->id,
+                    'name' => $b->name,
+                    'url'  => url($url),
+                ];
+            })->values()->all();
+
+            // --- PAYLOAD ---
+            $payload = [
+                'counts'     => [
+                    'products'   => $totalProducts,
+                    'brands'     => $totalBrands,
+                    'categories' => $totalCategories,
+                ],
+                'products'   => $productsPayload,
+                'categories' => $categoriesPayload,
+                'brands'     => $brandsPayload,
+            ];
+
+            $totalAll = $payload['counts']['products']
+                + $payload['counts']['brands']
+                + $payload['counts']['categories'];
+
+            return response()->json($payload)
+                ->header('X-Total-Count', $totalAll);
         }
 
         return response()->json(['error' => 'Greška kod pretrage..! Molimo pokušajte ponovo ili nas kotaktirajte! HVALA...']);

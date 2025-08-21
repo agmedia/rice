@@ -18,9 +18,22 @@
             </a>
             <!-- Search-->
             <form action="{{ route('pretrazi') }}" id="search-form-first" class="w-100 d-none d-lg-flex flex-nowrap mx-4" method="get">
-                <div class="input-group "><i class="ci-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-                    <input id="search-input"  class="form-control rounded-start w-100" type="text" name="{{ config('settings.search_keyword') }}" value="{{ request()->query('pojam') ?: '' }}" placeholder="{{ __('front/ricekakis.search_products') }}">
+
+
+
+                <div class="dropdown w-100">
+                    <div class="input-group ">
+                        <i class="ci-search position-absolute top-50 start-0 translate-middle-y text-muted fs-base ms-3"></i>
+                        <input class="form-control rounded-start ps-5" type="text"
+                               name="{{ config('settings.search_keyword') }}"
+                               value="{{ request()->query('pojam') ?: '' }}"
+                               placeholder="{{ __('front/ricekakis.search_products') }}" id="search_box" data-toggle="dropdown" aria-haspopup="true" autocomplete="off" aria-expanded="false" onkeyup="javascript:load_data(this.value)">
+                        <button type="submit" class="btn btn-primary btn-lg fs-base"><i class="ci-search"></i></button>
+                    </div>
+                    <div id="search_result" class="live-search"></div>
                 </div>
+
+
             </form>
             <!-- Toolbar-->
             <div class="navbar-toolbar d-flex flex-shrink-0 align-items-center ms-xl-2">
@@ -153,5 +166,142 @@
         <p class="pt-2 fw-medium pb-1">{{ __('front/ricekakis.follow_us') }}</p><a class="btn-social bs-outline bs-facebook me-2 mb-2" href="https://www.facebook.com/ricekakis" aria-label="Facebook"><i class="ci-facebook"></i></a><a class="btn-social bs-outline bs-instagram me-2 mb-2" aria-label="Instagram" href="https://www.instagram.com/ricekakis/"><i class="ci-instagram"></i></a><a class="btn-social bs-outline bs-youtube me-2 mb-2" aria-label="Youtube" href="https://www.youtube.com/channel/UCdNEYWHea1pKfUJbKF6fU4g"><i class="ci-youtube"></i></a><a class="btn-social bs-outline bs-tiktok me-2 mb-2" aria-label="Youtube" href="https://www.tiktok.com/@ricekakis"><i class="ci-tiktok"></i></a>
     </div>
 </aside>
+
+
+@push('js_after')
+    <script>
+        const DEBOUNCE_MS = 200;
+        let t = null;
+
+        function debouncedLoad(q){ clearTimeout(t); t = setTimeout(()=>load_data(q), DEBOUNCE_MS); }
+
+        function escapeHtml(s){ return String(s ?? '')
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+            .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+
+        function closeSearch(){
+            $('#search_result').removeClass('show').empty();
+            $('#search_overlay').addClass('d-none');
+            $('#search_box').attr('aria-expanded', 'false');
+        }
+
+        $(document).on('click', '#search_overlay', closeSearch);
+        $(document).on('keydown', function(e){ if(e.key === 'Escape') closeSearch(); });
+        $(document).on('click', function(e){
+            const $form = $('#search-form-first');
+            if(!$form.is(e.target) && $form.has(e.target).length === 0){ closeSearch(); }
+        });
+
+        // Fallbacke možeš mijenjati po potrebi
+        const CAT_GROUP   = '{{ $group ?? "kategorija-proizvoda" }}';
+        const BRAND_PREFX = '{{ request("brand_prefix","brand") }}';
+
+        function load_data(query) {
+            if (query.length > 2) {
+                $.ajax({
+                    method: 'get',
+                    url: '{{ route('api.front.autocomplete') }}'
+                        + '?pojam_api=' + encodeURIComponent(query)
+                        + '&group=' + encodeURIComponent(CAT_GROUP)
+                        + '&brand_prefix=' + encodeURIComponent(BRAND_PREFX),
+                    success: function(json, textStatus, xhr) {
+
+                        const headerTotal = parseInt(xhr.getResponseHeader('X-Total-Count') || '0', 10);
+                        let html = '';
+
+                        const isStructured = json && (json.counts || json.products || json.brands || json.categories);
+
+                        if (isStructured) {
+                            const c = json.counts || {products:0, brands:0, categories:0};
+                            const total = headerTotal > 0 ? headerTotal : ((c.products|0) + (c.brands|0) + (c.categories|0));
+
+                            html += '<div class="px-3 py-2 border-bottom fs-md text-dark">'
+                                + 'Pronađeno: <strong>' + total + '</strong> rezultata '
+                                + '(proizvodi ' + (c.products||0) + ', brandovi ' + (c.brands||0) + ', kategorije ' + (c.categories||0) + ')'
+                                + '</div>';
+
+                            // BRANDOVI
+                            if (json.brands && json.brands.length > 0) {
+                                html += '<div class="px-3  pt-2 pb-2 fw-medium  fs-md bg-secondary text-dark">Brandovi</div>';
+                                html += '<ul class="list-group list-group-flush">';
+                                json.brands.forEach(function(b){
+                                    html += '<li class="list-group-item py-2"><a class="text-dark fs-md" href="'+b.url+'">'+escapeHtml(b.name)+'</a></li>';
+                                });
+                                html += '</ul>';
+                            }
+
+                            // KATEGORIJE
+                            if (json.categories && json.categories.length > 0) {
+                                html += '<div class="px-3  pt-2 pb-2 fw-medium  fs-md bg-secondary text-dark">Kategorije</div>';
+                                html += '<ul class="list-group list-group-flush cat">';
+                                json.categories.forEach(function(cg){
+                                    html += '<li class="list-group-item py-2"><a class="text-dark fs-md" href="'+cg.url+'">'+escapeHtml(cg.name)+'</a></li>';
+                                });
+                                html += '</ul>';
+                            }
+
+                            // PROIZVODI
+                            if (json.products && json.products.length > 0) {
+                                html += '<div class="px-3  pt-2 pb-2 fw-medium  fs-md bg-secondary  text-dark">Artikli</div>';
+                                html += '<table class="px-3 table products"><tbody>';
+                                json.products.forEach(function (item) {
+                                    html += '<tr>'
+                                        +   '<td class="image"><a href="'+item.url+'"><img width="80" alt="'+escapeHtml(item.name)+'" src="'+item.image+'"></a></td>'
+                                        +   '<td class="main"><a href="'+item.url+'">'+escapeHtml(item.name)+'<br><small>'+escapeHtml(item.brand_title||"")+'</small></a></td>'
+                                        +   '<td class="price text-end"><a href="'+item.url+'"><div class="price"><span class="price">'+(item.main_price_text||"")+'</span></div></a></td>'
+                                        + '</tr>';
+                                });
+                                html += '</tbody></table>';
+                            }
+
+                            html += '<div class="result-text"><a href="'+('{{ route('pretrazi') }}' + '?pojam=' + encodeURIComponent(query))+'" class="btn btn-sm btn-primary w-100">Pogledaj sve rezultate</a></div>';
+
+                            if (total === 0) {
+                                html = '<div class="result-text text-muted p-3">Nema pronađenih rezultata</div>';
+                            }
+
+                        } else {
+                            // Legacy fallback
+                            const total = headerTotal > 0 ? headerTotal : (Array.isArray(json) ? json.length : 0);
+
+                            if (Array.isArray(json) && json.length > 0) {
+                                html += '<div class="px-3 py-2 border-bottom small text-muted">Pronađeno: <strong>'+ total +'</strong> rezultata</div>';
+                                html += '<table class="table products"><tbody>';
+                                json.slice(0, 15).forEach(function (item) {
+                                    html += '<tr>'
+                                        +   '<td class="image"><a href="'+item.url+'"><img width="80" alt="'+escapeHtml(item.name)+'" src="'+item.image+'"></a></td>'
+                                        +   '<td class="main"><a href="'+item.url+'">'+escapeHtml(item.name)+'<br><small>'+escapeHtml(item.brand_title||"")+'</small><br><small>'+escapeHtml(item.sku||"")+'</small></a></td>'
+                                        +   '<td class="price text-end"><a href="'+item.url+'"><div class="price"><span class="price">'+(item.main_price_text||"")+'</span></div></a></td>'
+                                        + '</tr>';
+                                });
+                                html += '</tbody></table>';
+                                html += '<div class="result-text"><a href="'+('{{ route('pretrazi') }}' + '?pojam=' + encodeURIComponent(query))+'" class="btn btn-sm btn-primary w-100">Pogledaj sve rezultate</a></div>';
+                            } else {
+                                html += '<div class="result-text text-muted">Nema pronađenih rezultata</div>';
+                            }
+                        }
+
+                        $('#search_result').html(html).addClass('show');
+                        $('#search_overlay').removeClass('d-none');
+                        $('#search_box').attr('aria-expanded', 'true');
+                    },
+
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        $('#search_result').html('<div class="result-text text-danger">Greška pri pretrazi</div>').addClass('show');
+                        $('#search_overlay').removeClass('d-none');
+                        $('#search_box').attr('aria-expanded', 'true');
+                    }
+                });
+            } else {
+                closeSearch();
+            }
+        }
+
+        document.getElementById('search_box')?.addEventListener('input', function(e){
+            debouncedLoad(e.target.value);
+        });
+    </script>
+@endpush
 
 

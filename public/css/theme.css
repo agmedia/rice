@@ -401,6 +401,96 @@ button#gdpr-cookie-advanced {
 body.cookie-lock { overflow: hidden; }
 
 
+/* pozicioniranje dropdowna ispod inputa */
+#search-form-first .dropdown { position: relative; }
+
+/* pretvori .live-search u Bootstrap dropdown-menu */
+#search_result.live-search {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;          /* w-100 efekt */
+    z-index: 1050;     /* iznad overlaya */
+    display: none;     /* kontroliramo kroz .show */
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: .25rem;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+    max-height: 470px; /* scroll */
+    overflow-y: auto;
+    margin-top: .25rem;
+    padding: 0;
+}
+
+#st-1 .st-btn > img {
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    position: relative;
+    top: 10px;
+    vertical-align: top;
+    filter: grayscale()!important;
+}
+
+#search_result.live-search.show { display: block; }
+
+/* estetika tvoje tablice rezultata */
+#search_result .table.products { margin-bottom: 0; }
+#search_result .table.products td.image { width: 90px; }
+#search_result .result-text { padding: .75rem; text-align: center; }
+
+
+
+.thumb-height img{
+    object-fit: scale-down;
+    width: 270px;
+    height: 270px;
+}
+
+.live-search tr a{
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+.live-search .table.products {
+    margin-bottom:0;
+}
+.live-search .table.products tr {
+    cursor:pointer;
+    font-size:15px
+}
+
+.live-search .table.products tr a {
+    color:#373f50;
+    font-size: 1.1em;
+}
+
+.live-search ul.cat li a {
+    color: #373f50 !important;
+}
+
+
+.live-search .table.products tr:hover {
+    background:#fcfcfc;
+}
+.live-search .table.products tr td.image{
+    padding:8px !important;
+    width:80px;
+    margin-right:20px;
+    padding-left: 15px !important;
+}
+.live-search .table.products tr td.price{
+    text-align: right;
+    padding: 8px 15px 5px 0 !important;
+    vertical-align: middle;
+    font-size:14px
+}
+.live-search .table.products tr td.main {
+    padding: 8px 5px 5px 0 !important;
+    vertical-align: middle;
+}
+
 @media(max-width:850px) {
     .wave-container-blue::before {
         height: 19px
