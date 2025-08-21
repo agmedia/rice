@@ -12,7 +12,7 @@
     <base href="{{ config('settings.images_domain') }}">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" media="screen" href="{{ asset('vendor/simplebar/dist/simplebar.min.css') }}"/>
-    <link rel="stylesheet" media="screen" href="{{ asset('css/theme.css?v=2.5456') }}">
+    <link rel="stylesheet" media="screen" href="{{ asset('css/theme.css?v=2.88') }}">
 
     <!-- Favicon and Touch Icons-->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ config('settings.images_domain') . 'apple-touch-icon.png' }}">
