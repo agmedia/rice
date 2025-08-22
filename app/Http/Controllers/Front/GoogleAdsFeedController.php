@@ -36,14 +36,14 @@ class GoogleAdsFeedController extends Controller
                 ->each(function (Product $p) use ($out) {
 
                     // 1) ID
-                    $id = (string) $p->id;
+                    $id = (string) $p->sku;
 
                     // 2) Naziv
                     $title = $this->cleanText($p->name);
 
                     // 3) Slika
                     $imageUrl = $this->encodeUrl(
-                        $this->removeHrFromUrl($this->absolutizeUrl($p->image))
+                        str_replace('.webp', '.jpg', $this->removeHrFromUrl($this->absolutizeUrl($p->image)))
                     );
 
                     // 4) Opis
