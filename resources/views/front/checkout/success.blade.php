@@ -13,13 +13,25 @@
             });
         </script>
 
-        @section('google_data_layer')
-            <!-- Event snippet for Purchase conversion page --> <script> gtag('event', 'conversion', { 'send_to': 'AW-11199697517', 'transaction_id': '' }); </script>
+        @push('google_data_layer')
+            <!-- Google Ads conversion (purchase) -->
+            <script>
+                gtag('event', 'conversion', {
+                    'send_to': 'AW-11199697517',
+                    // ako imaš ID narudžbe, ubaci ga:
+                    'transaction_id': '{{ $order->id ?? '' }}'
+                });
+            </script>
+
+            <!-- GA4 purchase preko dataLayer-a -->
             <script>
                 window.dataLayer = window.dataLayer || [];
-                dataLayer.push(<?php echo json_encode($data['google_tag_manager']); ?>);
+                // reset ecommerce prije novog eventa (GA4 preporuka)
+                window.dataLayer.push({ ecommerce: null });
+                // $data['google_tag_manager'] je cijeli event koji vraća TagManager::getGoogleSuccessDataLayer($order)
+                window.dataLayer.push({!! json_encode($data['google_tag_manager']) !!});
             </script>
-        @endsection
+        @endpush
     @endif
 
     <div class="pb-5 mb-sm-4">

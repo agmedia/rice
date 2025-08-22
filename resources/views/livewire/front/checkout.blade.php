@@ -27,51 +27,58 @@
         </span>
     </div>
 
-    @if ( ! empty($gdl) && ! $gdl_shipping && ! $gdl_payment)
-        @section('google_data_layer')
+    {{-- BEGIN_CHECKOUT (nema shipping/payment) --}}
+    @if (!empty($gdl) && !$gdl_shipping && !$gdl_payment)
+        @push('google_data_layer')
             <script>
                 window.dataLayer = window.dataLayer || [];
                 window.dataLayer.push({ ecommerce: null });
                 window.dataLayer.push({
-                    'event': '<?php echo $gdl_event; ?>',
-                    'ecommerce': {
-                        'items': <?php echo json_encode($gdl); ?>
-                    } });
+                    event: '{{ $gdl_event }}',
+                    ecommerce: {
+                        items: {!! json_encode($gdl) !!}
+                    }
+                });
             </script>
-        @endsection
+        @endpush
     @endif
 
-    @if ( ! empty($gdl) && $gdl_shipping && $gdl_event == 'add_shipping_info')
-        @section('google_data_layer')
+    {{-- ADD_SHIPPING_INFO --}}
+    @if (!empty($gdl) && $gdl_shipping && $gdl_event === 'add_shipping_info')
+        @push('google_data_layer')
             <script>
                 window.dataLayer = window.dataLayer || [];
                 window.dataLayer.push({ ecommerce: null });
                 window.dataLayer.push({
-                    'event': '<?php echo $gdl_event; ?>',
-                    'ecommerce': {
-                        'shipping_tier': '<?php echo $gdl_shipping; ?>',
-                        'items': <?php echo json_encode($gdl); ?>
-                    } });
+                    event: '{{ $gdl_event }}',
+                    ecommerce: {
+                        shipping_tier: '{{ $gdl_shipping }}',
+                        items: {!! json_encode($gdl) !!}
+                    }
+                });
             </script>
-        @endsection
+        @endpush
     @endif
 
-    @if ( ! empty($gdl) && $gdl_payment && $gdl_event == 'add_payment_info')
-        @section('google_data_layer')
+    {{-- ADD_PAYMENT_INFO --}}
+    @if (!empty($gdl) && $gdl_payment && $gdl_event === 'add_payment_info')
+        @push('google_data_layer')
             <script>
                 window.dataLayer = window.dataLayer || [];
                 window.dataLayer.push({ ecommerce: null });
                 window.dataLayer.push({
-                    'event': '<?php echo $gdl_event; ?>',
-                    'ecommerce': {
-                        'payment_type': '<?php echo $gdl_payment; ?>',
-                        'items': <?php echo json_encode($gdl); ?>
-                    } });
+                    event: '{{ $gdl_event }}',
+                    ecommerce: {
+                        payment_type: '{{ $gdl_payment }}',
+                        items: {!! json_encode($gdl) !!}
+                    }
+                });
             </script>
-        @endsection
+        @endpush
     @endif
 
-    @if ($step == 'podaci')
+
+@if ($step == 'podaci')
         <h2 class="h5 pt-1 pb-3 mb-3 m">{{ __('front/cart.adresa_dostave') }}</h2>
 
         @if (session()->has('login_success'))

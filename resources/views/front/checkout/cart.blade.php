@@ -1,17 +1,18 @@
 @extends('front.layouts.app')
 
 @if (isset($gdl))
-    @section('google_data_layer')
+    @push('google_data_layer')
         <script>
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push({ ecommerce: null });
             window.dataLayer.push({
-                'event': 'view_cart',
-                'ecommerce': {'items': <?php echo json_encode($gdl); ?>}
+                event: 'view_cart',
+                ecommerce: { items: {!! json_encode($gdl) !!} }
             });
         </script>
-    @endsection
+    @endpush
 @endif
+
 
 @section('content')
 

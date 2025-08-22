@@ -25,8 +25,8 @@
 
     @stack('css_after')
 
-    @if (config('app.env') == 'production')
-        @yield('google_data_layer')
+
+        @stack('google_data_layer')
         <!-- Google Tag Manager -->
 
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -37,7 +37,7 @@
         <!-- End Google Tag Manager -->
 
 
-    @endif
+
 
     @if (isset($js_lang))
         <script>
