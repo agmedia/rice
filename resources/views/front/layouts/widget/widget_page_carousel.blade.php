@@ -13,12 +13,16 @@
 
                     <!-- Product-->
                     <div class="article mb-grid-gutter">
-                        <a class="card border-0 shadow" href="{{ current_locale() }}/{{ $item['group'] }}/{{ $item->translation->slug }}">
-                            <img class="card-img-top p-3" loading="lazy" width="400" height="400" src="{{ $item['image'] }}" alt="{{ $item->translation->image_alt }}">
-                            <div class="card-body py-2 text-center px-0">
-                                <h3 class="h4 mt-1 font-title text-primary">{{ $item->translation->title }}</h3>
-                            </div>
-                        </a>
+                        @if($item->translation)
+                            <a class="card border-0 shadow" href="{{ current_locale() }}/{{ $item['group'] }}/{{ $item->translation->slug }}">
+                                <img class="card-img-top p-3" loading="lazy" width="400" height="400"
+                                     src="{{ $item['image'] }}" alt="{{ $item->translation->image_alt }}">
+                                <div class="card-body py-2 text-center px-0">
+                                    <h3 class="h4 mt-1 font-title text-primary">{{ $item->translation->title }}</h3>
+                                </div>
+                            </a>
+                        @endif
+
                     </div>
                 @endforeach
             </div>
