@@ -214,6 +214,12 @@ class Checkout extends Component
 
         // Dostava
         if (in_array($step, ['dostava', 'placanje']) && $this->cart) {
+            if (isset($this->cart->get()['subtotal']) && $this->cart->get()['subtotal'] < config('settings.order.min')) {
+                session()->flash('warning', __('front/cart.min_cart_amount'));
+
+                return redirect()->to('/kosarica');
+            }
+
             $this->setAddress($this->address);
             $this->validate($this->address_rules);
 

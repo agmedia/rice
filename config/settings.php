@@ -77,6 +77,7 @@ return [
     ],
 
     'order' => [
+        'min' => 10,
         'made_text'       => 'Narudžba napravljena.',
         'status'          => [
             'new'        => 1,

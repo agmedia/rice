@@ -206,7 +206,7 @@ return [
     'loyalty_cancel' => 'Cancel',
     'add_to_cart_combo' => 'Multipack x ',
     'min_cart_discount_title' => 'Quantity discount',
-    'pogledaj_sve' => 'View all'
-
+    'pogledaj_sve' => 'View all',
+    'min_cart_amount' => 'Minimum amount for succesfull purchase is 10€'
 
 ];

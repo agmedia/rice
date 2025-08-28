@@ -212,8 +212,8 @@ return [
 
     'min_cart_discount_title' => 'Količinski popust',
     'pogledaj_sve' => 'Pogledaj sve',
-    'review_request_subject' => 'Vaše mišljenje nam je važno – ocijenite narudžbu br. '
-
+    'review_request_subject' => 'Vaše mišljenje nam je važno – ocijenite narudžbu br. ',
+    'min_cart_amount' => 'Minimalni iznos košarice za uspješnu kupnju je 10€'
 
 
 

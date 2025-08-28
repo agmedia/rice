@@ -121,7 +121,7 @@
                             @if ( ! empty($prod->thumb))
                                 <a class="product-gallery-thumblist-item active" href="#first"><img src="{{ asset($prod->thumb) }}" alt="{{ $prod->name }}"></a>
                             @endif
-                            @foreach ($prod->images as $key => $image)
+                            @foreach ($prod->images->skip(1) as $key => $image)
                                 <a class="product-gallery-thumblist-item" href="#key{{ $key + 1 }}"><img src="{{ url('cache/thumb?size=100x100&src=' . $image->thumb) }}" width="100" height="100" alt="{{ $image->alt }}"></a>
                             @endforeach
                         @endif
@@ -187,7 +187,7 @@
 
                     @if($prod->created_at > now()->setDate(2025, 5, 2))
                         <div class="mb-0  mt-1 text-start">
-                            <span class=" fs-sm text-muted me-1">  {{ __('front/ricekakis.cijena_fix') }}{{ $prod->priceOn('2025-05-02 00:00:00'); }}</span>
+                            <span class=" fs-sm text-muted me-1">  {{ __('front/ricekakis.cijena_fix') }}{{ \App\Helpers\Currency::main($prod->priceOn('2025-05-02 00:00:00'), true) }}</span>
                         </div>
                     @endif
 
@@ -202,11 +202,9 @@
                     </div>
                 @endif
 
-                @if ($prod->main_price > $prod->main_special or $prod->action and !$prod->action->min_cart)
                     <div class="mb-3 mt-1 text-start">
-                        <span class=" fs-sm text-muted me-1">  {{ __('front/ricekakis.lowest_price') }}</span>
+                        <span class=" fs-sm text-muted me-1">{{ __('front/ricekakis.lowest_price') }} {{ \App\Helpers\Currency::main($prod->lowestPriceInWindow(), true) }}</span>
                     </div>
-                @endif
 
 
 

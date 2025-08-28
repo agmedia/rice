@@ -32,7 +32,7 @@
     </section>
 
 <!-- Page Title-->
-
+    @include('front.layouts.partials.session')
 
 
 
