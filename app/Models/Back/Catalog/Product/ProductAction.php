@@ -3,6 +3,7 @@
 namespace App\Models\Back\Catalog\Product;
 
 
+use App\Services\Pricing\PriceWriter;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -53,21 +54,27 @@ class ProductAction extends Model
     {
         if (isset($request->products)) {
             foreach ($request->products as $product) {
-                // Delete, if any action exist
-                self::where('product_id', $product)->delete();
+                $_product = Product::query()->where('id', $product)->first();
 
-                // Insert new action
-                $_id = self::insertGetId([
-                    'product_id' => $product,
-                    'name'       => $request->name,
-                    'coupon'     => $request->code,
-                    'price'      => $request->price,
-                    'discount'   => $request->discount,
-                    'date_start' => $request->date_start ? new Carbon($request->date_start) : null,
-                    'date_end'   => $request->date_end ? new Carbon($request->date_end) : null,
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now()
-                ]);
+                if ($_product) {
+                    // Delete, if any action exist
+                    self::where('product_id', $product)->delete();
+
+                    // Insert new action
+                    $_id = self::insertGetId([
+                        'product_id' => $product,
+                        'name'       => $request->name,
+                        'coupon'     => $request->code,
+                        'price'      => $request->price,
+                        'discount'   => $request->discount,
+                        'date_start' => $request->date_start ? new Carbon($request->date_start) : null,
+                        'date_end'   => $request->date_end ? new Carbon($request->date_end) : null,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]);
+
+                    app(PriceWriter::class)->setPrice($_product, $request->price);
+                }
             }
 
             return $_id;

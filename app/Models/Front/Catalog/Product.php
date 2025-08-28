@@ -7,6 +7,7 @@ use App\Helpers\ProductHelper;
 use App\Helpers\Special;
 use App\Models\Back\Catalog\Product\ProductAction;
 use App\Models\Back\Catalog\Product\ProductCombo;
+use App\Models\Back\Catalog\Product\ProductPriceHistory;
 use App\Models\Back\Catalog\Product\ProductSlug;
 use App\Models\Back\Marketing\Review;
 use App\Models\Back\Settings\Settings;
@@ -414,6 +415,48 @@ class Product extends Model
     public function action()
     {
         return $this->hasOne(ProductAction::class, 'id', 'action_id')->where('status', 1);
+    }
+
+
+    public function prices()
+    {
+        return $this->hasMany(ProductPriceHistory::class);
+    }
+
+
+    /**
+     * Price "active" at a given moment (preferring sale over regular if both exist).
+     * If you don’t use sales, remove the CASE ordering.
+     */
+    public function priceOn(Carbon|string $when)
+    {
+        $when = $when instanceof Carbon ? $when : Carbon::parse($when);
+
+        return $this->prices()
+                    ->where('effective_at', '<=', $when)
+                    ->where(function ($q) use ($when) {
+                        $q->whereNull('ended_at')->orWhere('ended_at', '>', $when);
+                    })
+                    ->orderByRaw("FIELD(kind, 'sale','regular')") // prefer sale
+                    ->orderByDesc('effective_at')
+                    ->first() ?: $this->price;
+    }
+
+    /**
+     * Lowest price seen in the last N days (default 30) up to a reference date (default now()).
+     */
+    public function lowestPriceInWindow(int $days = 30, ?Carbon $until = null): ?float
+    {
+        $until = $until ?: now();
+        $from  = (clone $until)->subDays($days);
+
+        // Any record whose interval intersects [from, until]
+        return $this->prices()
+                    ->where('effective_at', '<=', $until)
+                    ->where(function ($q) use ($from) {
+                        $q->whereNull('ended_at')->orWhere('ended_at', '>=', $from);
+                    })
+                    ->min('price');
     }
 
 

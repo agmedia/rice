@@ -9,6 +9,7 @@ use App\Models\Back\Catalog\Category;
 use App\Models\Back\Catalog\Publisher;
 use App\Models\Back\Settings\Settings;
 
+use App\Services\Pricing\PriceWriter;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -219,6 +220,8 @@ class Product extends Model
             ProductTranslation::create($id, $this->request);
             ProductTranslation::updateURL($id);
 
+            app(PriceWriter::class)->setPrice($this, $this->price);
+
             return $this->find($id);
         }
 
@@ -242,6 +245,8 @@ class Product extends Model
                  ->resolveCombo($this->id);
             ProductTranslation::edit($this->id, $this->request);
             ProductTranslation::updateURL($this->id);
+
+            app(PriceWriter::class)->setPrice($this, $this->price);
 
             return $this;
         }

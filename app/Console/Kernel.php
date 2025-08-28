@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('send:review_request_email')->dailyAt('03:00');
+        $schedule->command('recompute:lowest_price')->dailyAt('03:10');
     }
 
     /**
