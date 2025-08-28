@@ -202,10 +202,11 @@
                     </div>
                 @endif
 
-                    <div class="mb-3 mt-1 text-start">
-                        <span class=" fs-sm text-muted me-1">{{ __('front/ricekakis.lowest_price') }} {{ \App\Helpers\Currency::main($prod->lowestPriceInWindow(), true) }}</span>
-                    </div>
-
+                    @if ($prod->lowestPriceInWindow())
+                        <div class="mb-3 mt-1 text-start">
+                            <span class=" fs-sm text-muted me-1">{{ __('front/ricekakis.lowest_price') }} {{ \App\Helpers\Currency::main($prod->lowestPriceInWindow(), true) }}</span>
+                        </div>
+                    @endif
 
 
                     @if (isset($prod->action->min_cart))

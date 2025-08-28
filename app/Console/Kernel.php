@@ -26,6 +26,10 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('send:review_request_email')->dailyAt('03:00');
         $schedule->command('recompute:lowest_price')->dailyAt('03:10');
+        $schedule->command('recompute:product_action_prices')->dailyAt('03:20');
+
+        /*$schedule->command('recompute:lowest_price')->everyMinute();
+        $schedule->command('recompute:product_action_prices')->everyMinute();*/
     }
 
     /**
