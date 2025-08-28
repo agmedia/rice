@@ -105,7 +105,7 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <label for="size_value-input">Pack g/ml </label>
-                                                <input type="text" maxlength="3" class="form-control" id="size_value-input" name="size_value" placeholder="" value="{{ isset($product) ? $product->size_value : old('size_value') }}" >
+                                                <input type="text" maxlength="4" class="form-control" id="size_value-input" name="size_value" placeholder="" value="{{ isset($product) ? $product->size_value : old('size_value') }}" >
                                             </div>
                                             <div class="col-md-2">
                                                 <label for="size_value-input">g || ml </label>
