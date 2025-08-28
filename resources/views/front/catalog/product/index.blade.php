@@ -180,14 +180,16 @@
 
                 </div>
                     @if($price_per_kg)
-                    <div class="mb-0  mt-1 text-start">
-                        <span class=" fs-sm text-muted me-1"> {{ $price_per_kg }} </span>
-                    </div>
+                        <div class="mb-0  mt-1 text-start">
+                            <span class=" fs-sm text-muted me-1"> {{ $price_per_kg }} </span>
+                        </div>
                     @endif
 
-                    <div class="mb-0  mt-1 text-start">
-                        <span class=" fs-sm text-muted me-1">  {{ __('front/ricekakis.cijena_fix') }}{{ $prod->main_price_text }}</span>
-                    </div>
+                    @if($prod->created_at > now()->setDate(2025, 5, 2))
+                        <div class="mb-0  mt-1 text-start">
+                            <span class=" fs-sm text-muted me-1">  {{ __('front/ricekakis.cijena_fix') }}{{ $prod->main_price_text }}</span>
+                        </div>
+                    @endif
 
                 @if($prod->secondary_price_text)
                     <div class="mb-1 mt-1 text-start">
